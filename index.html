@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>سبورة تفاعلية</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+    body {
+      overflow: hidden;
+      background-color: #121820;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    #paintCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      cursor: crosshair;
+      touch-action: none;
+    }
+    .bottom-dock {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(22, 27, 34, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 20px;
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+    }
+    .tool-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-left: 1px solid rgba(255, 255, 255, 0.15);
+      padding-left: 12px;
+    }
+    .tool-group:last-child {
+      border-left: none;
+      padding-left: 0;
+    }
+    button.tool-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid transparent;
+      color: #e6edf3;
+      padding: 8px 14px;
+      border-radius: 12px;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+    button.tool-btn:hover {
+      background: rgba(255, 255, 255, 0.18);
+    }
+    button.tool-btn.active {
+      background: #238636;
+      border-color: #2ea043;
+      color: #fff;
+    }
+    .color-picker {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .color-dot {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+    .color-dot:hover {
+      transform: scale(1.15);
+    }
+    .color-dot.active {
+      border-color: #ffffff;
+      transform: scale(1.2);
+    }
+    .slider-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #8b949e;
+      font-size: 13px;
+    }
+    input[type="range"] {
+      cursor: pointer;
+      accent-color: #238636;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="paintCanvas"></canvas>
+
+  <div class="bottom-dock">
+    <div class="tool-group">
+      <button class="tool-btn active" id="penBtn">✏️ قلم</button>
+      <button class="tool-btn" id="highlighterBtn">🖊️ تظليل</button>
+      <button class="tool-btn" id="eraserBtn">🧹 ممحاة</button>
+    </div>
+
+    <div class="tool-group color-picker">
+      <div class="color-dot active" style="background: #ffffff;" data-color="#ffffff"></div>
+      <div class="color-dot" style="background: #facc15;" data-color="#facc15"></div>
+      <div class="color-dot" style="background: #4ade80;" data-color="#4ade80"></div>
+      <div class="color-dot" style="background: #38bdf8;" data-color="#38bdf8"></div>
+      <div class="color-dot" style="background: #fb923c;" data-color="#fb923c"></div>
+      <div class="color-dot" style="background: #f87171;" data-color="#f87171"></div>
+    </div>
+
+    <div class="tool-group slider-box">
+      <span>السُّمك</span>
+      <input type="range" id="brushSize" min="2" max="30" value="4">
+    </div>
+
+    <div class="tool-group">
+      <button class="tool-btn" id="undoBtn">↩️ تراجع</button>
+      <button class="tool-btn" id="clearBtn">🗑️ مسح الكل</button>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('paintCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = canvas.width;
+      tempCanvas.height = canvas.height;
+      const tempCtx = tempCanvas.getContext('2d');
+      tempCtx.drawImage(canvas, 0, 0);
+
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      ctx.drawImage(tempCanvas, 0, 0);
+    }
+    window.addEventListener('resize', resizeCanvas);
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let isDrawing = false;
+    let currentTool = 'pen';
+    let currentColor = '#ffffff';
+    let currentSize = 4;
+
+    let history = [];
+    const MAX_HISTORY = 15;
+
+    function saveState() {
+      if (history.length >= MAX_HISTORY) {
+        history.shift();
+      }
+      history.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+    }
+
+    saveState();
+
+    function getCoords(e) {
+      if (e.touches && e.touches[0]) {
+        return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      }
+      return { x: e.clientX, y: e.clientY };
+    }
+
+    function startDraw(e) {
+      isDrawing = true;
+      const { x, y } = getCoords(e);
+
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+
+      if (currentTool === 'eraser') {
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.lineWidth = currentSize * 4;
+      } else if (currentTool === 'highlighter') {
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.strokeStyle = currentColor + '55';
+        ctx.lineWidth = currentSize * 3;
+      } else {
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.strokeStyle = currentColor;
+        ctx.lineWidth = currentSize;
+      }
+
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+    }
+
+    function draw(e) {
+      if (!isDrawing) return;
+      const { x, y } = getCoords(e);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+    }
+
+    function stopDraw() {
+      if (isDrawing) {
+        ctx.closePath();
+        isDrawing = false;
+        saveState();
+      }
+    }
+
+    canvas.addEventListener('mousedown', startDraw);
+    canvas.addEventListener('mousemove', draw);
+    window.addEventListener('mouseup', stopDraw);
+
+    canvas.addEventListener('touchstart', (e) => { e.preventDefault(); startDraw(e); }, { passive: false });
+    canvas.addEventListener('touchmove', (e) => { e.preventDefault(); draw(e); }, { passive: false });
+    window.addEventListener('touchend', stopDraw);
+
+    const penBtn = document.getElementById('penBtn');
+    const highlighterBtn = document.getElementById('highlighterBtn');
+    const eraserBtn = document.getElementById('eraserBtn');
+    const toolBtns = [penBtn, highlighterBtn, eraserBtn];
+
+    function setActiveTool(tool, activeBtn) {
+      currentTool = tool;
+      toolBtns.forEach(btn => btn.classList.remove('active'));
+      activeBtn.classList.add('active');
+    }
+
+    penBtn.onclick = () => setActiveTool('pen', penBtn);
+    highlighterBtn.onclick = () => setActiveTool('highlighter', highlighterBtn);
+    eraserBtn.onclick = () => setActiveTool('eraser', eraserBtn);
+
+    const colorDots = document.querySelectorAll('.color-dot');
+    colorDots.forEach(dot => {
+      dot.addEventListener('click', () => {
+        colorDots.forEach(d => d.classList.remove('active'));
+        dot.classList.add('active');
+        currentColor = dot.getAttribute('data-color');
+        if (currentTool === 'eraser') {
+          setActiveTool('pen', penBtn);
+        }
+      });
+    });
+
+    document.getElementById('brushSize').oninput = (e) => {
+      currentSize = parseInt(e.target.value);
+    };
+
+    document.getElementById('undoBtn').onclick = () => {
+      if (history.length > 1) {
+        history.pop();
+        const previousState = history[history.length - 1];
+        ctx.putImageData(previousState, 0, 0);
+      }
+    };
+
+    document.getElementById('clearBtn').onclick = () => {
+      if (confirm('هل تريد مسح كل ما على السبورة؟')) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        saveState();
+      }
+    };
+  </script>
+</body>
+</html>
