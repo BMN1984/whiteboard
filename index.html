@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>سبورة تفاعلية</title>
+  <title>سبورة الفتح التفاعلية</title>
   <style>
     * {
       box-sizing: border-box;
@@ -15,89 +15,196 @@
       overflow: hidden;
       background-color: #121820;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      transition: background-color 0.25s ease;
     }
+    
+    /* طبقة خطوط التسطير والمربعات */
+    #gridCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* طبقة الرسم بالقلم */
     #paintCanvas {
       position: absolute;
       top: 0;
       left: 0;
       cursor: crosshair;
       touch-action: none;
+      z-index: 2;
     }
-    .bottom-dock {
+
+    /* شريط العنوان والحالة العلوي */
+    .top-dock {
       position: fixed;
-      bottom: 24px;
+      top: 16px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(22, 27, 34, 0.88);
+      background: rgba(22, 27, 34, 0.9);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 20px;
-      padding: 10px 18px;
+      border-radius: 14px;
+      padding: 6px 18px;
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 16px;
+      color: #e6edf3;
+      font-size: 13px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+      z-index: 1000;
+    }
+
+    /* القائمة الجانبية اليمنى: إعدادات وخلفيات السبورة */
+    .side-panel {
+      position: fixed;
+      top: 70px;
+      right: 20px;
+      width: 220px;
+      background: rgba(22, 27, 34, 0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 16px;
+      padding: 14px;
+      color: #e6edf3;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.45);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .panel-title {
+      font-size: 13px;
+      font-weight: bold;
+      color: #8b949e;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 5px;
+    }
+
+    .theme-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .theme-btn {
+      width: 100%;
+      height: 30px;
+      border-radius: 8px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+    .theme-btn:hover { transform: scale(1.08); }
+    .theme-btn.active { border-color: #38bdf8; }
+
+    .grid-options {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .btn-action {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #e6edf3;
+      padding: 7px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      cursor: pointer;
+      text-align: right;
+      transition: all 0.2s;
+    }
+    .btn-action:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+    .btn-action.active {
+      background: #1f6feb;
+      border-color: #388bfd;
+      color: #fff;
+    }
+
+    /* شريط الأدوات العائم السفلي */
+    .bottom-dock {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(22, 27, 34, 0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 20px;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
       z-index: 1000;
     }
+
     .tool-group {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       border-left: 1px solid rgba(255, 255, 255, 0.15);
-      padding-left: 12px;
+      padding-left: 10px;
     }
     .tool-group:last-child {
       border-left: none;
       padding-left: 0;
     }
+
     button.tool-btn {
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid transparent;
       color: #e6edf3;
-      padding: 8px 14px;
-      border-radius: 12px;
-      font-size: 14px;
+      padding: 6px 12px;
+      border-radius: 10px;
+      font-size: 13px;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       transition: all 0.2s ease;
     }
-    button.tool-btn:hover {
-      background: rgba(255, 255, 255, 0.18);
-    }
+    button.tool-btn:hover { background: rgba(255, 255, 255, 0.18); }
     button.tool-btn.active {
       background: #238636;
       border-color: #2ea043;
       color: #fff;
     }
+
     .color-picker {
       display: flex;
       gap: 6px;
       align-items: center;
     }
     .color-dot {
-      width: 24px;
-      height: 24px;
+      width: 22px;
+      height: 22px;
       border-radius: 50%;
       cursor: pointer;
       border: 2px solid transparent;
       transition: transform 0.15s, border-color 0.15s;
     }
-    .color-dot:hover {
-      transform: scale(1.15);
-    }
+    .color-dot:hover { transform: scale(1.15); }
     .color-dot.active {
       border-color: #ffffff;
       transform: scale(1.2);
     }
+
     .slider-box {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       color: #8b949e;
-      font-size: 13px;
+      font-size: 12px;
     }
     input[type="range"] {
       cursor: pointer;
@@ -107,8 +214,42 @@
 </head>
 <body>
 
+  <!-- شريط التحكم العلوي -->
+  <div class="top-dock">
+    <span>💡 وضع الشرح النشط</span>
+    <button class="tool-btn" id="fullScreenBtn" style="padding: 3px 8px; font-size: 12px;">⛶ ملء الشاشة</button>
+  </div>
+
+  <!-- مساحة تخطيط الأسطر والمربعات -->
+  <canvas id="gridCanvas"></canvas>
+
+  <!-- مساحة الرسم الرئيسية -->
   <canvas id="paintCanvas"></canvas>
 
+  <!-- القائمة الجانبية (إعدادات وخلفيات السبورة) -->
+  <div class="side-panel">
+    <div class="panel-title">لون السبورة</div>
+    <div class="theme-grid">
+      <div class="theme-btn active" style="background: #121820;" data-bg="#121820" title="كحلي غامق"></div>
+      <div class="theme-btn" style="background: #18221b;" data-bg="#18221b" title="أخضر مدرسي"></div>
+      <div class="theme-btn" style="background: #111111;" data-bg="#111111" title="أسود كلاسيكي"></div>
+      <div class="theme-btn" style="background: #f8fafc;" data-bg="#f8fafc" title="أبيض"></div>
+    </div>
+
+    <div class="panel-title">تخطيط الأسطر والشبكة</div>
+    <div class="grid-options">
+      <button class="btn-action active" data-grid="none">سادة (بدون تسطير)</button>
+      <button class="btn-action" data-grid="ruled">مسطر (دفتر مدرسي)</button>
+      <button class="btn-action" data-grid="graph">رسم بياني (مربعات)</button>
+    </div>
+
+    <div class="panel-title">تصدير الدرس</div>
+    <button class="btn-action" id="downloadBtn" style="text-align: center; background: #238636; font-weight: bold;">
+      💾 حفظ الشرح كصورة
+    </button>
+  </div>
+
+  <!-- شريط الأدوات العائم السفلي -->
   <div class="bottom-dock">
     <div class="tool-group">
       <button class="tool-btn active" id="penBtn">✏️ قلم</button>
@@ -127,7 +268,7 @@
 
     <div class="tool-group slider-box">
       <span>السُّمك</span>
-      <input type="range" id="brushSize" min="2" max="30" value="4">
+      <input type="range" id="brushSize" min="2" max="35" value="4">
     </div>
 
     <div class="tool-group">
@@ -137,24 +278,69 @@
   </div>
 
   <script>
-    const canvas = document.getElementById('paintCanvas');
-    const ctx = canvas.getContext('2d');
+    const paintCanvas = document.getElementById('paintCanvas');
+    const pCtx = paintCanvas.getContext('2d');
 
-    function resizeCanvas() {
+    const gridCanvas = document.getElementById('gridCanvas');
+    const gCtx = gridCanvas.getContext('2d');
+
+    let currentGrid = 'none';
+    let currentThemeBg = '#121820';
+
+    function resizeCanvases() {
       const tempCanvas = document.createElement('canvas');
-      tempCanvas.width = canvas.width;
-      tempCanvas.height = canvas.height;
-      const tempCtx = tempCanvas.getContext('2d');
-      tempCtx.drawImage(canvas, 0, 0);
+      tempCanvas.width = paintCanvas.width;
+      tempCanvas.height = paintCanvas.height;
+      const tCtx = tempCanvas.getContext('2d');
+      tCtx.drawImage(paintCanvas, 0, 0);
 
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      paintCanvas.width = window.innerWidth;
+      paintCanvas.height = window.innerHeight;
+      gridCanvas.width = window.innerWidth;
+      gridCanvas.height = window.innerHeight;
 
-      ctx.drawImage(tempCanvas, 0, 0);
+      pCtx.drawImage(tempCanvas, 0, 0);
+      drawGrid();
     }
-    window.addEventListener('resize', resizeCanvas);
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    window.addEventListener('resize', resizeCanvases);
+
+    paintCanvas.width = window.innerWidth;
+    paintCanvas.height = window.innerHeight;
+    gridCanvas.width = window.innerWidth;
+    gridCanvas.height = window.innerHeight;
+
+    function drawGrid() {
+      gCtx.clearRect(0, 0, gridCanvas.width, gridCanvas.height);
+      if (currentGrid === 'none') return;
+
+      const isLightBg = currentThemeBg === '#f8fafc';
+      gCtx.strokeStyle = isLightBg ? 'rgba(0, 0, 0, 0.08)' : 'rgba(255, 255, 255, 0.08)';
+      gCtx.lineWidth = 1;
+
+      if (currentGrid === 'ruled') {
+        const lineSpacing = 44;
+        for (let y = lineSpacing; y < gridCanvas.height; y += lineSpacing) {
+          gCtx.beginPath();
+          gCtx.moveTo(0, y);
+          gCtx.lineTo(gridCanvas.width, y);
+          gCtx.stroke();
+        }
+      } else if (currentGrid === 'graph') {
+        const step = 40;
+        for (let x = 0; x < gridCanvas.width; x += step) {
+          gCtx.beginPath();
+          gCtx.moveTo(x, 0);
+          gCtx.lineTo(x, gridCanvas.height);
+          gCtx.stroke();
+        }
+        for (let y = 0; y < gridCanvas.height; y += step) {
+          gCtx.beginPath();
+          gCtx.moveTo(0, y);
+          gCtx.lineTo(gridCanvas.width, y);
+          gCtx.stroke();
+        }
+      }
+    }
 
     let isDrawing = false;
     let currentTool = 'pen';
@@ -165,12 +351,9 @@
     const MAX_HISTORY = 15;
 
     function saveState() {
-      if (history.length >= MAX_HISTORY) {
-        history.shift();
-      }
-      history.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+      if (history.length >= MAX_HISTORY) history.shift();
+      history.push(pCtx.getImageData(0, 0, paintCanvas.width, paintCanvas.height));
     }
-
     saveState();
 
     function getCoords(e) {
@@ -183,48 +366,47 @@
     function startDraw(e) {
       isDrawing = true;
       const { x, y } = getCoords(e);
-
-      ctx.beginPath();
-      ctx.moveTo(x, y);
+      pCtx.beginPath();
+      pCtx.moveTo(x, y);
 
       if (currentTool === 'eraser') {
-        ctx.globalCompositeOperation = 'destination-out';
-        ctx.lineWidth = currentSize * 4;
+        pCtx.globalCompositeOperation = 'destination-out';
+        pCtx.lineWidth = currentSize * 4;
       } else if (currentTool === 'highlighter') {
-        ctx.globalCompositeOperation = 'source-over';
-        ctx.strokeStyle = currentColor + '55';
-        ctx.lineWidth = currentSize * 3;
+        pCtx.globalCompositeOperation = 'source-over';
+        pCtx.strokeStyle = currentColor + '55';
+        pCtx.lineWidth = currentSize * 3;
       } else {
-        ctx.globalCompositeOperation = 'source-over';
-        ctx.strokeStyle = currentColor;
-        ctx.lineWidth = currentSize;
+        pCtx.globalCompositeOperation = 'source-over';
+        pCtx.strokeStyle = currentColor;
+        pCtx.lineWidth = currentSize;
       }
 
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
+      pCtx.lineCap = 'round';
+      pCtx.lineJoin = 'round';
     }
 
     function draw(e) {
       if (!isDrawing) return;
       const { x, y } = getCoords(e);
-      ctx.lineTo(x, y);
-      ctx.stroke();
+      pCtx.lineTo(x, y);
+      pCtx.stroke();
     }
 
     function stopDraw() {
       if (isDrawing) {
-        ctx.closePath();
+        pCtx.closePath();
         isDrawing = false;
         saveState();
       }
     }
 
-    canvas.addEventListener('mousedown', startDraw);
-    canvas.addEventListener('mousemove', draw);
+    paintCanvas.addEventListener('mousedown', startDraw);
+    paintCanvas.addEventListener('mousemove', draw);
     window.addEventListener('mouseup', stopDraw);
 
-    canvas.addEventListener('touchstart', (e) => { e.preventDefault(); startDraw(e); }, { passive: false });
-    canvas.addEventListener('touchmove', (e) => { e.preventDefault(); draw(e); }, { passive: false });
+    paintCanvas.addEventListener('touchstart', (e) => { e.preventDefault(); startDraw(e); }, { passive: false });
+    paintCanvas.addEventListener('touchmove', (e) => { e.preventDefault(); draw(e); }, { passive: false });
     window.addEventListener('touchend', stopDraw);
 
     const penBtn = document.getElementById('penBtn');
@@ -248,9 +430,7 @@
         colorDots.forEach(d => d.classList.remove('active'));
         dot.classList.add('active');
         currentColor = dot.getAttribute('data-color');
-        if (currentTool === 'eraser') {
-          setActiveTool('pen', penBtn);
-        }
+        if (currentTool === 'eraser') setActiveTool('pen', penBtn);
       });
     });
 
@@ -261,16 +441,71 @@
     document.getElementById('undoBtn').onclick = () => {
       if (history.length > 1) {
         history.pop();
-        const previousState = history[history.length - 1];
-        ctx.putImageData(previousState, 0, 0);
+        pCtx.putImageData(history[history.length - 1], 0, 0);
       }
     };
 
     document.getElementById('clearBtn').onclick = () => {
       if (confirm('هل تريد مسح كل ما على السبورة؟')) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        pCtx.clearRect(0, 0, paintCanvas.width, paintCanvas.height);
         saveState();
       }
+    };
+
+    const themeBtns = document.querySelectorAll('.theme-btn');
+    themeBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        themeBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentThemeBg = btn.getAttribute('data-bg');
+        document.body.style.backgroundColor = currentThemeBg;
+
+        if (currentThemeBg === '#f8fafc' && currentColor === '#ffffff') {
+          currentColor = '#111111';
+          colorDots[0].style.background = '#111111';
+          colorDots[0].setAttribute('data-color', '#111111');
+        } else if (currentThemeBg !== '#f8fafc' && currentColor === '#111111') {
+          currentColor = '#ffffff';
+          colorDots[0].style.background = '#ffffff';
+          colorDots[0].setAttribute('data-color', '#ffffff');
+        }
+        drawGrid();
+      });
+    });
+
+    const gridBtns = document.querySelectorAll('.grid-options button');
+    gridBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        gridBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentGrid = btn.getAttribute('data-grid');
+        drawGrid();
+      });
+    });
+
+    document.getElementById('fullScreenBtn').onclick = () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    };
+
+    document.getElementById('downloadBtn').onclick = () => {
+      const exportCanvas = document.createElement('canvas');
+      exportCanvas.width = paintCanvas.width;
+      exportCanvas.height = paintCanvas.height;
+      const eCtx = exportCanvas.getContext('2d');
+
+      eCtx.fillStyle = currentThemeBg;
+      eCtx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
+      eCtx.drawImage(gridCanvas, 0, 0);
+      eCtx.drawImage(paintCanvas, 0, 0);
+
+      const link = document.createElement('a');
+      link.download = `شرح-السبورة-${new Date().toLocaleDateString('ar-EG')}.png`;
+      link.href = exportCanvas.toDataURL('image/png');
+      link.click();
     };
   </script>
 </body>
