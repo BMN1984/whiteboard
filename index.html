@@ -18,7 +18,6 @@
       transition: background-color 0.25s ease;
     }
     
-    /* طبقة خطوط التسطير والمربعات */
     #gridCanvas {
       position: absolute;
       top: 0;
@@ -27,7 +26,6 @@
       z-index: 1;
     }
 
-    /* طبقة الرسم بالقلم */
     #paintCanvas {
       position: absolute;
       top: 0;
@@ -37,7 +35,14 @@
       z-index: 2;
     }
 
-    /* شريط العنوان والحالة العلوي */
+    #overlayCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 3;
+    }
+
     .top-dock {
       position: fixed;
       top: 16px;
@@ -58,7 +63,6 @@
       z-index: 1000;
     }
 
-    /* القائمة الجانبية اليمنى: إعدادات وخلفيات السبورة */
     .side-panel {
       position: fixed;
       top: 70px;
@@ -120,16 +124,13 @@
       text-align: right;
       transition: all 0.2s;
     }
-    .btn-action:hover {
-      background: rgba(255, 255, 255, 0.15);
-    }
+    .btn-action:hover { background: rgba(255, 255, 255, 0.15); }
     .btn-action.active {
       background: #1f6feb;
       border-color: #388bfd;
       color: #fff;
     }
 
-    /* شريط الأدوات العائم السفلي */
     .bottom-dock {
       position: fixed;
       bottom: 20px;
@@ -146,6 +147,8 @@
       gap: 12px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
       z-index: 1000;
+      max-width: 95vw;
+      overflow-x: auto;
     }
 
     .tool-group {
@@ -172,6 +175,7 @@
       align-items: center;
       gap: 5px;
       transition: all 0.2s ease;
+      white-space: nowrap;
     }
     button.tool-btn:hover { background: rgba(255, 255, 255, 0.18); }
     button.tool-btn.active {
@@ -210,23 +214,20 @@
       cursor: pointer;
       accent-color: #238636;
     }
+    #imageInput { display: none; }
   </style>
 </head>
 <body>
 
-  <!-- شريط التحكم العلوي -->
   <div class="top-dock">
     <span>💡 وضع الشرح النشط</span>
     <button class="tool-btn" id="fullScreenBtn" style="padding: 3px 8px; font-size: 12px;">⛶ ملء الشاشة</button>
   </div>
 
-  <!-- مساحة تخطيط الأسطر والمربعات -->
   <canvas id="gridCanvas"></canvas>
-
-  <!-- مساحة الرسم الرئيسية -->
   <canvas id="paintCanvas"></canvas>
+  <canvas id="overlayCanvas"></canvas>
 
-  <!-- القائمة الجانبية (إعدادات وخلفيات السبورة) -->
   <div class="side-panel">
     <div class="panel-title">لون السبورة</div>
     <div class="theme-grid">
@@ -243,20 +244,34 @@
       <button class="btn-action" data-grid="graph">رسم بياني (مربعات)</button>
     </div>
 
+    <div class="panel-title">إدراج وسائط</div>
+    <button class="btn-action" id="uploadImageBtn">🖼️ إدراج صورة من الجهاز</button>
+    <input type="file" id="imageInput" accept="image/*">
+
     <div class="panel-title">تصدير الدرس</div>
     <button class="btn-action" id="downloadBtn" style="text-align: center; background: #238636; font-weight: bold;">
       💾 حفظ الشرح كصورة
     </button>
   </div>
 
-  <!-- شريط الأدوات العائم السفلي -->
   <div class="bottom-dock">
+    <!-- أدوات الكتابة والرسم -->
     <div class="tool-group">
-      <button class="tool-btn active" id="penBtn">✏️ قلم</button>
-      <button class="tool-btn" id="highlighterBtn">🖊️ تظليل</button>
-      <button class="tool-btn" id="eraserBtn">🧹 ممحاة</button>
+      <button class="tool-btn active" data-tool="pen">✏️ قلم</button>
+      <button class="tool-btn" data-tool="highlighter">🖊️ تظليل</button>
+      <button class="tool-btn" data-tool="laser">🔴 ليزر</button>
+      <button class="tool-btn" data-tool="eraser">🧹 ممحاة</button>
     </div>
 
+    <!-- الأشكال الهندسية -->
+    <div class="tool-group">
+      <button class="tool-btn" data-tool="line">📏 خط</button>
+      <button class="tool-btn" data-tool="arrow">➡️ سهم</button>
+      <button class="tool-btn" data-tool="rect">▭ مستطيل</button>
+      <button class="tool-btn" data-tool="circle">◯ دائرة</button>
+    </div>
+
+    <!-- الألوان والسُّمك -->
     <div class="tool-group color-picker">
       <div class="color-dot active" style="background: #ffffff;" data-color="#ffffff"></div>
       <div class="color-dot" style="background: #facc15;" data-color="#facc15"></div>
@@ -271,6 +286,7 @@
       <input type="range" id="brushSize" min="2" max="35" value="4">
     </div>
 
+    <!-- التحكم والإلغاء -->
     <div class="tool-group">
       <button class="tool-btn" id="undoBtn">↩️ تراجع</button>
       <button class="tool-btn" id="clearBtn">🗑️ مسح الكل</button>
@@ -284,8 +300,20 @@
     const gridCanvas = document.getElementById('gridCanvas');
     const gCtx = gridCanvas.getContext('2d');
 
+    const overlayCanvas = document.getElementById('overlayCanvas');
+    const oCtx = overlayCanvas.getContext('2d');
+
     let currentGrid = 'none';
     let currentThemeBg = '#121820';
+    let currentTool = 'pen';
+    let currentColor = '#ffffff';
+    let currentSize = 4;
+    let isDrawing = false;
+    let startX = 0, startY = 0;
+
+    let laserPoints = [];
+    let history = [];
+    const MAX_HISTORY = 15;
 
     function resizeCanvases() {
       const tempCanvas = document.createElement('canvas');
@@ -294,20 +322,20 @@
       const tCtx = tempCanvas.getContext('2d');
       tCtx.drawImage(paintCanvas, 0, 0);
 
-      paintCanvas.width = window.innerWidth;
-      paintCanvas.height = window.innerHeight;
-      gridCanvas.width = window.innerWidth;
-      gridCanvas.height = window.innerHeight;
+      [paintCanvas, gridCanvas, overlayCanvas].forEach(c => {
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
+      });
 
       pCtx.drawImage(tempCanvas, 0, 0);
       drawGrid();
     }
     window.addEventListener('resize', resizeCanvases);
 
-    paintCanvas.width = window.innerWidth;
-    paintCanvas.height = window.innerHeight;
-    gridCanvas.width = window.innerWidth;
-    gridCanvas.height = window.innerHeight;
+    [paintCanvas, gridCanvas, overlayCanvas].forEach(c => {
+      c.width = window.innerWidth;
+      c.height = window.innerHeight;
+    });
 
     function drawGrid() {
       gCtx.clearRect(0, 0, gridCanvas.width, gridCanvas.height);
@@ -342,14 +370,6 @@
       }
     }
 
-    let isDrawing = false;
-    let currentTool = 'pen';
-    let currentColor = '#ffffff';
-    let currentSize = 4;
-
-    let history = [];
-    const MAX_HISTORY = 15;
-
     function saveState() {
       if (history.length >= MAX_HISTORY) history.shift();
       history.push(pCtx.getImageData(0, 0, paintCanvas.width, paintCanvas.height));
@@ -363,43 +383,142 @@
       return { x: e.clientX, y: e.clientY };
     }
 
+    function drawArrow(ctx, fromX, fromY, toX, toY) {
+      const headLength = 16;
+      const angle = Math.atan2(toY - fromY, toX - fromX);
+      ctx.beginPath();
+      ctx.moveTo(fromX, fromY);
+      ctx.lineTo(toX, toY);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(toX, toY);
+      ctx.lineTo(toX - headLength * Math.cos(angle - Math.PI / 6), toY - headLength * Math.sin(angle - Math.PI / 6));
+      ctx.lineTo(toX - headLength * Math.cos(angle + Math.PI / 6), toY - headLength * Math.sin(angle + Math.PI / 6));
+      ctx.closePath();
+      ctx.fillStyle = ctx.strokeStyle;
+      ctx.fill();
+    }
+
     function startDraw(e) {
       isDrawing = true;
       const { x, y } = getCoords(e);
-      pCtx.beginPath();
-      pCtx.moveTo(x, y);
+      startX = x;
+      startY = y;
 
-      if (currentTool === 'eraser') {
-        pCtx.globalCompositeOperation = 'destination-out';
-        pCtx.lineWidth = currentSize * 4;
-      } else if (currentTool === 'highlighter') {
-        pCtx.globalCompositeOperation = 'source-over';
-        pCtx.strokeStyle = currentColor + '55';
-        pCtx.lineWidth = currentSize * 3;
-      } else {
-        pCtx.globalCompositeOperation = 'source-over';
-        pCtx.strokeStyle = currentColor;
-        pCtx.lineWidth = currentSize;
+      if (['pen', 'highlighter', 'eraser'].includes(currentTool)) {
+        pCtx.beginPath();
+        pCtx.moveTo(x, y);
+
+        if (currentTool === 'eraser') {
+          pCtx.globalCompositeOperation = 'destination-out';
+          pCtx.lineWidth = currentSize * 4;
+        } else if (currentTool === 'highlighter') {
+          pCtx.globalCompositeOperation = 'source-over';
+          pCtx.strokeStyle = currentColor + '55';
+          pCtx.lineWidth = currentSize * 3;
+        } else {
+          pCtx.globalCompositeOperation = 'source-over';
+          pCtx.strokeStyle = currentColor;
+          pCtx.lineWidth = currentSize;
+        }
+        pCtx.lineCap = 'round';
+        pCtx.lineJoin = 'round';
+      } else if (currentTool === 'laser') {
+        laserPoints.push({ x, y, time: Date.now() });
       }
-
-      pCtx.lineCap = 'round';
-      pCtx.lineJoin = 'round';
     }
 
     function draw(e) {
       if (!isDrawing) return;
       const { x, y } = getCoords(e);
-      pCtx.lineTo(x, y);
-      pCtx.stroke();
+
+      if (['pen', 'highlighter', 'eraser'].includes(currentTool)) {
+        pCtx.lineTo(x, y);
+        pCtx.stroke();
+      } else if (currentTool === 'laser') {
+        laserPoints.push({ x, y, time: Date.now() });
+      } else {
+        // معاينة الأشكال أثناء السحب على طبقة الـ Overlay
+        oCtx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+        oCtx.strokeStyle = currentColor;
+        oCtx.lineWidth = currentSize;
+        oCtx.lineCap = 'round';
+
+        if (currentTool === 'line') {
+          oCtx.beginPath();
+          oCtx.moveTo(startX, startY);
+          oCtx.lineTo(x, y);
+          oCtx.stroke();
+        } else if (currentTool === 'arrow') {
+          drawArrow(oCtx, startX, startY, x, y);
+        } else if (currentTool === 'rect') {
+          oCtx.strokeRect(startX, startY, x - startX, y - startY);
+        } else if (currentTool === 'circle') {
+          const radius = Math.hypot(x - startX, y - startY);
+          oCtx.beginPath();
+          oCtx.arc(startX, startY, radius, 0, Math.PI * 2);
+          oCtx.stroke();
+        }
+      }
     }
 
-    function stopDraw() {
-      if (isDrawing) {
+    function stopDraw(e) {
+      if (!isDrawing) return;
+      isDrawing = false;
+      const { x, y } = getCoords(e);
+
+      if (['pen', 'highlighter', 'eraser'].includes(currentTool)) {
         pCtx.closePath();
-        isDrawing = false;
+        saveState();
+      } else if (['line', 'arrow', 'rect', 'circle'].includes(currentTool)) {
+        oCtx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+        pCtx.globalCompositeOperation = 'source-over';
+        pCtx.strokeStyle = currentColor;
+        pCtx.lineWidth = currentSize;
+        pCtx.lineCap = 'round';
+
+        if (currentTool === 'line') {
+          pCtx.beginPath();
+          pCtx.moveTo(startX, startY);
+          pCtx.lineTo(x, y);
+          pCtx.stroke();
+        } else if (currentTool === 'arrow') {
+          drawArrow(pCtx, startX, startY, x, y);
+        } else if (currentTool === 'rect') {
+          pCtx.strokeRect(startX, startY, x - startX, y - startY);
+        } else if (currentTool === 'circle') {
+          const radius = Math.hypot(x - startX, y - startY);
+          pCtx.beginPath();
+          pCtx.arc(startX, startY, radius, 0, Math.PI * 2);
+          pCtx.stroke();
+        }
         saveState();
       }
     }
+
+    // دورة تحديث مسار الليزر المتلاشي
+    function renderLaser() {
+      if (laserPoints.length > 0) {
+        oCtx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+        const now = Date.now();
+        laserPoints = laserPoints.filter(p => now - p.time < 1200);
+
+        for (let i = 1; i < laserPoints.length; i++) {
+          const age = now - laserPoints[i].time;
+          const alpha = 1 - age / 1200;
+          oCtx.strokeStyle = `rgba(239, 68, 68, ${alpha})`;
+          oCtx.lineWidth = 6;
+          oCtx.lineCap = 'round';
+          oCtx.beginPath();
+          oCtx.moveTo(laserPoints[i - 1].x, laserPoints[i - 1].y);
+          oCtx.lineTo(laserPoints[i].x, laserPoints[i].y);
+          oCtx.stroke();
+        }
+      }
+      requestAnimationFrame(renderLaser);
+    }
+    renderLaser();
 
     paintCanvas.addEventListener('mousedown', startDraw);
     paintCanvas.addEventListener('mousemove', draw);
@@ -407,30 +526,28 @@
 
     paintCanvas.addEventListener('touchstart', (e) => { e.preventDefault(); startDraw(e); }, { passive: false });
     paintCanvas.addEventListener('touchmove', (e) => { e.preventDefault(); draw(e); }, { passive: false });
-    window.addEventListener('touchend', stopDraw);
+    window.addEventListener('touchend', (e) => { stopDraw(e); });
 
-    const penBtn = document.getElementById('penBtn');
-    const highlighterBtn = document.getElementById('highlighterBtn');
-    const eraserBtn = document.getElementById('eraserBtn');
-    const toolBtns = [penBtn, highlighterBtn, eraserBtn];
+    // تبديل الأدوات
+    const toolBtns = document.querySelectorAll('.tool-btn[data-tool]');
+    toolBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        toolBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentTool = btn.getAttribute('data-tool');
+      });
+    });
 
-    function setActiveTool(tool, activeBtn) {
-      currentTool = tool;
-      toolBtns.forEach(btn => btn.classList.remove('active'));
-      activeBtn.classList.add('active');
-    }
-
-    penBtn.onclick = () => setActiveTool('pen', penBtn);
-    highlighterBtn.onclick = () => setActiveTool('highlighter', highlighterBtn);
-    eraserBtn.onclick = () => setActiveTool('eraser', eraserBtn);
-
+    // تغيير الألوان
     const colorDots = document.querySelectorAll('.color-dot');
     colorDots.forEach(dot => {
       dot.addEventListener('click', () => {
         colorDots.forEach(d => d.classList.remove('active'));
         dot.classList.add('active');
         currentColor = dot.getAttribute('data-color');
-        if (currentTool === 'eraser') setActiveTool('pen', penBtn);
+        if (currentTool === 'eraser') {
+          document.querySelector('[data-tool="pen"]').click();
+        }
       });
     });
 
@@ -452,6 +569,52 @@
       }
     };
 
+    // إدراج الصور من الجهاز
+    const uploadBtn = document.getElementById('uploadImageBtn');
+    const imageInput = document.getElementById('imageInput');
+
+    uploadBtn.onclick = () => imageInput.click();
+
+    function placeImage(src) {
+      const img = new Image();
+      img.onload = () => {
+        const maxWidth = paintCanvas.width * 0.7;
+        const scale = Math.min(1, maxWidth / img.width);
+        const w = img.width * scale;
+        const h = img.height * scale;
+        const x = (paintCanvas.width - w) / 2;
+        const y = (paintCanvas.height - h) / 2;
+
+        pCtx.globalCompositeOperation = 'source-over';
+        pCtx.drawImage(img, x, y, w, h);
+        saveState();
+      };
+      img.src = src;
+    }
+
+    imageInput.onchange = (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (ev) => placeImage(ev.target.result);
+        reader.readAsDataURL(file);
+      }
+    };
+
+    // دعم اللصق المباشر (Ctrl + V)
+    window.addEventListener('paste', (e) => {
+      const items = (e.clipboardData || window.clipboardData).items;
+      for (const item of items) {
+        if (item.type.indexOf('image') !== -1) {
+          const blob = item.getAsFile();
+          const reader = new FileReader();
+          reader.onload = (ev) => placeImage(ev.target.result);
+          reader.readAsDataURL(blob);
+        }
+      }
+    });
+
+    // تبديل خلفيات السبورة والشبكات
     const themeBtns = document.querySelectorAll('.theme-btn');
     themeBtns.forEach(btn => {
       btn.addEventListener('click', () => {
