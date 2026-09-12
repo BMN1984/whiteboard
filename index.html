@@ -114,9 +114,8 @@
     <input type="file" id="imageInput" accept="image/*" style="display:none;">
   </div>
 
-  <!-- شريط الأدوات السفلي العريض (صفين متطابقين مع المنصة المرجعية) -->
+  <!-- شريط الأدوات السفلي العريض -->
   <div class="panel bottom-dock">
-    <!-- الصف الأول: الأقلام والأشكال والألوان الأساسية -->
     <div class="dock-row">
       <button class="dock-btn" id="redoBtn" title="إعادة">↪️</button>
       <button class="dock-btn" title="تحديد">🔲</button>
@@ -130,7 +129,6 @@
       <button class="dock-btn" data-tool="circle" title="دائرة">◯</button>
       <button class="dock-btn" data-tool="text" title="نص">A</button>
     </div>
-    <!-- الصف الثاني: أدوات القياس والمساعدة السريعة -->
     <div class="dock-row">
       <button class="dock-btn" id="prevPageBtn" title="الصفحة السابقة">◀</button>
       <button class="dock-btn" id="nextPageBtn" title="الصفحة التالية">▶</button>
@@ -140,6 +138,56 @@
       <button class="dock-btn btn-sq-color" style="background:#eab308;" data-color="#eab308"></button>
       <button class="dock-btn btn-sq-color" style="background:#ef4444;" data-color="#ef4444"></button>
       <button class="dock-btn" title="حفظ سريع" id="quickSaveBtn">💾</button>
+    </div>
+  </div>
+
+  <!-- نافذة استخراج آيات المصحف الشريف المنبثقة -->
+  <div class="modal-overlay" id="quranModal">
+    <div class="quran-modal">
+      <div class="modal-header">
+        <button class="modal-close" id="closeQuranModalBtn">✕</button>
+        <div class="modal-title">
+          <span>📖</span>
+          <span>استخراج آيات المصحف الشريف</span>
+        </div>
+      </div>
+
+      <div class="edition-box">
+        <div class="edition-label-row">
+          <span class="badge-orange">طبعات جديدة ✨</span>
+          <span>📖 اختر طراز ونوع المصحف الشريف:</span>
+        </div>
+        <select class="custom-select">
+          <option>🟢 مصحف المدينة المنورة (طبعة مجمع الملك فهد - 604 صفحة مصورة)</option>
+        </select>
+      </div>
+
+      <div class="tabs-row">
+        <button class="tab-btn active" id="tabByPage">الخيار الأول: برقم الصفحة</button>
+        <button class="tab-btn" id="tabBySurah">الخيار الثاني: بالسورة والآيات</button>
+      </div>
+
+      <div id="pageSection">
+        <div class="input-label">أدخل رقم الصفحة في المصحف (من 1 إلى 604):</div>
+        <input type="number" id="quranPageInput" class="quran-field" value="1" min="1" max="604">
+      </div>
+
+      <div id="surahSection" style="display: none; flex-direction: column; gap: 8px;">
+        <div class="input-label">اختر السورة:</div>
+        <select id="surahSelect" class="custom-select"></select>
+        <div style="display: flex; gap: 8px;">
+          <input type="number" id="verseFrom" class="quran-field" placeholder="من آية" min="1" value="1">
+          <input type="number" id="verseTo" class="quran-field" placeholder="إلى آية" min="1" value="5">
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" id="cancelQuranModalBtn">إلغاء</button>
+        <button class="btn-modal-submit" id="submitQuranBtn">
+          <span>📖</span>
+          <span>إدراج على السبورة</span>
+        </button>
+      </div>
     </div>
   </div>
 
