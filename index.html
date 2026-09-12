@@ -4,9 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>سبورة الفتح التفاعلية</title>
+  <!-- استدعاء خط المصحف العثماني المشكول Amiri Quran -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <style>
     * {
@@ -17,12 +18,52 @@
     }
     body {
       overflow: hidden;
-      background-color: #064e3b;
+      background-color: #064e3b; /* أخضر سبورة كلاسيكي */
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       color: #d1d5db;
     }
 
-    /* حاوية صفحة المصحف العثماني المصورة */
+    /* 1. حاوية الآيات بالخط العثماني المزخرف الملون والكبير */
+    #quranTextContainer {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      display: none;
+      width: 62vw;
+      max-width: 880px;
+      max-height: 86vh;
+      overflow-y: auto;
+      background: rgba(15, 23, 42, 0.94);
+      backdrop-filter: blur(14px);
+      border: 2px solid #d97706;
+      border-radius: 20px;
+      padding: 28px 34px;
+      box-shadow: 0 16px 45px rgba(0,0,0,0.75), 0 0 25px rgba(217, 119, 6, 0.25);
+      text-align: center;
+      direction: rtl;
+    }
+    .surah-header-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #d97706, #78350f);
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: bold;
+      padding: 6px 24px;
+      border-radius: 30px;
+      margin-bottom: 18px;
+      border: 1px solid #fef3c7;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+    #quranTextContent {
+      font-family: 'Amiri Quran', 'Amiri', serif;
+      line-height: 2.3;
+      letter-spacing: 0.6px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+
+    /* 2. حاوية صفحة المصحف المصورة */
     #mushafContainer {
       position: absolute;
       top: 50%;
@@ -42,46 +83,6 @@
       max-width: 52vw;
       object-fit: contain;
       pointer-events: none;
-    }
-
-    /* حاوية الآيات المزخرفة بالخط العريض */
-    #quranTextContainer {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 2;
-      display: none;
-      width: 60vw;
-      max-width: 850px;
-      max-height: 85vh;
-      overflow-y: auto;
-      background: rgba(15, 23, 42, 0.94);
-      backdrop-filter: blur(12px);
-      border: 2px solid #d97706;
-      border-radius: 20px;
-      padding: 30px;
-      box-shadow: 0 16px 40px rgba(0,0,0,0.7), 0 0 25px rgba(217, 119, 6, 0.25);
-      text-align: center;
-      direction: rtl;
-    }
-    .surah-header-badge {
-      display: inline-block;
-      background: linear-gradient(135deg, #d97706, #78350f);
-      color: #fff;
-      font-size: 16px;
-      font-weight: bold;
-      padding: 6px 20px;
-      border-radius: 30px;
-      margin-bottom: 18px;
-      border: 1px solid #fef3c7;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    }
-    #quranTextContent {
-      font-family: 'Amiri Quran', 'Amiri', serif;
-      line-height: 2.3;
-      letter-spacing: 0.5px;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
     }
 
     /* لوحات الكانفاس */
@@ -249,7 +250,7 @@
     }
     .dock-btn.btn-sq-color { border-radius: 8px; }
 
-    /* النافذة المنبثقة */
+    /* النافذة المنبثقة للقرآن الكريم */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -412,15 +413,15 @@
     <button class="side-btn" id="fullScreenBtn" style="padding:4px 8px;">⛶ ملء الشاشة</button>
   </div>
 
-  <!-- 1. عنصر عرض صفحة المصحف العثماني المصورة مع تخطي سياسة الحظر -->
-  <div id="mushafContainer">
-    <img id="mushafImg" src="" alt="صفحة المصحف الشريف" referrerpolicy="no-referrer">
-  </div>
-
-  <!-- 2. عنصر عرض الآيات بالخط العربي الكبير والمزخرف والملون -->
+  <!-- 1. عنصر عرض الآيات بالخط العربي الكبير والمزخرف والملون (الخيار الافتراضي النشط) -->
   <div id="quranTextContainer">
     <div class="surah-header-badge" id="surahBadgeTitle">سورة الفاتحة</div>
     <div id="quranTextContent"></div>
+  </div>
+
+  <!-- 2. عنصر عرض صفحة المصحف العثماني المصورة -->
+  <div id="mushafContainer">
+    <img id="mushafImg" src="" alt="صفحة المصحف الشريف" crossorigin="anonymous" referrerpolicy="no-referrer">
   </div>
 
   <canvas id="gridCanvas"></canvas>
@@ -538,7 +539,7 @@
     </div>
   </div>
 
-  <!-- النافذة المنبثقة: اختيار نمط المصحف الشريف -->
+  <!-- النافذة المنبثقة: تبدأ الآن تلقائياً بالخيار الثاني (الخط المزخرف الملون) -->
   <div class="modal-overlay" id="quranModal">
     <div class="quran-modal">
       <div class="modal-header">
@@ -550,22 +551,12 @@
       </div>
 
       <div class="tabs-row">
-        <button class="tab-btn active" id="tabMushafImage">📜 مصحف المدينة (طبعة مصورة بالزخارف)</button>
-        <button class="tab-btn" id="tabCustomText">✨ خط عريض ومزخرف وملون</button>
+        <button class="tab-btn active" id="tabCustomText">✨ خط عريض ومزخرف وملون</button>
+        <button class="tab-btn" id="tabMushafImage">📜 مصحف المدينة (طبعة مصورة)</button>
       </div>
 
-      <!-- القسم 1: المصحف العثماني المصور الكامل -->
-      <div id="mushafImageSection">
-        <div class="input-label" style="margin-bottom:6px; font-size:12px;">أدخل رقم صفحة المصحف (من 1 إلى 604) أو اختر السورة:</div>
-        <div style="display:flex; gap:8px; margin-bottom:10px;">
-          <input type="number" id="quranPageInput" class="quran-field" style="width:100px;" value="1" min="1" max="604" placeholder="رقم">
-          <select id="quickSurahSelect" class="custom-select" style="flex:1;"></select>
-        </div>
-        <div style="font-size:11px; color:#38bdf8;">* سيتم عرض الصفحة الأصلية الكاملة لطبعة مجمع الملك فهد بإطارها الذهبي وزخارفها.</div>
-      </div>
-
-      <!-- القسم 2: الخط العادي المزخرف والكبير الملون -->
-      <div id="customTextSection" style="display: none; flex-direction: column; gap: 10px;">
+      <!-- القسم 1 (النشط افتراضياً): الآيات بالخط العثماني المزخرف الملون -->
+      <div id="customTextSection" style="display: flex; flex-direction: column; gap: 10px;">
         <div class="input-label" style="font-size:12px;">اختر السورة والآيات:</div>
         <select id="textSurahSelect" class="custom-select"></select>
         <div style="display:flex; gap:8px;">
@@ -586,16 +577,26 @@
 
         <div style="display:flex; justify-content:space-between; font-size:11px; color:#9ca3af; margin-top:4px;">
           <span>حجم الخط المزخرف:</span>
-          <span id="fontSizeDisplay">32px</span>
+          <span id="fontSizeDisplay">34px</span>
         </div>
-        <input type="range" id="quranFontSizeSlider" min="22" max="50" value="32">
+        <input type="range" id="quranFontSizeSlider" min="22" max="52" value="34">
+      </div>
+
+      <!-- القسم 2: مصحف المدينة المصور الكامل -->
+      <div id="mushafImageSection" style="display: none;">
+        <div class="input-label" style="margin-bottom:6px; font-size:12px;">أدخل رقم صفحة المصحف (من 1 إلى 604) أو اختر السورة:</div>
+        <div style="display:flex; gap:8px; margin-bottom:10px;">
+          <input type="number" id="quranPageInput" class="quran-field" style="width:100px;" value="1" min="1" max="604" placeholder="رقم">
+          <select id="quickSurahSelect" class="custom-select" style="flex:1;"></select>
+        </div>
+        <div style="font-size:11px; color:#38bdf8;">* سيتم عرض الصفحة الأصلية الكاملة لطبعة مجمع الملك فهد بإطارها وزخارفها.</div>
       </div>
 
       <div class="modal-footer">
         <button class="btn-modal-cancel" id="cancelQuranModalBtn">إلغاء</button>
         <button class="btn-modal-submit" id="submitQuranBtn">
           <span>📖</span>
-          <span id="submitBtnText">إدراج على السبورة</span>
+          <span id="submitBtnText">إدراج الآيات المزخرفة الملونة</span>
         </button>
       </div>
     </div>
@@ -1039,6 +1040,7 @@
       }
     };
 
+    // قائمة السور الـ 114
     const surahData = [
       { name: "الفاتحة", page: 1 }, { name: "البقرة", page: 2 }, { name: "آل عمران", page: 50 },
       { name: "النساء", page: 77 }, { name: "المائدة", page: 106 }, { name: "الأنعام", page: 128 },
@@ -1099,6 +1101,7 @@
       document.getElementById('quranPageInput').value = quickSurahSelect.value;
     };
 
+    // التحكم في نافذة القرآن الكريم (الافتراضي هو الخيار الثاني: text)
     const quranModal = document.getElementById('quranModal');
     const openQuranBtn = document.getElementById('openQuranBtn');
     const closeQuranBtn = document.getElementById('closeQuranModalBtn');
@@ -1107,11 +1110,30 @@
     const tabCustomText = document.getElementById('tabCustomText');
     const mushafImageSection = document.getElementById('mushafImageSection');
     const customTextSection = document.getElementById('customTextSection');
-    let quranDisplayMode = 'image';
+    let quranDisplayMode = 'text'; // البدء بالخيار الثاني مباشرة
 
-    openQuranBtn.onclick = () => quranModal.classList.add('active');
+    openQuranBtn.onclick = () => {
+      // التأكد من ضبط الواجهة على الخيار الثاني عند كل فتح
+      quranDisplayMode = 'text';
+      tabCustomText.classList.add('active');
+      tabMushafImage.classList.remove('active');
+      customTextSection.style.display = 'flex';
+      mushafImageSection.style.display = 'none';
+      document.getElementById('submitBtnText').innerText = "إدراج الآيات المزخرفة الملونة";
+      quranModal.classList.add('active');
+    };
+
     closeQuranBtn.onclick = () => quranModal.classList.remove('active');
     cancelQuranBtn.onclick = () => quranModal.classList.remove('active');
+
+    tabCustomText.onclick = () => {
+      quranDisplayMode = 'text';
+      tabCustomText.classList.add('active');
+      tabMushafImage.classList.remove('active');
+      customTextSection.style.display = 'flex';
+      mushafImageSection.style.display = 'none';
+      document.getElementById('submitBtnText').innerText = "إدراج الآيات المزخرفة الملونة";
+    };
 
     tabMushafImage.onclick = () => {
       quranDisplayMode = 'image';
@@ -1120,15 +1142,6 @@
       mushafImageSection.style.display = 'block';
       customTextSection.style.display = 'none';
       document.getElementById('submitBtnText').innerText = "إدراج الصفحة المصورة";
-    };
-
-    tabCustomText.onclick = () => {
-      quranDisplayMode = 'text';
-      tabCustomText.classList.add('active');
-      tabMushafImage.classList.remove('active');
-      mushafImageSection.style.display = 'none';
-      customTextSection.style.display = 'flex';
-      document.getElementById('submitBtnText').innerText = "إدراج الآيات المزخرفة الملونة";
     };
 
     let selectedTextColor = '#fef08a';
@@ -1153,21 +1166,21 @@
       fontSizeDisplay.innerText = e.target.value + 'px';
     };
 
-    // الروابط المباشرة والمفتوحة 100% لصفحات مصحف مجمع الملك فهد
+    // تحميل صفحة المصحف المصورة (للخيار الأول عند الحاجة)
     function loadMushafPage(pageNum) {
       currentQuranPage = pageNum;
       const formatted3 = String(pageNum).padStart(3, '0');
       
       const urls = [
-        `https://android.quran.com/data/width_1024/page${formatted3}.png`,
-        `https://quran.ksu.edu.sa/ayat/safahat/${pageNum}.png`,
-        `https://images.quran.com/mushaf/page${pageNum}.png`
+        `https://images.quran.com/mushaf/page${pageNum}.png`,
+        `https://raw.githubusercontent.com/zonetecde/mushaf-layout/refs/heads/main/mushaf-images/page-${formatted3}.png`,
+        `https://quran.ksu.edu.sa/ayat/safahat/${pageNum}.png`
       ];
 
       let attempt = 0;
       function tryLoad() {
         if (attempt >= urls.length) {
-          alert('تعذر تحميل صفحة المصحف. يرجى التحقق من اتصال الإنترنت.');
+          alert('تعذر تحميل صورة الصفحة، يمكنك استخدام خيار "خط عريض ومزخرف وملون" لعرض الآيات فوراً.');
           return;
         }
         mushafImg.onerror = () => {
@@ -1187,15 +1200,10 @@
       tryLoad();
     }
 
+    // زر تأكيد الإدراج على السبورة
     document.getElementById('submitQuranBtn').onclick = () => {
-      if (quranDisplayMode === 'image') {
-        const pageNum = parseInt(document.getElementById('quranPageInput').value) || 1;
-        if (pageNum < 1 || pageNum > 604) {
-          alert('يرجى إدخال رقم صفحة صحيح من 1 إلى 604');
-          return;
-        }
-        loadMushafPage(pageNum);
-      } else {
+      if (quranDisplayMode === 'text') {
+        // تنفيذ الخيار الثاني المباشر
         const surahIdx = parseInt(textSurahSelect.value);
         const surahObj = surahData[surahIdx - 1];
         const fromV = parseInt(document.getElementById('verseFrom').value) || 1;
@@ -1204,7 +1212,8 @@
 
         document.getElementById('submitBtnText').innerText = "جاري جلب الآيات...";
 
-        fetch(`https://api.alquran.cloud/v1/surah/${surahIdx}`)
+        // جلب نص الآيات بالرسم العثماني المضبوط والمشكول كاملاً
+        fetch(`https://api.alquran.cloud/v1/surah/${surahIdx}/quran-uthmani`)
           .then(res => res.json())
           .then(data => {
             const verses = data.data.ayahs.filter(a => a.numberInSurah >= fromV && a.numberInSurah <= toV);
@@ -1214,7 +1223,7 @@
               return;
             }
 
-            const fullVersesHtml = verses.map(a => `${a.text} <span style="color:#d97706; font-size:0.85em;">﴿${a.numberInSurah}﴾</span>`).join(' ');
+            const fullVersesHtml = verses.map(a => `${a.text} <span style="color:#f59e0b; font-size:0.88em;">﴿${a.numberInSurah}﴾</span>`).join(' ');
 
             surahBadgeTitle.innerText = `سورة ${surahObj.name} (الآيات ${fromV} - ${toV})`;
             quranTextContent.innerHTML = fullVersesHtml;
@@ -1235,6 +1244,14 @@
             alert('تعذر جلب الآيات، يرجى التأكد من الاتصال بالإنترنت.');
             document.getElementById('submitBtnText').innerText = "إدراج الآيات المزخرفة الملونة";
           });
+      } else {
+        // الخيار الأول: صفحة المصحف المصورة
+        const pageNum = parseInt(document.getElementById('quranPageInput').value) || 1;
+        if (pageNum < 1 || pageNum > 604) {
+          alert('يرجى إدخال رقم صفحة صحيح من 1 إلى 604');
+          return;
+        }
+        loadMushafPage(pageNum);
       }
     };
 
