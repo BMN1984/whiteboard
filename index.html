@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>سبورة الفتح التفاعلية</title>
-  <!-- استدعاء خط المصحف العثماني المشكول Amiri Quran -->
+  <title>سبورة أكاديمية الفتح لعلوم القرآن حفظ وتجويد وتفسير</title>
+  <!-- مكتبات الخطوط والـ PDF والاحتفال التفاعلي -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
   <style>
     * {
       box-sizing: border-box;
@@ -18,12 +19,35 @@
     }
     body {
       overflow: hidden;
-      background-color: #064e3b; /* أخضر سبورة كلاسيكي */
+      background-color: #064e3b;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       color: #d1d5db;
     }
 
-    /* 1. حاوية الآيات بالخط العثماني المزخرف الملون والكبير */
+    /* طبقة الرسوم المتحركة للنجوم والقلوب */
+    #celebrationOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 1500;
+      overflow: hidden;
+    }
+    .floating-item {
+      position: absolute;
+      font-size: 32px;
+      animation: floatUp 2.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(100vh) scale(0.6) rotate(0deg); opacity: 0; }
+      20% { opacity: 1; }
+      80% { opacity: 0.9; }
+      100% { transform: translateY(-15vh) scale(1.4) rotate(360deg); opacity: 0; }
+    }
+
+    /* حاوية الآيات بالخط العثماني المزخرف الملون */
     #quranTextContainer {
       position: absolute;
       top: 50%;
@@ -63,7 +87,7 @@
       text-shadow: 0 2px 4px rgba(0,0,0,0.5);
     }
 
-    /* 2. حاوية صفحة المصحف المصورة */
+    /* حاوية صفحة المصحف المصورة */
     #mushafContainer {
       position: absolute;
       top: 50%;
@@ -106,26 +130,57 @@
       top: 14px;
       left: 50%;
       transform: translateX(-50%);
-      padding: 6px 14px;
+      padding: 6px 16px;
       display: flex;
       align-items: center;
       gap: 12px;
       font-size: 13px;
     }
-    .btn-gold {
-      background: linear-gradient(135deg, #d97706, #b45309);
-      color: #fff;
+
+    /* شريط أدوات التحفيز والتصفيق التفاعلي في الشريط العلوي */
+    .praise-dock {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 3px 8px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    .praise-btn {
+      background: transparent;
       border: none;
+      font-size: 18px;
+      cursor: pointer;
+      padding: 3px 6px;
+      border-radius: 6px;
+      transition: transform 0.15s, background 0.15s;
+    }
+    .praise-btn:hover {
+      transform: scale(1.25);
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .btn-meet {
+      background: #1a73e8;
+      color: #fff;
+      border: 1px solid #4285f4;
       border-radius: 8px;
       padding: 5px 12px;
       font-size: 12px;
       font-weight: bold;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
     }
+    .btn-meet:hover { background: #1557b0; }
+
     .side-left {
       top: 14px;
       left: 14px;
-      width: 220px;
+      width: 240px;
       max-height: 94vh;
       overflow-y: auto;
       padding: 14px;
@@ -144,8 +199,20 @@
       flex-direction: column;
       gap: 12px;
     }
-    .panel.closed-left { transform: translateX(-260px); opacity: 0; pointer-events: none; }
+    .panel.closed-left { transform: translateX(-280px); opacity: 0; pointer-events: none; }
     .panel.closed-right { transform: translateX(260px); opacity: 0; pointer-events: none; }
+
+    .academy-badge-sub {
+      font-size: 11px;
+      color: #facc15;
+      font-weight: bold;
+      text-align: center;
+      background: rgba(217, 119, 6, 0.2);
+      border: 1px solid rgba(217, 119, 6, 0.4);
+      padding: 5px 8px;
+      border-radius: 8px;
+      line-height: 1.4;
+    }
 
     .panel-header {
       display: flex;
@@ -153,9 +220,10 @@
       justify-content: space-between;
       border-bottom: 1px solid rgba(255, 255, 255, 0.07);
       padding-bottom: 8px;
-      font-size: 13px;
-      font-weight: 600;
+      font-size: 12px;
+      font-weight: 700;
       color: #93c5fd;
+      line-height: 1.4;
     }
     .close-btn {
       background: transparent;
@@ -400,20 +468,32 @@
 </head>
 <body>
 
-  <button class="toggle-panel-btn" id="toggleLeftBtn">☰ سبورة الصباح</button>
+  <!-- طبقة الرسوم المتحركة للنجوم والقلوب المحفزة -->
+  <div id="celebrationOverlay"></div>
+
+  <button class="toggle-panel-btn" id="toggleLeftBtn">☰ سبورة الأكاديمية</button>
   <button class="toggle-panel-btn" id="toggleRightBtn">☰ أدوات الرسم</button>
 
+  <!-- شريط التحكم العلوي -->
   <div class="panel top-bar">
-    <div style="display:flex; gap:8px; align-items:center;">
-      <span>🌙</span>
-      <span style="color:#ef4444;">❤️</span>
-      <span>👁️</span>
+    <!-- أزرار التحفيز التفاعلي للمعلمة عند تسميع الطالب الممتاز -->
+    <div class="praise-dock">
+      <button class="praise-btn" id="btnClap" title="تصفيق حار مبهج">👏</button>
+      <button class="praise-btn" id="btnStars" title="مطر النجوم المتلألئة">⭐</button>
+      <button class="praise-btn" id="btnHearts" title="قلوب طائرة">💖</button>
+      <button class="praise-btn" id="btnParty" title="احتفال كلي ومفرقعات">🎊</button>
     </div>
-    <button class="btn-gold">👑 ترقية للنسخة الاحترافية</button>
+
+    <!-- زر Google Meet لمشاركة الشاشة -->
+    <button class="btn-meet" id="btnGoogleMeet" title="مشاركة الشاشة الحالية أو الانتقال لـ Google Meet">
+      <span>📹</span>
+      <span>مشاركة عبر Google Meet</span>
+    </button>
+
     <button class="side-btn" id="fullScreenBtn" style="padding:4px 8px;">⛶ ملء الشاشة</button>
   </div>
 
-  <!-- 1. عنصر عرض الآيات بالخط العربي الكبير والمزخرف والملون (الخيار الافتراضي النشط) -->
+  <!-- 1. عنصر عرض الآيات بالخط العربي الكبير والمزخرف والملون -->
   <div id="quranTextContainer">
     <div class="surah-header-badge" id="surahBadgeTitle">سورة الفاتحة</div>
     <div id="quranTextContent"></div>
@@ -429,16 +509,16 @@
   <canvas id="paintCanvas"></canvas>
   <canvas id="overlayCanvas"></canvas>
 
-  <!-- اللوحة الجانبية اليسرى -->
+  <!-- اللوحة الجانبية اليسرى: اسم الأكاديمية ونخبة المعلمات -->
   <div class="panel side-left" id="leftPanel">
     <div class="panel-header">
-      <span>سبورة الصباح</span>
+      <span>سبورة أكاديمية الفتح لعلوم القرآن</span>
       <button class="close-btn" id="closeLeftBtn">✕</button>
     </div>
 
-    <div style="display:flex; justify-content:space-between; font-size:11px; color:#9ca3af;">
-      <span>🌐 English (EN)</span>
-      <span>☀️ الوضع المضيء</span>
+    <div class="academy-badge-sub">
+      ✨ حفظ وتجويد وتفسير ✨<br>
+      🌸 نخبة من أكفأ المعلمات 🌸
     </div>
 
     <div class="section-label">لون السبورة</div>
@@ -539,7 +619,7 @@
     </div>
   </div>
 
-  <!-- النافذة المنبثقة: تبدأ الآن تلقائياً بالخيار الثاني (الخط المزخرف الملون) -->
+  <!-- النافذة المنبثقة: اختيار نمط المصحف الشريف -->
   <div class="modal-overlay" id="quranModal">
     <div class="quran-modal">
       <div class="modal-header">
@@ -639,6 +719,112 @@
     let currentPdfPage = 1;
     let totalPdfPages = 0;
     const pageIndicator = document.getElementById('pageIndicator');
+
+    // محرك الصوتيات التفاعلية الداخلي (Web Audio API)
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null;
+
+    function getAudioContext() {
+      if (!audioCtx) audioCtx = new AudioContext();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    }
+
+    // 1. صوت التصفيق الحار المبهج
+    function playClapSound() {
+      const ctx = getAudioContext();
+      for (let i = 0; i < 18; i++) {
+        setTimeout(() => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(140 + Math.random() * 260, ctx.currentTime);
+          gain.gain.setValueAtTime(0.3, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.08);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.09);
+        }, i * 45 + Math.random() * 20);
+      }
+    }
+
+    // 2. صوت الرنين الذهبي التكريمي
+    function playChimeSound() {
+      const ctx = getAudioContext();
+      const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+      notes.forEach((freq, idx) => {
+        setTimeout(() => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, ctx.currentTime);
+          gain.gain.setValueAtTime(0.35, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.65);
+        }, idx * 110);
+      });
+    }
+
+    // تأثيرات التحفيز البصرية (النجوم والقلوب العائمة)
+    const celebrationOverlay = document.getElementById('celebrationOverlay');
+    function triggerFloatingEffect(symbol, count = 25) {
+      for (let i = 0; i < count; i++) {
+        const el = document.createElement('div');
+        el.className = 'floating-item';
+        el.innerText = symbol;
+        el.style.left = Math.random() * 95 + 'vw';
+        el.style.animationDelay = (Math.random() * 0.8) + 's';
+        el.style.fontSize = (26 + Math.random() * 24) + 'px';
+        celebrationOverlay.appendChild(el);
+        setTimeout(() => el.remove(), 3600);
+      }
+    }
+
+    // أزرار التشجيع والترحيب
+    document.getElementById('btnClap').onclick = () => {
+      playClapSound();
+      confetti({ particleCount: 60, spread: 70, origin: { y: 0.7 } });
+    };
+
+    document.getElementById('btnStars').onclick = () => {
+      playChimeSound();
+      triggerFloatingEffect('⭐', 30);
+    };
+
+    document.getElementById('btnHearts').onclick = () => {
+      playChimeSound();
+      triggerFloatingEffect('💖', 30);
+    };
+
+    document.getElementById('btnParty').onclick = () => {
+      playClapSound();
+      playChimeSound();
+      triggerFloatingEffect('🌟', 20);
+      confetti({ particleCount: 120, spread: 100, origin: { y: 0.6 } });
+      setTimeout(() => {
+        confetti({ particleCount: 80, angle: 60, spread: 55, origin: { x: 0 } });
+        confetti({ particleCount: 80, angle: 120, spread: 55, origin: { x: 1 } });
+      }, 300);
+    };
+
+    // ميزة مشاركة الشاشة عبر Google Meet
+    document.getElementById('btnGoogleMeet').onclick = async () => {
+      if (confirm("هل ترغب في بدء مشاركة الشاشة الحالية للمتصفح عبر Google Meet؟")) {
+        try {
+          if (navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia) {
+            await navigator.mediaDevices.getDisplayMedia({ video: true });
+          } else {
+            window.open("https://meet.google.com/new", "_blank");
+          }
+        } catch (err) {
+          window.open("https://meet.google.com/new", "_blank");
+        }
+      }
+    };
 
     function resizeCanvases() {
       const tempCanvas = document.createElement('canvas');
@@ -1040,7 +1226,6 @@
       }
     };
 
-    // قائمة السور الـ 114
     const surahData = [
       { name: "الفاتحة", page: 1 }, { name: "البقرة", page: 2 }, { name: "آل عمران", page: 50 },
       { name: "النساء", page: 77 }, { name: "المائدة", page: 106 }, { name: "الأنعام", page: 128 },
@@ -1101,7 +1286,6 @@
       document.getElementById('quranPageInput').value = quickSurahSelect.value;
     };
 
-    // التحكم في نافذة القرآن الكريم (الافتراضي هو الخيار الثاني: text)
     const quranModal = document.getElementById('quranModal');
     const openQuranBtn = document.getElementById('openQuranBtn');
     const closeQuranBtn = document.getElementById('closeQuranModalBtn');
@@ -1110,10 +1294,9 @@
     const tabCustomText = document.getElementById('tabCustomText');
     const mushafImageSection = document.getElementById('mushafImageSection');
     const customTextSection = document.getElementById('customTextSection');
-    let quranDisplayMode = 'text'; // البدء بالخيار الثاني مباشرة
+    let quranDisplayMode = 'text';
 
     openQuranBtn.onclick = () => {
-      // التأكد من ضبط الواجهة على الخيار الثاني عند كل فتح
       quranDisplayMode = 'text';
       tabCustomText.classList.add('active');
       tabMushafImage.classList.remove('active');
@@ -1166,7 +1349,6 @@
       fontSizeDisplay.innerText = e.target.value + 'px';
     };
 
-    // تحميل صفحة المصحف المصورة (للخيار الأول عند الحاجة)
     function loadMushafPage(pageNum) {
       currentQuranPage = pageNum;
       const formatted3 = String(pageNum).padStart(3, '0');
@@ -1180,7 +1362,7 @@
       let attempt = 0;
       function tryLoad() {
         if (attempt >= urls.length) {
-          alert('تعذر تحميل صورة الصفحة، يمكنك استخدام خيار "خط عريض ومزخرف وملون" لعرض الآيات فوراً.');
+          alert('تعذر تحميل صورة الصفحة، يرجى استخدام خيار "خط عريض ومزخرف وملون" لعرض الآيات.');
           return;
         }
         mushafImg.onerror = () => {
@@ -1200,10 +1382,8 @@
       tryLoad();
     }
 
-    // زر تأكيد الإدراج على السبورة
     document.getElementById('submitQuranBtn').onclick = () => {
       if (quranDisplayMode === 'text') {
-        // تنفيذ الخيار الثاني المباشر
         const surahIdx = parseInt(textSurahSelect.value);
         const surahObj = surahData[surahIdx - 1];
         const fromV = parseInt(document.getElementById('verseFrom').value) || 1;
@@ -1212,7 +1392,6 @@
 
         document.getElementById('submitBtnText').innerText = "جاري جلب الآيات...";
 
-        // جلب نص الآيات بالرسم العثماني المضبوط والمشكول كاملاً
         fetch(`https://api.alquran.cloud/v1/surah/${surahIdx}/quran-uthmani`)
           .then(res => res.json())
           .then(data => {
@@ -1245,7 +1424,6 @@
             document.getElementById('submitBtnText').innerText = "إدراج الآيات المزخرفة الملونة";
           });
       } else {
-        // الخيار الأول: صفحة المصحف المصورة
         const pageNum = parseInt(document.getElementById('quranPageInput').value) || 1;
         if (pageNum < 1 || pageNum > 604) {
           alert('يرجى إدخال رقم صفحة صحيح من 1 إلى 604');
@@ -1299,7 +1477,7 @@
       eCtx.drawImage(paintCanvas, 0, 0);
 
       const link = document.createElement('a');
-      link.download = `سبورة-شرح-${Date.now()}.${format}`;
+      link.download = `سبورة-أكاديمية-الفتح-${Date.now()}.${format}`;
       link.href = exportCanvas.toDataURL(`image/${format === 'png' ? 'png' : 'jpeg'}`);
       link.click();
     }
