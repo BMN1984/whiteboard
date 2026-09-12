@@ -2,27 +2,26 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs
 
 const paintCanvas = document.getElementById('paintCanvas');
 const pCtx = paintCanvas.getContext('2d');
-
 const gridCanvas = document.getElementById('gridCanvas');
 const gCtx = gridCanvas.getContext('2d');
-
 const pdfCanvas = document.getElementById('pdfCanvas');
 const pdfCtx = pdfCanvas.getContext('2d');
-
 const overlayCanvas = document.getElementById('overlayCanvas');
 const oCtx = overlayCanvas.getContext('2d');
 
 let currentGrid = 'none';
-let currentThemeBg = '#121820';
+let currentThemeBg = '#12161f';
 let currentTool = 'pen';
 let currentColor = '#ffffff';
 let currentSize = 4;
+let currentOpacity = 1.0;
 let isDrawing = false;
 let startX = 0, startY = 0;
 
 let laserPoints = [];
 let history = [];
-const MAX_HISTORY = 15;
+let redoList = [];
+const MAX_HISTORY = 20;
 
 let currentPdf = null;
 let currentPdfPage = 1;
@@ -56,20 +55,29 @@ function drawGrid() {
   gCtx.clearRect(0, 0, gridCanvas.width, gridCanvas.height);
   if (currentGrid === 'none') return;
 
-  const isLightBg = currentThemeBg === '#f8fafc';
-  gCtx.strokeStyle = isLightBg ? 'rgba(0, 0, 0, 0.08)' : 'rgba(255, 255, 255, 0.08)';
+  const isLight = currentThemeBg === '#ffffff';
+  gCtx.strokeStyle = isLight ? 'rgba(0, 0, 0, 0.08)' : 'rgba(255, 255, 255, 0.08)';
   gCtx.lineWidth = 1;
 
-  if (currentGrid === 'ruled') {
-    const lineSpacing = 44;
-    for (let y = lineSpacing; y < gridCanvas.height; y += lineSpacing) {
+  if (currentGrid === 'ruled' || currentGrid === 'wide-ruled') {
+    const space = currentGrid === 'wide-ruled' ? 56 : 42;
+    for (let y = space; y < gridCanvas.height; y += space) {
       gCtx.beginPath();
       gCtx.moveTo(0, y);
       gCtx.lineTo(gridCanvas.width, y);
       gCtx.stroke();
     }
+  } else if (currentGrid === 'two-lines') {
+    for (let y = 50; y < gridCanvas.height; y += 70) {
+      gCtx.beginPath();
+      gCtx.moveTo(0, y);
+      gCtx.lineTo(gridCanvas.width, y);
+      gCtx.moveTo(0, y + 24);
+      gCtx.lineTo(gridCanvas.width, y + 24);
+      gCtx.stroke();
+    }
   } else if (currentGrid === 'graph') {
-    const step = 40;
+    const step = 38;
     for (let x = 0; x < gridCanvas.width; x += step) {
       gCtx.beginPath();
       gCtx.moveTo(x, 0);
@@ -88,6 +96,7 @@ function drawGrid() {
 function saveState() {
   if (history.length >= MAX_HISTORY) history.shift();
   history.push(pCtx.getImageData(0, 0, paintCanvas.width, paintCanvas.height));
+  redoList = [];
 }
 saveState();
 
@@ -112,18 +121,9 @@ function drawArrow(targetCtx, fromX, fromY, toX, toY, color, size) {
 
   targetCtx.beginPath();
   targetCtx.moveTo(toX, toY);
-  targetCtx.lineTo(
-    toX - headLength * Math.cos(angle - Math.PI / 6),
-    toY - headLength * Math.sin(angle - Math.PI / 6)
-  );
-  targetCtx.lineTo(
-    toX - (headLength * 0.7) * Math.cos(angle),
-    toY - (headLength * 0.7) * Math.sin(angle)
-  );
-  targetCtx.lineTo(
-    toX - headLength * Math.cos(angle + Math.PI / 6),
-    toY - headLength * Math.sin(angle + Math.PI / 6)
-  );
+  targetCtx.lineTo(toX - headLength * Math.cos(angle - Math.PI / 6), toY - headLength * Math.sin(angle - Math.PI / 6));
+  targetCtx.lineTo(toX - (headLength * 0.7) * Math.cos(angle), toY - (headLength * 0.7) * Math.sin(angle));
+  targetCtx.lineTo(toX - headLength * Math.cos(angle + Math.PI / 6), toY - headLength * Math.sin(angle + Math.PI / 6));
   targetCtx.closePath();
   targetCtx.fillStyle = color;
   targetCtx.fill();
@@ -142,14 +142,11 @@ function startDraw(e) {
     if (currentTool === 'eraser') {
       pCtx.globalCompositeOperation = 'destination-out';
       pCtx.lineWidth = currentSize * 4;
-    } else if (currentTool === 'highlighter') {
-      pCtx.globalCompositeOperation = 'source-over';
-      pCtx.strokeStyle = currentColor + '55';
-      pCtx.lineWidth = currentSize * 3;
     } else {
       pCtx.globalCompositeOperation = 'source-over';
-      pCtx.strokeStyle = currentColor;
-      pCtx.lineWidth = currentSize;
+      pCtx.strokeStyle = currentTool === 'highlighter' ? currentColor + '55' : currentColor;
+      pCtx.globalAlpha = currentTool === 'highlighter' ? 0.4 : currentOpacity;
+      pCtx.lineWidth = currentTool === 'highlighter' ? currentSize * 3 : currentSize;
     }
     pCtx.lineCap = 'round';
     pCtx.lineJoin = 'round';
@@ -169,14 +166,12 @@ function draw(e) {
     laserPoints.push({ x, y, time: Date.now() });
   } else {
     oCtx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
-
     if (currentTool === 'arrow') {
       drawArrow(oCtx, startX, startY, x, y, currentColor, currentSize);
     } else {
       oCtx.strokeStyle = currentColor;
       oCtx.lineWidth = currentSize;
       oCtx.lineCap = 'round';
-
       if (currentTool === 'line') {
         oCtx.beginPath();
         oCtx.moveTo(startX, startY);
@@ -185,9 +180,8 @@ function draw(e) {
       } else if (currentTool === 'rect') {
         oCtx.strokeRect(startX, startY, x - startX, y - startY);
       } else if (currentTool === 'circle') {
-        const radius = Math.hypot(x - startX, y - startY);
         oCtx.beginPath();
-        oCtx.arc(startX, startY, radius, 0, Math.PI * 2);
+        oCtx.arc(startX, startY, Math.hypot(x - startX, y - startY), 0, Math.PI * 2);
         oCtx.stroke();
       }
     }
@@ -201,18 +195,18 @@ function stopDraw(e) {
 
   if (['pen', 'highlighter', 'eraser'].includes(currentTool)) {
     pCtx.closePath();
+    pCtx.globalAlpha = 1.0;
     saveState();
   } else if (['line', 'arrow', 'rect', 'circle'].includes(currentTool)) {
     oCtx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
     pCtx.globalCompositeOperation = 'source-over';
-
+    pCtx.globalAlpha = currentOpacity;
     if (currentTool === 'arrow') {
       drawArrow(pCtx, startX, startY, x, y, currentColor, currentSize);
     } else {
       pCtx.strokeStyle = currentColor;
       pCtx.lineWidth = currentSize;
       pCtx.lineCap = 'round';
-
       if (currentTool === 'line') {
         pCtx.beginPath();
         pCtx.moveTo(startX, startY);
@@ -221,12 +215,12 @@ function stopDraw(e) {
       } else if (currentTool === 'rect') {
         pCtx.strokeRect(startX, startY, x - startX, y - startY);
       } else if (currentTool === 'circle') {
-        const radius = Math.hypot(x - startX, y - startY);
         pCtx.beginPath();
-        pCtx.arc(startX, startY, radius, 0, Math.PI * 2);
+        pCtx.arc(startX, startY, Math.hypot(x - startX, y - startY), 0, Math.PI * 2);
         pCtx.stroke();
       }
     }
+    pCtx.globalAlpha = 1.0;
     saveState();
   }
 }
@@ -238,8 +232,7 @@ function renderLaser() {
     laserPoints = laserPoints.filter(p => now - p.time < 1200);
 
     for (let i = 1; i < laserPoints.length; i++) {
-      const age = now - laserPoints[i].time;
-      const alpha = 1 - age / 1200;
+      const alpha = 1 - (now - laserPoints[i].time) / 1200;
       oCtx.strokeStyle = `rgba(239, 68, 68, ${alpha})`;
       oCtx.lineWidth = 6;
       oCtx.lineCap = 'round';
@@ -261,19 +254,19 @@ paintCanvas.addEventListener('touchstart', (e) => { e.preventDefault(); startDra
 paintCanvas.addEventListener('touchmove', (e) => { e.preventDefault(); draw(e); }, { passive: false });
 window.addEventListener('touchend', (e) => { stopDraw(e); });
 
-const toolBtns = document.querySelectorAll('.tool-btn[data-tool]');
-toolBtns.forEach(btn => {
+// أزرار الأدوات
+document.querySelectorAll('[data-tool]').forEach(btn => {
   btn.addEventListener('click', () => {
-    toolBtns.forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('[data-tool]').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     currentTool = btn.getAttribute('data-tool');
   });
 });
 
-const colorDots = document.querySelectorAll('.color-dot');
-colorDots.forEach(dot => {
+// أزرار الألوان
+document.querySelectorAll('[data-color]').forEach(dot => {
   dot.addEventListener('click', () => {
-    colorDots.forEach(d => d.classList.remove('active'));
+    document.querySelectorAll('[data-color]').forEach(d => d.classList.remove('active'));
     dot.classList.add('active');
     currentColor = dot.getAttribute('data-color');
     if (currentTool === 'eraser') {
@@ -282,24 +275,69 @@ colorDots.forEach(dot => {
   });
 });
 
+// تغيير لون خلفية السبورة
+document.querySelectorAll('[data-bg]').forEach(dot => {
+  dot.addEventListener('click', () => {
+    document.querySelectorAll('[data-bg]').forEach(d => d.classList.remove('active'));
+    dot.classList.add('active');
+    currentThemeBg = dot.getAttribute('data-bg');
+    document.body.style.backgroundColor = currentThemeBg;
+    drawGrid();
+  });
+});
+
+// التحكم في نوع التسطير
+document.querySelectorAll('[data-grid]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-grid]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentGrid = btn.getAttribute('data-grid');
+    drawGrid();
+  });
+});
+
+// منزلقات السُمك والشفافية
 document.getElementById('brushSize').oninput = (e) => {
   currentSize = parseInt(e.target.value);
+  document.getElementById('sizeVal').innerText = currentSize + 'px';
+};
+document.getElementById('brushOpacity').oninput = (e) => {
+  currentOpacity = parseInt(e.target.value) / 100;
+  document.getElementById('opacityVal').innerText = e.target.value + '%';
 };
 
+// التراجع والإعادة
 document.getElementById('undoBtn').onclick = () => {
   if (history.length > 1) {
-    history.pop();
+    redoList.push(history.pop());
     pCtx.putImageData(history[history.length - 1], 0, 0);
   }
 };
+document.getElementById('redoBtn').onclick = () => {
+  if (redoList.length > 0) {
+    const nextState = redoList.pop();
+    history.push(nextState);
+    pCtx.putImageData(nextState, 0, 0);
+  }
+};
 
-document.getElementById('clearBtn').onclick = () => {
-  if (confirm('هل تريد مسح كل ما كتبته على الصفحة الحالية؟')) {
+document.getElementById('clearBoardBtn').onclick = () => {
+  if (confirm('مسح كامل محتوى السبورة؟')) {
     pCtx.clearRect(0, 0, paintCanvas.width, paintCanvas.height);
     saveState();
   }
 };
 
+// ملء الشاشة
+document.getElementById('fullScreenBtn').onclick = () => {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen();
+  } else {
+    document.exitFullscreen();
+  }
+};
+
+// رفع وعرض الـ PDF
 const pdfInput = document.getElementById('pdfInput');
 document.getElementById('uploadPdfBtn').onclick = () => pdfInput.click();
 
@@ -328,45 +366,38 @@ function renderPdfPage(pageNumber) {
     const scaledViewport = page.getViewport({ scale: scale });
 
     pdfCtx.clearRect(0, 0, pdfCanvas.width, pdfCanvas.height);
-
     const x = (pdfCanvas.width - scaledViewport.width) / 2;
     const y = (pdfCanvas.height - scaledViewport.height) / 2;
 
-    const renderContext = {
+    page.render({
       canvasContext: pdfCtx,
       viewport: scaledViewport,
       transform: [1, 0, 0, 1, x, y]
-    };
-
-    page.render(renderContext);
+    });
     pageIndicator.innerText = `صفحة PDF: ${pageNumber} / ${totalPdfPages}`;
   });
 }
 
-document.getElementById('prevPdfPage').onclick = () => {
+document.getElementById('prevPageBtn').onclick = () => {
   if (currentPdf && currentPdfPage > 1) {
     currentPdfPage--;
-    pCtx.clearRect(0, 0, paintCanvas.width, paintCanvas.height);
-    saveState();
     renderPdfPage(currentPdfPage);
   }
 };
-
-document.getElementById('nextPdfPage').onclick = () => {
+document.getElementById('nextPageBtn').onclick = () => {
   if (currentPdf && currentPdfPage < totalPdfPages) {
     currentPdfPage++;
-    pCtx.clearRect(0, 0, paintCanvas.width, paintCanvas.height);
-    saveState();
     renderPdfPage(currentPdfPage);
   }
 };
 
-document.getElementById('loadQuranBtn').onclick = () => {
-  const pageVal = parseInt(document.getElementById('quranPageNum').value);
-  if (pageVal >= 1 && pageVal <= 604) {
-    const formatted = String(pageVal).padStart(3, '0');
+// استدعاء صفحات القرآن الكريم
+document.getElementById('loadQuranModalBtn').onclick = () => {
+  const pageVal = prompt('أدخل رقم صفحة المصحف الشريف (1 إلى 604):', '1');
+  const num = parseInt(pageVal);
+  if (num >= 1 && num <= 604) {
+    const formatted = String(num).padStart(3, '0');
     const quranUrl = `https://raw.githubusercontent.com/Quran-Mobile/Quran-Images/master/pages_1024/page_${formatted}.png`;
-    
     const img = new Image();
     img.crossOrigin = 'anonymous';
     img.onload = () => {
@@ -374,22 +405,16 @@ document.getElementById('loadQuranBtn').onclick = () => {
       const scale = Math.min((pdfCanvas.width * 0.7) / img.width, (pdfCanvas.height * 0.95) / img.height);
       const w = img.width * scale;
       const h = img.height * scale;
-      const x = (pdfCanvas.width - w) / 2;
-      const y = (pdfCanvas.height - h) / 2;
-
-      pdfCtx.drawImage(img, x, y, w, h);
-      pageIndicator.innerText = `مصحف: صفحة ${pageVal}`;
+      pdfCtx.drawImage(img, (pdfCanvas.width - w) / 2, (pdfCanvas.height - h) / 2, w, h);
+      pageIndicator.innerText = `مصحف: صفحة ${num}`;
     };
     img.src = quranUrl;
-  } else {
-    alert('يرجى إدخال رقم صفحة صحيح بين 1 و 604');
   }
 };
 
-const uploadBtn = document.getElementById('uploadImageBtn');
+// إدراج الصور
 const imageInput = document.getElementById('imageInput');
-
-uploadBtn.onclick = () => imageInput.click();
+document.getElementById('uploadImgBtn').onclick = () => imageInput.click();
 
 function placeImage(src) {
   const img = new Image();
@@ -398,11 +423,7 @@ function placeImage(src) {
     const scale = Math.min(1, maxWidth / img.width);
     const w = img.width * scale;
     const h = img.height * scale;
-    const x = (paintCanvas.width - w) / 2;
-    const y = (paintCanvas.height - h) / 2;
-
-    pCtx.globalCompositeOperation = 'source-over';
-    pCtx.drawImage(img, x, y, w, h);
+    pCtx.drawImage(img, (paintCanvas.width - w) / 2, (paintCanvas.height - h) / 2, w, h);
     saveState();
   };
   img.src = src;
@@ -417,58 +438,8 @@ imageInput.onchange = (e) => {
   }
 };
 
-window.addEventListener('paste', (e) => {
-  const items = (e.clipboardData || window.clipboardData).items;
-  for (const item of items) {
-    if (item.type.indexOf('image') !== -1) {
-      const blob = item.getAsFile();
-      const reader = new FileReader();
-      reader.onload = (ev) => placeImage(ev.target.result);
-      reader.readAsDataURL(blob);
-    }
-  }
-});
-
-const themeBtns = document.querySelectorAll('.theme-btn');
-themeBtns.forEach(btn => {
-  btn.addEventListener('click', () => {
-    themeBtns.forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    currentThemeBg = btn.getAttribute('data-bg');
-    document.body.style.backgroundColor = currentThemeBg;
-
-    if (currentThemeBg === '#f8fafc' && currentColor === '#ffffff') {
-      currentColor = '#111111';
-      colorDots[0].style.background = '#111111';
-      colorDots[0].setAttribute('data-color', '#111111');
-    } else if (currentThemeBg !== '#f8fafc' && currentColor === '#111111') {
-      currentColor = '#ffffff';
-      colorDots[0].style.background = '#ffffff';
-      colorDots[0].setAttribute('data-color', '#ffffff');
-    }
-    drawGrid();
-  });
-});
-
-const gridBtns = document.querySelectorAll('.grid-options button');
-gridBtns.forEach(btn => {
-  btn.addEventListener('click', () => {
-    gridBtns.forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    currentGrid = btn.getAttribute('data-grid');
-    drawGrid();
-  });
-});
-
-document.getElementById('fullScreenBtn').onclick = () => {
-  if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen();
-  } else {
-    document.exitFullscreen();
-  }
-};
-
-document.getElementById('downloadBtn').onclick = () => {
+// تصدير الصور
+function exportImage(format) {
   const exportCanvas = document.createElement('canvas');
   exportCanvas.width = paintCanvas.width;
   exportCanvas.height = paintCanvas.height;
@@ -481,7 +452,11 @@ document.getElementById('downloadBtn').onclick = () => {
   eCtx.drawImage(paintCanvas, 0, 0);
 
   const link = document.createElement('a');
-  link.download = `شرح-السبورة-${new Date().toLocaleDateString('ar-EG')}.png`;
-  link.href = exportCanvas.toDataURL('image/png');
+  link.download = `سبورة-${Date.now()}.${format}`;
+  link.href = exportCanvas.toDataURL(`image/${format === 'png' ? 'png' : 'jpeg'}`);
   link.click();
-};
+}
+
+document.getElementById('downloadPngBtn').onclick = () => exportImage('png');
+document.getElementById('downloadJpgBtn').onclick = () => exportImage('jpeg');
+document.getElementById('quickSaveBtn').onclick = () => exportImage('png');
