@@ -99,13 +99,13 @@
     /* حاوية الآيات العائمة والقابلة للتحريك */
     #quranTextContainer {
       position: absolute;
-      top: 16%;
+      top: 15%;
       left: 20%;
       z-index: 50;
       display: none;
       width: 62vw;
-      max-width: 880px;
-      max-height: 80vh;
+      max-width: 890px;
+      max-height: 82vh;
       background: rgba(15, 23, 42, 0.96);
       backdrop-filter: blur(14px);
       border: 2px solid #d97706;
@@ -149,30 +149,35 @@
     .card-close-btn:hover { background: #dc2626; color: #fff; }
 
     .card-body {
-      padding: 20px 28px;
+      padding: 18px 26px;
       overflow-y: auto;
-      max-height: 68vh;
+      max-height: 70vh;
       text-align: center;
     }
 
-    /* شريط أدوات الصوت والترديد المتطور */
+    /* شريط أدوات التلاوة والفاصل الزمني المخصص */
     .audio-toolbar {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      background: rgba(30, 41, 59, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+    }
+    .toolbar-row {
       display: flex;
       align-items: center;
       justify-content: center;
       flex-wrap: wrap;
       gap: 8px;
-      background: rgba(30, 41, 59, 0.95);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 12px;
-      padding: 8px 12px;
-      margin-bottom: 16px;
     }
     .audio-btn {
       background: #0284c7;
       border: 1px solid #38bdf8;
       color: #fff;
-      padding: 6px 14px;
+      padding: 5px 12px;
       border-radius: 8px;
       font-size: 12px;
       font-weight: bold;
@@ -188,16 +193,55 @@
       border-color: #34d399;
     }
     .audio-btn.download-btn:hover { background: #047857; }
+    .audio-btn.sec-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+    .audio-btn.sec-btn:hover { background: rgba(255, 255, 255, 0.18); }
 
     .audio-select {
       background: #0b111e;
       border: 1px solid rgba(255,255,255,0.2);
       color: #e2e8f0;
-      padding: 6px 8px;
+      padding: 5px 8px;
       border-radius: 6px;
       font-size: 11px;
       outline: none;
       cursor: pointer;
+    }
+
+    /* شريط العد التنازلي التفاعلي للفاصل الزمني والترديد */
+    .interval-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      color: #fbbf24;
+    }
+    .interval-slider {
+      width: 90px;
+      accent-color: #f59e0b;
+      cursor: pointer;
+      height: 4px;
+    }
+    .countdown-bar-container {
+      width: 100%;
+      height: 4px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 4px;
+      overflow: hidden;
+      display: none;
+      margin-top: 4px;
+    }
+    .countdown-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: #10b981;
+      transition: width 0.1s linear;
     }
 
     .surah-header-badge {
@@ -216,9 +260,14 @@
       font-family: 'Amiri Quran', 'Amiri', serif;
       line-height: 2.3;
       letter-spacing: 0.6px;
+      transition: filter 0.3s ease;
+    }
+    #quranTextContent.blurred-text {
+      filter: blur(8px);
+      user-select: none;
     }
 
-    /* تصميم الهايلايت (Highlight) المتنقل مع الآية المقروءة */
+    /* تصميم الهايلايت المتنقل مع الآية المقروءة */
     .ayah-span {
       display: inline;
       padding: 2px 6px;
@@ -264,7 +313,7 @@
       position: absolute;
       display: none;
       z-index: 100;
-      background: rgba(15, 23, 42, 0.9);
+      background: rgba(15, 23, 42, 0.92);
       border: 1.5px dashed #38bdf8;
       border-radius: 6px;
       outline: none;
@@ -625,13 +674,13 @@
 </head>
 <body>
 
-  <!-- البنر الدعائي المتحرك الفاخر لدار التحفيظ -->
+  <!-- البنر الدعائي المتحرك لدار التحفيظ -->
   <div class="academy-marquee-banner">
     <div class="marquee-track">
       🌟 مرحباً بكم في سبورة <span style="color:#ffffff; font-weight:800; font-size:16px;">أكاديمية الفتح لعلوم القرآن الكريم</span> 
       <span class="badge-sparkle">حفظ وتجويد وتفسير</span> 
       تحت إشراف <span style="color:#38bdf8;">نخبة متميزة من أكفأ المعلمات المتخصصات والمجازات</span> بالسند المتصل 🌸 
-      نسأل الله تعالى التوفيق والسداد لجميع أبنائنا وبناتنا الطلاب والطلبات 🌿
+      نسأل الله تعالى التوفيق والسداد لجميع أبنائنا وبناتنا الطلاب والطالبات 🌿
     </div>
   </div>
 
@@ -657,49 +706,63 @@
     <button class="side-btn" id="fullScreenBtn" style="padding:4px 8px;">⛶ ملء الشاشة</button>
   </div>
 
-  <!-- 1. حاوية الآيات القابلة للسحب والمزودة بمشغل التلاوة والهايلايت والترديد -->
+  <!-- 1. حاوية الآيات القابلة للسحب والمزودة بأدوات الفاصل الزمني والتحكم المتقدم -->
   <div id="quranTextContainer">
     <div class="drag-header" id="dragHeader">
       <div class="drag-title">
         <span>✥</span>
-        <span>اسحب لتحريك موضع الآيات على السبورة</span>
+        <span>أدوات مصحف الشرح — اسحب لتحريك الموضع</span>
       </div>
       <button class="card-close-btn" id="closeQuranCardBtn" title="إغلاق اللوحة">✕</button>
     </div>
 
     <div class="card-body">
-      <!-- شريط أدوات الصوت والترديد المتطور -->
+      <!-- شريط أدوات الصوت والفاصل الزمني المخصص -->
       <div class="audio-toolbar">
-        <button class="audio-btn" id="btnPlayAudio">▶️ تشغيل التلاوة</button>
-        <button class="audio-btn download-btn" id="btnDownloadAudio" title="تحميل التلاوة للاستخدام أوفلاين">📥 حفظ أوفلاين</button>
-        
-        <!-- اختيار القارئ (سيرفر EveryAyah المباشر) -->
-        <select class="audio-select" id="reciterSelect" title="اختيار القارئ">
-          <option value="Husary_64kbps">محمود خليل الحصري (مرتل)</option>
-          <option value="Minshawy_Murattal_128kbps">محمد صديق المنشاوي (مرتل)</option>
-          <option value="Abdul_Basit_Murattal_64kbps">عبد الباسط عبد الصمد (مرتل)</option>
-          <option value="Alafasy_128kbps">مشاري راشد العفاسي</option>
-        </select>
+        <!-- الصف الأول: أزرار التحكم في التشغيل والتنقل -->
+        <div class="toolbar-row">
+          <button class="audio-btn sec-btn" id="btnPrevAyah" title="الآية السابقة">⏮️</button>
+          <button class="audio-btn" id="btnPlayAudio">▶️ تشغيل التلاوة</button>
+          <button class="audio-btn sec-btn" id="btnNextAyah" title="الآية التالية">⏭️</button>
+          <button class="audio-btn download-btn" id="btnDownloadAudio" title="تحميل التلاوة للاستخدام أوفلاين">📥 حفظ أوفلاين</button>
+          <button class="audio-btn sec-btn" id="btnToggleBlur" title="إخفاء النص لاختبار الحفظ (تسميع)">👁️ إخفاء النص</button>
+        </div>
 
-        <!-- مدة الصمت الفاصلة لترديد الطالب -->
-        <select class="audio-select" id="pauseIntervalSelect" title="فترة صمت لترديد الطالب">
-          <option value="0">بدون توقف للترديد</option>
-          <option value="2">ترديد: ثانيتان (2s)</option>
-          <option value="4" selected>ترديد: 4 ثوانٍ (4s)</option>
-          <option value="6">ترديد: 6 ثوانٍ (6s)</option>
-          <option value="8">ترديد: 8 ثوانٍ (8s)</option>
-          <option value="10">ترديد: 10 ثوانٍ (10s)</option>
-          <option value="15">ترديد: 15 ثانية (15s)</option>
-        </select>
+        <!-- الصف الثاني: القارئ، سرعة التلاوة، التكرار، والفاصل الزمني المتطور -->
+        <div class="toolbar-row">
+          <select class="audio-select" id="reciterSelect" title="اختيار القارئ">
+            <option value="Husary_64kbps">محمود خليل الحصري (مرتل)</option>
+            <option value="Minshawy_Murattal_128kbps">محمد صديق المنشاوي (مرتل)</option>
+            <option value="Abdul_Basit_Murattal_64kbps">عبد الباسط عبد الصمد (مرتل)</option>
+            <option value="Alafasy_128kbps">مشاري راشد العفاسي</option>
+          </select>
 
-        <!-- التكرار -->
-        <select class="audio-select" id="loopSelect" title="خاصية التكرار">
-          <option value="1">تشغيل مرة واحدة</option>
-          <option value="3">تكرار 3 مرات</option>
-          <option value="5">تكرار 5 مرات</option>
-          <option value="999">تكرار مستمر</option>
-        </select>
+          <select class="audio-select" id="playbackSpeedSelect" title="سرعة التلاوة">
+            <option value="0.75">سرعة: 0.75x (بطيء تعليمي)</option>
+            <option value="1.0" selected>سرعة: 1.0x (عادي)</option>
+            <option value="1.25">سرعة: 1.25x (سريع)</option>
+          </select>
+
+          <select class="audio-select" id="loopSelect" title="تكرار المجموعة">
+            <option value="1">تشغيل مرة واحدة</option>
+            <option value="3">تكرار 3 مرات</option>
+            <option value="5">تكرار 5 مرات</option>
+            <option value="999">تكرار مستمر</option>
+          </select>
+
+          <!-- أداة الفاصل الزمني والترديد المحددة بالثواني -->
+          <div class="interval-box" title="الفاصل الزمني بالثواني لترديد الطالب بين الآيات">
+            <span>⏱️ الفاصل الزمني:</span>
+            <input type="range" id="intervalSlider" class="interval-slider" min="0" max="25" value="4">
+            <span id="intervalSecDisplay" style="font-weight:bold; min-width:24px;">4 ث</span>
+          </div>
+        </div>
         
+        <!-- شريط العد التنازلي البصري للفاصل الزمني -->
+        <div class="countdown-bar-container" id="countdownBarContainer">
+          <div class="countdown-bar-fill" id="countdownBarFill"></div>
+        </div>
+
         <div id="audioStatus" style="font-size:11px; color:#38bdf8; width:100%; margin-top:2px;">جاهز للاستماع</div>
       </div>
 
@@ -963,7 +1026,7 @@
       stopQuranAudio();
     };
 
-    // الصوتيات والمؤثرات التحفيزية (Web Audio API)
+    // الصوتيات والمؤثرات التحفيزية
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     let audioCtx = null;
 
@@ -1058,7 +1121,7 @@
       }
     };
 
-    // نظام تشغيل التلاوة المباشرة عبر EveryAyah والهايلايت والترديد
+    // نظام تشغيل التلاوة المباشرة والفاصل الزمني المتطور
     let activeAyahAudios = [];
     let activeAyahNumbers = [];
     let currentAudioIndex = 0;
@@ -1067,15 +1130,45 @@
     let currentLoopCount = 1;
     let currentLoopIteration = 1;
     let repeatTimer = null;
+    let countdownInterval = null;
 
     const btnPlayAudio = document.getElementById('btnPlayAudio');
+    const btnPrevAyah = document.getElementById('btnPrevAyah');
+    const btnNextAyah = document.getElementById('btnNextAyah');
     const btnDownloadAudio = document.getElementById('btnDownloadAudio');
+    const btnToggleBlur = document.getElementById('btnToggleBlur');
     const audioStatus = document.getElementById('audioStatus');
     const reciterSelect = document.getElementById('reciterSelect');
     const loopSelect = document.getElementById('loopSelect');
-    const pauseIntervalSelect = document.getElementById('pauseIntervalSelect');
+    const playbackSpeedSelect = document.getElementById('playbackSpeedSelect');
+    const intervalSlider = document.getElementById('intervalSlider');
+    const intervalSecDisplay = document.getElementById('intervalSecDisplay');
+    const countdownBarContainer = document.getElementById('countdownBarContainer');
+    const countdownBarFill = document.getElementById('countdownBarFill');
 
-    // تظليل الآية المقروءة حالياً
+    intervalSlider.oninput = (e) => {
+      intervalSecDisplay.innerText = e.target.value + ' ث';
+    };
+
+    playbackSpeedSelect.onchange = () => {
+      currentAudioObj.playbackRate = parseFloat(playbackSpeedSelect.value);
+    };
+
+    // خاصية إخفاء النص للتسميع (اختبار حفظ الطالب)
+    let isTextBlurred = false;
+    btnToggleBlur.onclick = () => {
+      isTextBlurred = !isTextBlurred;
+      if (isTextBlurred) {
+        quranTextContent.classList.add('blurred-text');
+        btnToggleBlur.innerText = "👁️ إظهار النص";
+        btnToggleBlur.style.background = "#d97706";
+      } else {
+        quranTextContent.classList.remove('blurred-text');
+        btnToggleBlur.innerText = "👁️ إخفاء النص";
+        btnToggleBlur.style.background = "rgba(255, 255, 255, 0.08)";
+      }
+    };
+
     function setAyahHighlight(ayahNum) {
       document.querySelectorAll('.ayah-span').forEach(el => {
         el.classList.remove('active-highlight');
@@ -1115,7 +1208,9 @@
       setAyahHighlight(ayahNum);
 
       currentAudioObj.src = audioUrl;
+      currentAudioObj.playbackRate = parseFloat(playbackSpeedSelect.value);
       audioStatus.innerText = `▶ تلاوة آية (${ayahNum}) — [${index + 1}/${activeAyahAudios.length}]`;
+      countdownBarContainer.style.display = 'none';
 
       currentAudioObj.play().catch(err => {
         console.log("Audio load fallback:", err);
@@ -1123,20 +1218,31 @@
       });
 
       currentAudioObj.onended = () => {
-        const pauseSeconds = parseInt(pauseIntervalSelect.value);
-        if (pauseSeconds > 0) {
-          let remaining = pauseSeconds;
-          audioStatus.innerText = `⏳ وقت لترديد الطالب خلف الشيخ (${remaining} ثوانٍ)...`;
+        const pauseSeconds = parseInt(intervalSlider.value);
+        if (pauseSeconds > 0 && index < activeAyahAudios.length - 1) {
+          let totalMs = pauseSeconds * 1000;
+          let elapsedMs = 0;
           
-          repeatTimer = setInterval(() => {
-            remaining--;
-            if (remaining > 0) {
-              audioStatus.innerText = `⏳ وقت لترديد الطالب خلف الشيخ (${remaining} ثوانٍ)...`;
+          countdownBarContainer.style.display = 'block';
+          countdownBarFill.style.width = '100%';
+
+          audioStatus.innerText = `⏳ فاصل زمني لترديد الطالب (${pauseSeconds} ثوانٍ)...`;
+
+          if (countdownInterval) clearInterval(countdownInterval);
+          countdownInterval = setInterval(() => {
+            elapsedMs += 100;
+            let percent = 100 - (elapsedMs / totalMs) * 100;
+            countdownBarFill.style.width = Math.max(0, percent) + '%';
+
+            let secLeft = Math.ceil((totalMs - elapsedMs) / 1000);
+            if (secLeft > 0) {
+              audioStatus.innerText = `⏳ فاصل زمني لترديد الطالب (${secLeft} ثوانٍ)...`;
             } else {
-              clearInterval(repeatTimer);
+              clearInterval(countdownInterval);
+              countdownBarContainer.style.display = 'none';
               playAyahSequence(index + 1);
             }
-          }, 1000);
+          }, 100);
         } else {
           playAyahSequence(index + 1);
         }
@@ -1145,7 +1251,8 @@
 
     function stopQuranAudio() {
       isAudioPlaying = false;
-      if (repeatTimer) clearInterval(repeatTimer);
+      if (countdownInterval) clearInterval(countdownInterval);
+      countdownBarContainer.style.display = 'none';
       currentAudioObj.pause();
       currentAudioObj.currentTime = 0;
       clearAllHighlights();
@@ -1168,7 +1275,30 @@
         currentLoopIteration = 1;
         btnPlayAudio.innerText = "⏸️ إيقاف مؤقت";
         btnPlayAudio.style.background = "#dc2626";
-        playAyahSequence(0);
+        playAyahSequence(currentAudioIndex);
+      }
+    };
+
+    // أزرار التنقل السريع بين الآيات
+    btnNextAyah.onclick = (e) => {
+      e.stopPropagation();
+      if (activeAyahAudios.length > 0 && currentAudioIndex < activeAyahAudios.length - 1) {
+        if (countdownInterval) clearInterval(countdownInterval);
+        isAudioPlaying = true;
+        btnPlayAudio.innerText = "⏸️ إيقاف مؤقت";
+        btnPlayAudio.style.background = "#dc2626";
+        playAyahSequence(currentAudioIndex + 1);
+      }
+    };
+
+    btnPrevAyah.onclick = (e) => {
+      e.stopPropagation();
+      if (activeAyahAudios.length > 0 && currentAudioIndex > 0) {
+        if (countdownInterval) clearInterval(countdownInterval);
+        isAudioPlaying = true;
+        btnPlayAudio.innerText = "⏸️ إيقاف مؤقت";
+        btnPlayAudio.style.background = "#dc2626";
+        playAyahSequence(currentAudioIndex - 1);
       }
     };
 
@@ -1217,7 +1347,6 @@
       for (let v = fromV; v <= toV; v++) {
         const sPad = String(surahIdx).padStart(3, '0');
         const vPad = String(v).padStart(3, '0');
-        // السيرفر العالمي المباشر EveryAyah
         const audioUrl = `https://everyayah.com/data/${reciter}/${sPad}${vPad}.mp3`;
         activeAyahAudios.push(audioUrl);
         activeAyahNumbers.push(v);
@@ -1876,7 +2005,6 @@
 
         document.getElementById('submitBtnText').innerText = "جاري جلب الآيات...";
 
-        // جلب نص الآيات العثمانية
         fetch(`https://api.alquran.cloud/v1/surah/${surahIdx}/quran-uthmani`)
           .then(res => res.json())
           .then(data => {
@@ -1887,7 +2015,6 @@
               return;
             }
 
-            // توليد الـ Spans الحاملة للآيات مع معرّف فريد لكل آية لتفعيل الهايلايت
             const fullVersesHtml = verses.map(a => 
               `<span class="ayah-span" id="ayah-${a.numberInSurah}">${a.text} <span style="color:#f59e0b; font-size:0.88em; text-shadow:none;">﴿${a.numberInSurah}﴾</span></span>`
             ).join(' ');
@@ -1897,13 +2024,12 @@
             quranTextContent.style.color = selectedTextColor;
             quranTextContent.style.fontSize = fSize;
 
-            // تجهيز الصوتيات عبر EveryAyah لكل القراء
             updateAudioListForCurrentAyahs();
 
             mushafContainer.style.display = 'none';
             quranTextContainer.style.display = 'block';
 
-            quranTextContainer.style.top = '16%';
+            quranTextContainer.style.top = '15%';
             quranTextContainer.style.left = '20%';
             quranTextContainer.style.transform = 'none';
 
