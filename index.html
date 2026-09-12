@@ -14,7 +14,7 @@
     }
     body {
       overflow: hidden;
-      background-color: #064e3b; /* أخضر سبورة كلاسيكي */
+      background-color: #064e3b;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       color: #d1d5db;
     }
@@ -195,7 +195,6 @@
     }
     .dock-btn.btn-sq-color { border-radius: 8px; }
 
-    /* النافذة المنبثقة للمصحف الشريف */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -262,7 +261,6 @@
     .btn-modal-submit { flex: 2; background: #0d9488; color: #fff; border: none; border-radius: 8px; padding: 10px; font-size: 13px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
     .btn-modal-submit:hover { background: #0f766e; }
 
-    /* أزرار إعادة إظهار القوائم في حال إغلاقها */
     .toggle-panel-btn {
       position: fixed;
       top: 16px;
@@ -411,7 +409,7 @@
     </div>
   </div>
 
-  <!-- النافذة المنبثقة لاستخراج آيات المصحف الشريف -->
+  <!-- النافذة المنبثقة لمصحف المدينة المنورة -->
   <div class="modal-overlay" id="quranModal">
     <div class="quran-modal">
       <div class="modal-header">
@@ -425,16 +423,16 @@
       <div class="edition-box">
         <div class="edition-label-row">
           <span class="badge-orange">طبعات جديدة ✨</span>
-          <span>📖 اختر طراز ونوع المصحف الشريف:</span>
+          <span>📖 طراز ونوع المصحف الشريف:</span>
         </div>
         <select class="custom-select">
-          <option>🟢 مصحف المدينة المنورة (طبعة مجمع الملك فهد - 604 صفحة مصورة)</option>
+          <option>🟢 مصحف المدينة المنورة (طبعة مجمع الملك فهد - 604 صفحة مصورة بالزخارف)</option>
         </select>
       </div>
 
       <div class="tabs-row">
         <button class="tab-btn active" id="tabByPage">الخيار الأول: برقم الصفحة</button>
-        <button class="tab-btn" id="tabBySurah">الخيار الثاني: بالسورة والآيات</button>
+        <button class="tab-btn" id="tabBySurah">الخيار الثاني: بالسورة</button>
       </div>
 
       <div id="pageSection">
@@ -443,19 +441,15 @@
       </div>
 
       <div id="surahSection" style="display: none; flex-direction: column; gap: 8px;">
-        <div class="input-label">اختر السورة:</div>
+        <div class="input-label">اختر السورة لعرض أول صفحة منها:</div>
         <select id="surahSelect" class="custom-select"></select>
-        <div style="display: flex; gap: 8px;">
-          <input type="number" id="verseFrom" class="quran-field" placeholder="من آية" min="1" value="1">
-          <input type="number" id="verseTo" class="quran-field" placeholder="إلى آية" min="1" value="7">
-        </div>
       </div>
 
       <div class="modal-footer">
         <button class="btn-modal-cancel" id="cancelQuranModalBtn">إلغاء</button>
         <button class="btn-modal-submit" id="submitQuranBtn">
           <span>📖</span>
-          <span>إدراج على السبورة</span>
+          <span>إدراج الصفحة بالزخارف على السبورة</span>
         </button>
       </div>
     </div>
@@ -810,7 +804,6 @@
       }
     };
 
-    // إغلاق وإظهار القوائم الجانبية
     const leftPanel = document.getElementById('leftPanel');
     const rightPanel = document.getElementById('rightPanel');
     const toggleLeftBtn = document.getElementById('toggleLeftBtn');
@@ -888,27 +881,53 @@
       }
     };
 
-    // قائمة السور الـ 114
-    const surahNames = [
-      "الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس",
-      "هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه",
-      "الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم",
-      "لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر",
-      "فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","ق",
-      "الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحديد","المجادلة","الحشر","الممتحنة",
-      "الصف","الجمعة","المنافقون","التغابن","الطلاق","التحريم","الملك","القلم","الحاقة","المعارج",
-      "نوح","الجن","المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات","عبس",
-      "التكوير","الانفطار","المطففين","الانشقاق","البروج","الطارق","الأعلى","الغاشية","الفجر","البلد",
-      "الشمس","الليل","الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات",
-      "القارعة","التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون","النصر",
-      "المسد","الإخلاص","الفلق","الناس"
+    // قائمة السور وأرقام بدايات صفحاتها في مصحف المدينة (طبعة مجمع الملك فهد)
+    const surahData = [
+      { name: "الفاتحة", page: 1 }, { name: "البقرة", page: 2 }, { name: "آل عمران", page: 50 },
+      { name: "النساء", page: 77 }, { name: "المائدة", page: 106 }, { name: "الأنعام", page: 128 },
+      { name: "الأعراف", page: 151 }, { name: "الأنفال", page: 177 }, { name: "التوبة", page: 187 },
+      { name: "يونس", page: 208 }, { name: "هود", page: 221 }, { name: "يوسف", page: 235 },
+      { name: "الرعد", page: 249 }, { name: "إبراهيم", page: 255 }, { name: "الحجر", page: 262 },
+      { name: "النحل", page: 267 }, { name: "الإسراء", page: 282 }, { name: "الكهف", page: 293 },
+      { name: "مريم", page: 305 }, { name: "طه", page: 312 }, { name: "الأنبياء", page: 322 },
+      { name: "الحج", page: 332 }, { name: "المؤمنون", page: 342 }, { name: "النور", page: 350 },
+      { name: "الفرقان", page: 359 }, { name: "الشعراء", page: 367 }, { name: "النمل", page: 377 },
+      { name: "القصص", page: 385 }, { name: "العنكبوت", page: 396 }, { name: "الروم", page: 404 },
+      { name: "لقمان", page: 411 }, { name: "السجدة", page: 415 }, { name: "الأحزاب", page: 418 },
+      { name: "سبأ", page: 428 }, { name: "فاطر", page: 434 }, { name: "يس", page: 440 },
+      { name: "الصافات", page: 446 }, { name: "ص", page: 453 }, { name: "الزمر", page: 458 },
+      { name: "غافر", page: 467 }, { name: "فصلت", page: 477 }, { name: "الشورى", page: 483 },
+      { name: "الزخرف", page: 489 }, { name: "الدخان", page: 496 }, { name: "الجاثية", page: 499 },
+      { name: "الأحقاف", page: 502 }, { name: "محمد", page: 507 }, { name: "الفتح", page: 511 },
+      { name: "الحجرات", page: 515 }, { name: "ق", page: 518 }, { name: "الذاريات", page: 520 },
+      { name: "الطور", page: 523 }, { name: "النجم", page: 526 }, { name: "القمر", page: 528 },
+      { name: "الرحمن", page: 531 }, { name: "الواقعة", page: 534 }, { name: "الحديد", page: 537 },
+      { name: "المجادلة", page: 542 }, { name: "الحشر", page: 545 }, { name: "الممتحنة", page: 549 },
+      { name: "الصف", page: 551 }, { name: "الجمعة", page: 553 }, { name: "المنافقون", page: 554 },
+      { name: "التغابن", page: 556 }, { name: "الطلاق", page: 558 }, { name: "التحريم", page: 560 },
+      { name: "الملك", page: 562 }, { name: "القلم", page: 564 }, { name: "الحاقة", page: 566 },
+      { name: "المعارج", page: 568 }, { name: "نوح", page: 570 }, { name: "الجن", page: 572 },
+      { name: "المزمل", page: 574 }, { name: "المدثر", page: 575 }, { name: "القيامة", page: 577 },
+      { name: "الإنسان", page: 578 }, { name: "المرسلات", page: 580 }, { name: "النبأ", page: 582 },
+      { name: "النازعات", page: 583 }, { name: "عبس", page: 585 }, { name: "التكوير", page: 586 },
+      { name: "الانفطار", page: 587 }, { name: "المطففين", page: 587 }, { name: "الانشقاق", page: 589 },
+      { name: "البروج", page: 590 }, { name: "الطارق", page: 591 }, { name: "الأعلى", page: 591 },
+      { name: "الغاشية", page: 592 }, { name: "الفجر", page: 593 }, { name: "البلد", page: 594 },
+      { name: "الشمس", page: 595 }, { name: "الليل", page: 595 }, { name: "الضحى", page: 596 },
+      { name: "الشرح", page: 596 }, { name: "التين", page: 597 }, { name: "العلق", page: 597 },
+      { name: "القدر", page: 598 }, { name: "البينة", page: 598 }, { name: "الزلزلة", page: 599 },
+      { name: "العاديات", page: 599 }, { name: "القارعة", page: 600 }, { name: "التكاثر", page: 600 },
+      { name: "العصر", page: 601 }, { name: "الهمزة", page: 601 }, { name: "الفيل", page: 601 },
+      { name: "قريش", page: 602 }, { name: "الماعون", page: 602 }, { name: "الكوثر", page: 602 },
+      { name: "الكافرون", page: 603 }, { name: "النصر", page: 603 }, { name: "المسد", page: 603 },
+      { name: "الإخلاص", page: 604 }, { name: "الفلق", page: 604 }, { name: "الناس", page: 604 }
     ];
 
     const surahSelect = document.getElementById('surahSelect');
-    surahNames.forEach((name, index) => {
+    surahData.forEach((s, idx) => {
       const opt = document.createElement('option');
-      opt.value = index + 1;
-      opt.innerText = `${index + 1}. سورة ${name}`;
+      opt.value = s.page;
+      opt.innerText = `${idx + 1}. سورة ${s.name} (صفحة ${s.page})`;
       surahSelect.appendChild(opt);
     });
 
@@ -942,14 +961,14 @@
       surahSection.style.display = 'flex';
     };
 
-    // دالة رسم صفحة المصحف في منتصف الشاشة بدقة بين القائمتين
+    // دالة رسم صفحة المصحف المصورة بالزخارف بدقة في المنتصف
     function drawQuranPageCenter(img) {
       currentQuranImg = img;
       pdfCtx.clearRect(0, 0, pdfCanvas.width, pdfCanvas.height);
 
-      // مساحة العرض بين القائمتين (العرض الكلي - عرض القائمتين وهوامشهما)
-      const availableWidth = Math.max(pdfCanvas.width - 520, pdfCanvas.width * 0.45);
-      const availableHeight = pdfCanvas.height * 0.90;
+      // حساب المساحة المناسبة بين القائمتين
+      const availableWidth = Math.max(pdfCanvas.width - 540, pdfCanvas.width * 0.48);
+      const availableHeight = pdfCanvas.height * 0.92;
 
       const scale = Math.min(availableWidth / img.width, availableHeight / img.height);
       const w = img.width * scale;
@@ -958,10 +977,10 @@
       const x = (pdfCanvas.width - w) / 2;
       const y = (pdfCanvas.height - h) / 2 + 10;
 
-      // رسم خلفية بيضاء وارفة بظل خفيف خلف صفحة المصحف
+      // رسم خلفية بيضاء وبراويز ناعمة مطابقة للمصحف المطبوع
       pdfCtx.save();
-      pdfCtx.shadowColor = 'rgba(0,0,0,0.5)';
-      pdfCtx.shadowBlur = 25;
+      pdfCtx.shadowColor = 'rgba(0,0,0,0.6)';
+      pdfCtx.shadowBlur = 30;
       pdfCtx.fillStyle = '#ffffff';
       pdfCtx.fillRect(x, y, w, h);
       pdfCtx.restore();
@@ -969,82 +988,52 @@
       pdfCtx.drawImage(img, x, y, w, h);
     }
 
-    // إدراج صفحة أو آيات المصحف الشريف
+    // زر إدراج صفحة المصحف المصورة
     document.getElementById('submitQuranBtn').onclick = () => {
+      let pageNum = 1;
       if (currentQuranMode === 'page') {
-        const pageNum = parseInt(document.getElementById('quranPageInput').value);
-        if (pageNum >= 1 && pageNum <= 604) {
-          const formatted = String(pageNum).padStart(3, '0');
-          // رابط مباشر عالي الجودة لصفحات مجمع الملك فهد المصورة الأصلية
-          const quranUrl = `https://raw.githubusercontent.com/Quran-Mobile/Quran-Images/master/pages_1024/page_${formatted}.png`;
-          
-          const img = new Image();
-          img.crossOrigin = 'anonymous';
-          img.onload = () => {
-            drawQuranPageCenter(img);
-            pageIndicator.innerText = `مصحف: صفحة ${pageNum}`;
-            quranModal.classList.remove('active');
-          };
-          img.onerror = () => {
-            // رابط احتياطي فوري
-            const fallbackUrl = `https://quran.ksu.edu.sa/ayat/safahat/${pageNum}.png`;
-            const img2 = new Image();
-            img2.crossOrigin = 'anonymous';
-            img2.onload = () => {
-              drawQuranPageCenter(img2);
-              pageIndicator.innerText = `مصحف: صفحة ${pageNum}`;
-              quranModal.classList.remove('active');
-            };
-            img2.onerror = () => alert('تعذر تحميل صفحة المصحف، يرجى التحقق من اتصال الإنترنت.');
-            img2.src = fallbackUrl;
-          };
-          img.src = quranUrl;
-        } else {
-          alert('يرجى إدخال رقم صفحة صحيح من 1 إلى 604');
-        }
+        pageNum = parseInt(document.getElementById('quranPageInput').value) || 1;
       } else {
-        // الخيار الثاني: جلب نص الآيات وحصرها وسط الشاشة بدقة
-        const surahNum = surahSelect.value;
-        const fromVerse = parseInt(document.getElementById('verseFrom').value) || 1;
-        const toVerse = parseInt(document.getElementById('verseTo').value) || fromVerse;
-
-        fetch(`https://api.alquran.cloud/v1/surah/${surahNum}`)
-          .then(res => res.json())
-          .then(data => {
-            const verses = data.data.ayahs.filter(a => a.numberInSurah >= fromVerse && a.numberInSurah <= toVerse);
-            const fullText = verses.map(a => `${a.text} ﴿${a.numberInSurah}﴾`).join(' ');
-
-            pCtx.save();
-            pCtx.fillStyle = currentColor;
-            pCtx.font = 'bold 24px "Traditional Arabic", "Amiri", Tahoma, serif';
-            pCtx.textAlign = 'center';
-            pCtx.direction = 'rtl';
-
-            // حصر عرض النص في منتصف الشاشة بين القائمتين بدقة
-            const maxLineWidth = Math.max(paintCanvas.width - 540, 320);
-            const words = fullText.split(' ');
-            let line = '';
-            let y = paintCanvas.height * 0.25;
-
-            for (let n = 0; n < words.length; n++) {
-              let testLine = line + words[n] + ' ';
-              let metrics = pCtx.measureText(testLine);
-              if (metrics.width > maxLineWidth && n > 0) {
-                pCtx.fillText(line, paintCanvas.width / 2, y);
-                line = words[n] + ' ';
-                y += 46;
-              } else {
-                line = testLine;
-              }
-            }
-            pCtx.fillText(line, paintCanvas.width / 2, y);
-            pCtx.restore();
-
-            saveState();
-            quranModal.classList.remove('active');
-          })
-          .catch(() => alert('تعذر جلب الآيات، يرجى التحقق من اتصال الإنترنت.'));
+        pageNum = parseInt(surahSelect.value) || 1;
       }
+
+      if (pageNum < 1 || pageNum > 604) {
+        alert('يرجى إدخال رقم صفحة صحيح من 1 إلى 604');
+        return;
+      }
+
+      const formatted = String(pageNum).padStart(3, '0');
+      // السيرفر المباشر الرسمي لصفحات مصحف مجمع الملك فهد عالية الدقة بدون أي حظر CORS
+      const primaryUrl = `https://verses.quran.com/images/pages/page${formatted}.png`;
+      const fallbackUrl = `https://quran.ksu.edu.sa/ayat/safahat/${pageNum}.png`;
+
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => {
+        // مسح أي شروحات سابقة لتظهر الصفحة نقية
+        pCtx.clearRect(0, 0, paintCanvas.width, paintCanvas.height);
+        saveState();
+        drawQuranPageCenter(img);
+        pageIndicator.innerText = `مصحف: صفحة ${pageNum}`;
+        quranModal.classList.remove('active');
+      };
+
+      img.onerror = () => {
+        // المحاولة الفورية بالسيرفر البديل
+        const img2 = new Image();
+        img2.crossOrigin = 'anonymous';
+        img2.onload = () => {
+          pCtx.clearRect(0, 0, paintCanvas.width, paintCanvas.height);
+          saveState();
+          drawQuranPageCenter(img2);
+          pageIndicator.innerText = `مصحف: صفحة ${pageNum}`;
+          quranModal.classList.remove('active');
+        };
+        img2.onerror = () => alert('تعذر تحميل صفحة المصحف، يرجى التأكد من الاتصال بالإنترنت.');
+        img2.src = fallbackUrl;
+      };
+
+      img.src = primaryUrl;
     };
 
     // إدراج الصور
