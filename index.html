@@ -3,105 +3,146 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>سبورة تفاعلية</title>
-  
-  <!-- ربط ملف التنسيقات الخارجي -->
+  <title>سبورة الفتح التفاعلية</title>
   <link rel="stylesheet" href="style.css">
-  
-  <!-- مكتبة تشغيل الـ PDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 <body>
 
-  <!-- شريط التحكم العلوي -->
-  <div class="top-dock">
-    <div class="page-controls">
-      <button class="mini-btn" id="prevPdfPage">◀</button>
-      <span id="pageIndicator">لوحة 1 / 1</span>
-      <button class="mini-btn" id="nextPdfPage">▶</button>
+  <!-- شريط الإجراءات العلوي -->
+  <div class="panel top-bar">
+    <div style="display:flex; gap:8px; align-items:center;">
+      <span>🌙</span>
+      <span style="color:#ef4444;">❤️</span>
+      <span>👁️</span>
     </div>
-    <button class="tool-btn" id="fullScreenBtn" style="padding: 3px 8px; font-size: 12px;">⛶ ملء الشاشة</button>
+    <button class="btn-gold">👑 ترقية للنسخة الاحترافية</button>
+    <button class="side-btn" id="fullScreenBtn" style="padding:4px 8px;">⛶ التكبير</button>
   </div>
 
-  <!-- مساحات الرسم والطبقات -->
+  <!-- مساحات الكانفاس -->
   <canvas id="gridCanvas"></canvas>
   <canvas id="pdfCanvas"></canvas>
   <canvas id="paintCanvas"></canvas>
   <canvas id="overlayCanvas"></canvas>
 
-  <!-- القائمة الجانبية: الإعدادات والوسائط -->
-  <div class="side-panel">
-    <div class="panel-title">لون السبورة</div>
-    <div class="theme-grid">
-      <div class="theme-btn active" style="background: #121820;" data-bg="#121820" title="كحلي غامق"></div>
-      <div class="theme-btn" style="background: #18221b;" data-bg="#18221b" title="أخضر مدرسي"></div>
-      <div class="theme-btn" style="background: #111111;" data-bg="#111111" title="أسود كلاسيكي"></div>
-      <div class="theme-btn" style="background: #f8fafc;" data-bg="#f8fafc" title="أبيض"></div>
+  <!-- اللوحة الجانبية اليسرى: إعدادات السبورة والمشروع -->
+  <div class="panel side-left">
+    <div class="panel-header">
+      <span>سبورة الصباح</span>
+      <button class="close-btn">✕</button>
     </div>
 
-    <div class="panel-title">تخطيط الأسطر والشبكة</div>
-    <div class="grid-options">
-      <button class="btn-action active" data-grid="none">سادة (بدون تسطير)</button>
-      <button class="btn-action" data-grid="ruled">مسطر (دفتر مدرسي)</button>
-      <button class="btn-action" data-grid="graph">رسم بياني (مربعات)</button>
+    <div style="display:flex; justify-content:space-between; font-size:11px; color:#9ca3af;">
+      <span>🌐 English (EN)</span>
+      <span>☀️ الوضع المضيء</span>
     </div>
 
-    <div class="panel-title">أدوات الشرح والوسائط</div>
-    <button class="btn-action" id="uploadPdfBtn">📑 فتح وشرح ملف PDF</button>
-    <input type="file" id="pdfInput" accept="application/pdf">
-
-    <button class="btn-action" id="uploadImageBtn">🖼️ إدراج صورة من الجهاز</button>
-    <input type="file" id="imageInput" accept="image/*">
-
-    <div class="panel-title">مصحف الشرح المباشر</div>
-    <div class="quran-box">
-      <input type="number" id="quranPageNum" class="quran-input" min="1" max="604" placeholder="رقم (1-604)">
-      <button class="btn-action" id="loadQuranBtn" style="flex: 1; text-align: center;">عرض الصفحة</button>
+    <div class="section-label">لون السبورة</div>
+    <div class="color-palette">
+      <div class="palette-dot active" style="background: #12161f;" data-bg="#12161f"></div>
+      <div class="palette-dot" style="background: #064e3b;" data-bg="#064e3b"></div>
+      <div class="palette-dot" style="background: #1e3a8a;" data-bg="#1e3a8a"></div>
+      <div class="palette-dot" style="background: #0f172a;" data-bg="#0f172a"></div>
+      <div class="palette-dot" style="background: #ffffff;" data-bg="#ffffff"></div>
+      <div class="palette-dot" style="background: #7f1d1d;" data-bg="#7f1d1d"></div>
+      <div class="palette-dot" style="background: #374151;" data-bg="#374151"></div>
+      <div class="palette-dot" style="background: #facc15;" data-bg="#facc15"></div>
+      <div class="palette-dot" style="background: #0284c7;" data-bg="#0284c7"></div>
+      <div class="palette-dot" style="background: #000000;" data-bg="#000000"></div>
     </div>
 
-    <div class="panel-title">تصدير الدرس</div>
-    <button class="btn-action" id="downloadBtn" style="text-align: center; background: #238636; font-weight: bold;">
-      💾 حفظ الشرح كصورة
-    </button>
+    <button class="side-btn" id="turboModeBtn">⚡ وضع تسريع الأداء (Turbo)</button>
+
+    <div class="section-label">تخطيط الأسطر والشبكة</div>
+    <div class="btn-grid-3">
+      <button class="side-btn active" data-grid="none">سادة</button>
+      <button class="side-btn" data-grid="graph">شبكة</button>
+      <button class="side-btn" data-grid="ruled">مسطر</button>
+      <button class="side-btn" data-grid="two-lines">سطرين معاً</button>
+      <button class="side-btn" data-grid="four-lines">4 أسطر</button>
+      <button class="side-btn" data-grid="wide-ruled">عريض</button>
+    </div>
+
+    <div class="section-label">المشروع والتصدير</div>
+    <button class="side-btn" id="saveProjectBtn">💾 حفظ المشروع</button>
+    <button class="side-btn" id="downloadPngBtn">📷 تصدير صورة PNG</button>
+    <button class="side-btn" id="downloadJpgBtn">🖼️ تصدير صورة JPG</button>
+    <button class="side-btn" id="clearBoardBtn" style="color:#f87171;">🗑️ مسح لوحة الشرح</button>
   </div>
 
-  <!-- شريط الأدوات السفلي العائم -->
-  <div class="bottom-dock">
-    <div class="tool-group">
-      <button class="tool-btn active" data-tool="pen">✏️ قلم</button>
-      <button class="tool-btn" data-tool="highlighter">🖊️ تظليل</button>
-      <button class="tool-btn" data-tool="laser">🔴 ليزر</button>
-      <button class="tool-btn" data-tool="eraser">🧹 ممحاة</button>
+  <!-- اللوحة الجانبية اليمنى: الأدوات والوسائط -->
+  <div class="panel side-right">
+    <div class="panel-header">
+      <button class="side-btn" id="undoBtn" style="padding:2px 8px;">↩️ التراجع</button>
+      <span id="pageIndicator" style="font-size:11px;">صفحة 1 / 1</span>
+      <button class="close-btn">✕</button>
     </div>
 
-    <div class="tool-group">
-      <button class="tool-btn" data-tool="line">📏 خط</button>
-      <button class="tool-btn" data-tool="arrow">➡️ سهم</button>
-      <button class="tool-btn" data-tool="rect">▭ مستطيل</button>
-      <button class="tool-btn" data-tool="circle">◯ دائرة</button>
+    <div class="section-label">ألوان القلم</div>
+    <div class="color-palette">
+      <div class="palette-dot active" style="background: #ffffff;" data-color="#ffffff"></div>
+      <div class="palette-dot" style="background: #facc15;" data-color="#facc15"></div>
+      <div class="palette-dot" style="background: #4ade80;" data-color="#4ade80"></div>
+      <div class="palette-dot" style="background: #38bdf8;" data-color="#38bdf8"></div>
+      <div class="palette-dot" style="background: #fb923c;" data-color="#fb923c"></div>
+      <div class="palette-dot" style="background: #f87171;" data-color="#f87171"></div>
+      <div class="palette-dot" style="background: #c084fc;" data-color="#c084fc"></div>
+      <div class="palette-dot" style="background: #f472b6;" data-color="#f472b6"></div>
+      <div class="palette-dot" style="background: #2dd4bf;" data-color="#2dd4bf"></div>
+      <div class="palette-dot" style="background: #94a3b8;" data-color="#94a3b8"></div>
     </div>
 
-    <div class="tool-group color-picker">
-      <div class="color-dot active" style="background: #ffffff;" data-color="#ffffff"></div>
-      <div class="color-dot" style="background: #facc15;" data-color="#facc15"></div>
-      <div class="color-dot" style="background: #4ade80;" data-color="#4ade80"></div>
-      <div class="color-dot" style="background: #38bdf8;" data-color="#38bdf8"></div>
-      <div class="color-dot" style="background: #fb923c;" data-color="#fb923c"></div>
-      <div class="color-dot" style="background: #f87171;" data-color="#f87171"></div>
-    </div>
-
-    <div class="tool-group slider-box">
-      <span>السُّمك</span>
+    <div class="slider-group">
+      <div class="slider-info"><span>سُمك القلم / الشكل</span><span id="sizeVal">4px</span></div>
       <input type="range" id="brushSize" min="2" max="35" value="4">
     </div>
 
-    <div class="tool-group">
-      <button class="tool-btn" id="undoBtn">↩️ تراجع</button>
-      <button class="tool-btn" id="clearBtn">🗑️ مسح الكل</button>
+    <div class="slider-group">
+      <div class="slider-info"><span>درجة الشفافية</span><span id="opacityVal">100%</span></div>
+      <input type="range" id="brushOpacity" min="10" max="100" value="100">
+    </div>
+
+    <div class="section-label">استيراد وسائط وعمليات</div>
+    <div class="btn-grid-2">
+      <button class="side-btn" id="uploadPdfBtn">📑 شرح PDF</button>
+      <button class="side-btn" id="uploadImgBtn">🖼️ إدراج صورة</button>
+    </div>
+    <button class="side-btn btn-green-spec" id="loadQuranModalBtn">📖 آيات القرآن</button>
+
+    <input type="file" id="pdfInput" accept="application/pdf" style="display:none;">
+    <input type="file" id="imageInput" accept="image/*" style="display:none;">
+  </div>
+
+  <!-- شريط الأدوات السفلي العريض (صفين متطابقين مع المنصة المرجعية) -->
+  <div class="panel bottom-dock">
+    <!-- الصف الأول: الأقلام والأشكال والألوان الأساسية -->
+    <div class="dock-row">
+      <button class="dock-btn" id="redoBtn" title="إعادة">↪️</button>
+      <button class="dock-btn" title="تحديد">🔲</button>
+      <button class="dock-btn active" data-tool="pen" title="قلم">✏️</button>
+      <button class="dock-btn" data-tool="highlighter" title="تظليل">🖊️</button>
+      <button class="dock-btn" data-tool="laser" title="مؤشر ليزر">🔴</button>
+      <button class="dock-btn" data-tool="eraser" title="ممحاة">🧹</button>
+      <button class="dock-btn" data-tool="line" title="خط">📏</button>
+      <button class="dock-btn" data-tool="arrow" title="سهم">➡️</button>
+      <button class="dock-btn" data-tool="rect" title="مستطيل">▭</button>
+      <button class="dock-btn" data-tool="circle" title="دائرة">◯</button>
+      <button class="dock-btn" data-tool="text" title="نص">A</button>
+    </div>
+    <!-- الصف الثاني: أدوات القياس والمساعدة السريعة -->
+    <div class="dock-row">
+      <button class="dock-btn" id="prevPageBtn" title="الصفحة السابقة">◀</button>
+      <button class="dock-btn" id="nextPageBtn" title="الصفحة التالية">▶</button>
+      <button class="dock-btn btn-sq-color" style="background:#a855f7;" data-color="#a855f7"></button>
+      <button class="dock-btn btn-sq-color" style="background:#0284c7;" data-color="#0284c7"></button>
+      <button class="dock-btn btn-sq-color" style="background:#22c55e;" data-color="#22c55e"></button>
+      <button class="dock-btn btn-sq-color" style="background:#eab308;" data-color="#eab308"></button>
+      <button class="dock-btn btn-sq-color" style="background:#ef4444;" data-color="#ef4444"></button>
+      <button class="dock-btn" title="حفظ سريع" id="quickSaveBtn">💾</button>
     </div>
   </div>
 
-  <!-- ربط ملف المحرك البرمجي الخارجي -->
   <script src="script.js"></script>
 </body>
 </html>
