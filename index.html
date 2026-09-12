@@ -14,18 +14,46 @@
     }
     body {
       overflow: hidden;
-      background-color: #064e3b;
+      background-color: #064e3b; /* أخضر سبورة كلاسيكي */
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       color: #d1d5db;
     }
-    #gridCanvas, #pdfCanvas, #overlayCanvas {
+
+    /* طبقة خلفية المصحف والـ PDF في المنتصف بدقة */
+    #mushafContainer {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      display: none;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.75);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #ffffff;
+    }
+    #mushafImg {
+      display: block;
+      max-height: 88vh;
+      max-width: 52vw;
+      object-fit: contain;
+      pointer-events: none;
+    }
+
+    #gridCanvas {
       position: absolute;
       top: 0;
       left: 0;
       pointer-events: none;
+      z-index: 1;
     }
-    #gridCanvas { z-index: 1; }
-    #pdfCanvas { z-index: 2; }
+    #pdfCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 2;
+    }
     #paintCanvas {
       position: absolute;
       top: 0;
@@ -34,7 +62,13 @@
       touch-action: none;
       z-index: 3;
     }
-    #overlayCanvas { z-index: 4; }
+    #overlayCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 4;
+    }
 
     .panel {
       position: fixed;
@@ -195,6 +229,7 @@
     }
     .dock-btn.btn-sq-color { border-radius: 8px; }
 
+    /* النافذة المنبثقة لمصحف المدينة */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -283,7 +318,6 @@
   <button class="toggle-panel-btn" id="toggleLeftBtn">☰ سبورة الصباح</button>
   <button class="toggle-panel-btn" id="toggleRightBtn">☰ أدوات الرسم</button>
 
-  <!-- شريط التحكم العلوي -->
   <div class="panel top-bar">
     <div style="display:flex; gap:8px; align-items:center;">
       <span>🌙</span>
@@ -292,6 +326,11 @@
     </div>
     <button class="btn-gold">👑 ترقية للنسخة الاحترافية</button>
     <button class="side-btn" id="fullScreenBtn" style="padding:4px 8px;">⛶ ملء الشاشة</button>
+  </div>
+
+  <!-- عنصر عرض صفحة المصحف الشريف المصورة المباشر -->
+  <div id="mushafContainer">
+    <img id="mushafImg" src="" alt="صفحة المصحف الشريف">
   </div>
 
   <canvas id="gridCanvas"></canvas>
@@ -409,7 +448,7 @@
     </div>
   </div>
 
-  <!-- النافذة المنبثقة لمصحف المدينة المنورة -->
+  <!-- النافذة المنبثقة لاختيار صفحة المصحف الشريف -->
   <div class="modal-overlay" id="quranModal">
     <div class="quran-modal">
       <div class="modal-header">
@@ -426,7 +465,7 @@
           <span>📖 طراز ونوع المصحف الشريف:</span>
         </div>
         <select class="custom-select">
-          <option>🟢 مصحف المدينة المنورة (طبعة مجمع الملك فهد - 604 صفحة مصورة بالزخارف)</option>
+          <option>🟢 مصحف المدينة المنورة (طبعة مجمع الملك فهد - 604 صفحة مصورة بالزخارف الكاملة)</option>
         </select>
       </div>
 
@@ -441,7 +480,7 @@
       </div>
 
       <div id="surahSection" style="display: none; flex-direction: column; gap: 8px;">
-        <div class="input-label">اختر السورة لعرض أول صفحة منها:</div>
+        <div class="input-label">اختر السورة:</div>
         <select id="surahSelect" class="custom-select"></select>
       </div>
 
@@ -449,7 +488,7 @@
         <button class="btn-modal-cancel" id="cancelQuranModalBtn">إلغاء</button>
         <button class="btn-modal-submit" id="submitQuranBtn">
           <span>📖</span>
-          <span>إدراج الصفحة بالزخارف على السبورة</span>
+          <span>إدراج الصفحة المصورة على السبورة</span>
         </button>
       </div>
     </div>
@@ -467,6 +506,9 @@
     const overlayCanvas = document.getElementById('overlayCanvas');
     const oCtx = overlayCanvas.getContext('2d');
 
+    const mushafContainer = document.getElementById('mushafContainer');
+    const mushafImg = document.getElementById('mushafImg');
+
     let currentGrid = 'two-lines';
     let currentThemeBg = '#064e3b';
     let currentTool = 'pen';
@@ -476,6 +518,7 @@
     let isDrawing = false;
     let startX = 0, startY = 0;
 
+    let currentQuranPage = 1;
     let laserPoints = [];
     let history = [];
     let redoList = [];
@@ -484,7 +527,6 @@
     let currentPdf = null;
     let currentPdfPage = 1;
     let totalPdfPages = 0;
-    let currentQuranImg = null;
     const pageIndicator = document.getElementById('pageIndicator');
 
     function resizeCanvases() {
@@ -502,7 +544,6 @@
       pCtx.drawImage(tempCanvas, 0, 0);
       drawGrid();
       if (currentPdf) renderPdfPage(currentPdfPage);
-      if (currentQuranImg) drawQuranPageCenter(currentQuranImg);
     }
     window.addEventListener('resize', resizeCanvases);
 
@@ -789,8 +830,8 @@
       if (confirm('مسح كامل محتوى السبورة؟')) {
         pCtx.clearRect(0, 0, paintCanvas.width, paintCanvas.height);
         pdfCtx.clearRect(0, 0, pdfCanvas.width, pdfCanvas.height);
+        mushafContainer.style.display = 'none';
         currentPdf = null;
-        currentQuranImg = null;
         pageIndicator.innerText = "صفحة 1 / 1";
         saveState();
       }
@@ -841,6 +882,7 @@
             currentPdf = pdf;
             totalPdfPages = pdf.numPages;
             currentPdfPage = 1;
+            mushafContainer.style.display = 'none';
             renderPdfPage(currentPdfPage);
           });
         };
@@ -868,20 +910,25 @@
       });
     }
 
+    // التنقل بين الصفحات (سواء PDF أو صفحات المصحف الشريف)
     document.getElementById('prevPageBtn').onclick = () => {
       if (currentPdf && currentPdfPage > 1) {
         currentPdfPage--;
         renderPdfPage(currentPdfPage);
+      } else if (mushafContainer.style.display === 'block' && currentQuranPage > 1) {
+        loadMushafPage(currentQuranPage - 1);
       }
     };
     document.getElementById('nextPageBtn').onclick = () => {
       if (currentPdf && currentPdfPage < totalPdfPages) {
         currentPdfPage++;
         renderPdfPage(currentPdfPage);
+      } else if (mushafContainer.style.display === 'block' && currentQuranPage < 604) {
+        loadMushafPage(currentQuranPage + 1);
       }
     };
 
-    // قائمة السور وأرقام بدايات صفحاتها في مصحف المدينة (طبعة مجمع الملك فهد)
+    // قائمة السور الـ 114 وبدايات صفحاتها الرسمية
     const surahData = [
       { name: "الفاتحة", page: 1 }, { name: "البقرة", page: 2 }, { name: "آل عمران", page: 50 },
       { name: "النساء", page: 77 }, { name: "المائدة", page: 106 }, { name: "الأنعام", page: 128 },
@@ -961,34 +1008,41 @@
       surahSection.style.display = 'flex';
     };
 
-    // دالة رسم صفحة المصحف المصورة بالزخارف بدقة في المنتصف
-    function drawQuranPageCenter(img) {
-      currentQuranImg = img;
-      pdfCtx.clearRect(0, 0, pdfCanvas.width, pdfCanvas.height);
+    // دالة تحميل صفحة المصحف المصورة المباشرة (طبعة مجمع الملك فهد بالزخارف الكاملة)
+    function loadMushafPage(pageNum) {
+      currentQuranPage = pageNum;
+      const formatted = String(pageNum).padStart(3, '0');
+      
+      // روابط متسلسلة لضمان التحميل الفوري لصفحات مجمع الملك فهد الرسمية
+      const urls = [
+        `https://raw.githubusercontent.com/quranpedia/quran-svg/main/mushafs/hafs/kfqc/svg/${formatted}.svg`,
+        `https://raw.githubusercontent.com/Quran-Mobile/Quran-Images/master/pages_1024/page_${formatted}.png`,
+        `https://quran.ksu.edu.sa/ayat/safahat/${pageNum}.png`
+      ];
 
-      // حساب المساحة المناسبة بين القائمتين
-      const availableWidth = Math.max(pdfCanvas.width - 540, pdfCanvas.width * 0.48);
-      const availableHeight = pdfCanvas.height * 0.92;
-
-      const scale = Math.min(availableWidth / img.width, availableHeight / img.height);
-      const w = img.width * scale;
-      const h = img.height * scale;
-
-      const x = (pdfCanvas.width - w) / 2;
-      const y = (pdfCanvas.height - h) / 2 + 10;
-
-      // رسم خلفية بيضاء وبراويز ناعمة مطابقة للمصحف المطبوع
-      pdfCtx.save();
-      pdfCtx.shadowColor = 'rgba(0,0,0,0.6)';
-      pdfCtx.shadowBlur = 30;
-      pdfCtx.fillStyle = '#ffffff';
-      pdfCtx.fillRect(x, y, w, h);
-      pdfCtx.restore();
-
-      pdfCtx.drawImage(img, x, y, w, h);
+      let attempt = 0;
+      function tryNext() {
+        if (attempt >= urls.length) {
+          alert('تعذر تحميل صفحة المصحف، يرجى التأكد من اتصال الإنترنت.');
+          return;
+        }
+        mushafImg.onerror = () => {
+          attempt++;
+          tryNext();
+        };
+        mushafImg.onload = () => {
+          mushafContainer.style.display = 'block';
+          pCtx.clearRect(0, 0, paintCanvas.width, paintCanvas.height);
+          saveState();
+          pageIndicator.innerText = `مصحف: صفحة ${pageNum}`;
+          quranModal.classList.remove('active');
+        };
+        mushafImg.src = urls[attempt];
+      }
+      tryNext();
     }
 
-    // زر إدراج صفحة المصحف المصورة
+    // زر إدراج الصفحة المصورة
     document.getElementById('submitQuranBtn').onclick = () => {
       let pageNum = 1;
       if (currentQuranMode === 'page') {
@@ -1002,38 +1056,7 @@
         return;
       }
 
-      const formatted = String(pageNum).padStart(3, '0');
-      // السيرفر المباشر الرسمي لصفحات مصحف مجمع الملك فهد عالية الدقة بدون أي حظر CORS
-      const primaryUrl = `https://verses.quran.com/images/pages/page${formatted}.png`;
-      const fallbackUrl = `https://quran.ksu.edu.sa/ayat/safahat/${pageNum}.png`;
-
-      const img = new Image();
-      img.crossOrigin = 'anonymous';
-      img.onload = () => {
-        // مسح أي شروحات سابقة لتظهر الصفحة نقية
-        pCtx.clearRect(0, 0, paintCanvas.width, paintCanvas.height);
-        saveState();
-        drawQuranPageCenter(img);
-        pageIndicator.innerText = `مصحف: صفحة ${pageNum}`;
-        quranModal.classList.remove('active');
-      };
-
-      img.onerror = () => {
-        // المحاولة الفورية بالسيرفر البديل
-        const img2 = new Image();
-        img2.crossOrigin = 'anonymous';
-        img2.onload = () => {
-          pCtx.clearRect(0, 0, paintCanvas.width, paintCanvas.height);
-          saveState();
-          drawQuranPageCenter(img2);
-          pageIndicator.innerText = `مصحف: صفحة ${pageNum}`;
-          quranModal.classList.remove('active');
-        };
-        img2.onerror = () => alert('تعذر تحميل صفحة المصحف، يرجى التأكد من الاتصال بالإنترنت.');
-        img2.src = fallbackUrl;
-      };
-
-      img.src = primaryUrl;
+      loadMushafPage(pageNum);
     };
 
     // إدراج الصور
@@ -1062,6 +1085,7 @@
       }
     };
 
+    // تصدير الدرس المكتمل كصورة
     function exportImage(format) {
       const exportCanvas = document.createElement('canvas');
       exportCanvas.width = paintCanvas.width;
@@ -1071,6 +1095,13 @@
       eCtx.fillStyle = currentThemeBg;
       eCtx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
       eCtx.drawImage(gridCanvas, 0, 0);
+
+      // في حال كانت صفحة المصحف معروضة، يتم دمجها مع التصدير
+      if (mushafContainer.style.display === 'block' && mushafImg.complete) {
+        const rect = mushafImg.getBoundingClientRect();
+        eCtx.drawImage(mushafImg, rect.left, rect.top, rect.width, rect.height);
+      }
+
       eCtx.drawImage(pdfCanvas, 0, 0);
       eCtx.drawImage(paintCanvas, 0, 0);
 
