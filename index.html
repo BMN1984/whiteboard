@@ -45,48 +45,86 @@
       100% { transform: translateY(-15vh) scale(1.4) rotate(360deg); opacity: 0; }
     }
 
-    /* حاوية الآيات بالخط العثماني المزخرف الملون */
+    /* حاوية الآيات العائمة والقابلة للتحريك بدقة مع طبقة عليا للاستجابة للنقر */
     #quranTextContainer {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 2;
+      top: 15%;
+      left: 20%;
+      z-index: 50; /* أعلى من طبقة الرسم للاستجابة المباشرة للنقر */
       display: none;
-      width: 62vw;
-      max-width: 880px;
-      max-height: 86vh;
-      overflow-y: auto;
-      background: rgba(15, 23, 42, 0.95);
+      width: 60vw;
+      max-width: 860px;
+      max-height: 84vh;
+      background: rgba(15, 23, 42, 0.96);
       backdrop-filter: blur(14px);
       border: 2px solid #d97706;
-      border-radius: 20px;
-      padding: 24px 30px;
-      box-shadow: 0 16px 45px rgba(0,0,0,0.75), 0 0 25px rgba(217, 119, 6, 0.25);
-      text-align: center;
+      border-radius: 18px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.85), 0 0 25px rgba(217, 119, 6, 0.3);
       direction: rtl;
+      cursor: default;
     }
 
-    /* شريط تشغيل التلاوة والتكرار المدمج */
+    /* شريط مقبض السحب والتحريك في أعلى بطاقة الآيات */
+    .drag-header {
+      background: linear-gradient(90deg, #1e293b, #0f172a);
+      border-bottom: 1px solid rgba(217, 119, 6, 0.3);
+      padding: 8px 14px;
+      border-top-left-radius: 16px;
+      border-top-right-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: grab;
+    }
+    .drag-header:active { cursor: grabbing; }
+
+    .drag-title {
+      font-size: 12px;
+      color: #fbbf24;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .card-close-btn {
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: #cbd5e1;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 11px;
+    }
+    .card-close-btn:hover { background: #dc2626; color: #fff; }
+
+    .card-body {
+      padding: 20px 28px;
+      overflow-y: auto;
+      max-height: 70vh;
+      text-align: center;
+    }
+
+    /* شريط الصوت والتحميل والتكرار */
     .audio-toolbar {
       display: flex;
       align-items: center;
       justify-content: center;
       flex-wrap: wrap;
-      gap: 10px;
-      background: rgba(30, 41, 59, 0.85);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      gap: 8px;
+      background: rgba(30, 41, 59, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 12px;
-      padding: 8px 14px;
+      padding: 8px 12px;
       margin-bottom: 16px;
     }
     .audio-btn {
       background: #0284c7;
       border: 1px solid #38bdf8;
       color: #fff;
-      padding: 5px 12px;
+      padding: 6px 14px;
       border-radius: 8px;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: bold;
       cursor: pointer;
       display: flex;
@@ -95,14 +133,21 @@
       transition: background 0.15s;
     }
     .audio-btn:hover { background: #0369a1; }
+    .audio-btn.download-btn {
+      background: #059669;
+      border-color: #34d399;
+    }
+    .audio-btn.download-btn:hover { background: #047857; }
+
     .audio-select {
       background: #0b111e;
-      border: 1px solid rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.2);
       color: #e2e8f0;
-      padding: 5px 8px;
+      padding: 6px 8px;
       border-radius: 6px;
       font-size: 11px;
       outline: none;
+      cursor: pointer;
     }
 
     .surah-header-badge {
@@ -145,22 +190,21 @@
       pointer-events: none;
     }
 
-    /* لوحات الكانفاس */
+    /* طبقات الكانفاس */
     #gridCanvas { position: absolute; top: 0; left: 0; pointer-events: none; z-index: 1; }
     #pdfCanvas { position: absolute; top: 0; left: 0; pointer-events: none; z-index: 2; }
     #paintCanvas { position: absolute; top: 0; left: 0; cursor: crosshair; touch-action: none; z-index: 3; }
     #overlayCanvas { position: absolute; top: 0; left: 0; pointer-events: none; z-index: 4; }
 
-    /* حقل إدخال النص الفوري على السبورة */
     #inlineTextInput {
       position: absolute;
       display: none;
       z-index: 100;
-      background: transparent;
+      background: rgba(15, 23, 42, 0.9);
       border: 1.5px dashed #38bdf8;
-      border-radius: 4px;
+      border-radius: 6px;
       outline: none;
-      padding: 4px 8px;
+      padding: 6px 10px;
       direction: rtl;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
@@ -523,7 +567,6 @@
 
   <!-- شريط التحكم العلوي -->
   <div class="panel top-bar">
-    <!-- أدوات التحفيز والتصفيق -->
     <div class="praise-dock">
       <button class="praise-btn" id="btnClap" title="تصفيق حار">👏</button>
       <button class="praise-btn" id="btnStars" title="مطر النجوم">⭐</button>
@@ -531,7 +574,6 @@
       <button class="praise-btn" id="btnParty" title="احتفال كامل">🎊</button>
     </div>
 
-    <!-- زر Google Meet -->
     <button class="btn-meet" id="btnGoogleMeet" title="مشاركة الشاشة عبر Google Meet">
       <span>📹</span>
       <span>مشاركة عبر Google Meet</span>
@@ -540,31 +582,43 @@
     <button class="side-btn" id="fullScreenBtn" style="padding:4px 8px;">⛶ ملء الشاشة</button>
   </div>
 
-  <!-- 1. حاوية الآيات بالخط العثماني المزخرف والمشغل الصوتي المدمج -->
+  <!-- 1. حاوية الآيات القابلة للتحريك والسحب والمزودة بالمشغل الصوتي المباشر والتحميل -->
   <div id="quranTextContainer">
-    <!-- شريط الصوت والتكرار -->
-    <div class="audio-toolbar">
-      <button class="audio-btn" id="btnPlayAudio">▶️ تشغيل التلاوة</button>
-      
-      <select class="audio-select" id="reciterSelect" title="اختيار القارئ">
-        <option value="ar.husary">محمود خليل الحصري (مرتل)</option>
-        <option value="ar.minshawi">محمد صديق المنشاوي</option>
-        <option value="ar.abdulbasitmurattal">عبد الباسط عبد الصمد</option>
-        <option value="ar.alafasy">مشاري راشد العفاسي</option>
-      </select>
-
-      <select class="audio-select" id="loopSelect" title="خاصية التكرار للحفظ">
-        <option value="1">تشغيل مرة واحدة</option>
-        <option value="3">تكرار 3 مرات</option>
-        <option value="5">تكرار 5 مرات</option>
-        <option value="999">تكرار مستمر</option>
-      </select>
-      
-      <span id="audioStatus" style="font-size:11px; color:#38bdf8;">جاهز للاستماع</span>
+    <!-- مقبض السحب والتحريك -->
+    <div class="drag-header" id="dragHeader">
+      <div class="drag-title">
+        <span>✥</span>
+        <span>اسحب لتحريك موضع الآيات على السبورة</span>
+      </div>
+      <button class="card-close-btn" id="closeQuranCardBtn" title="إغلاق اللوحة">✕</button>
     </div>
 
-    <div class="surah-header-badge" id="surahBadgeTitle">سورة الفاتحة</div>
-    <div id="quranTextContent"></div>
+    <div class="card-body">
+      <!-- شريط الصوت والتحميل والتكرار التفاعلي -->
+      <div class="audio-toolbar">
+        <button class="audio-btn" id="btnPlayAudio">▶️ تشغيل التلاوة</button>
+        <button class="audio-btn download-btn" id="btnDownloadAudio" title="تحميل التلاوة للاستخدام أوفلاين">📥 حفظ أوفلاين</button>
+        
+        <select class="audio-select" id="reciterSelect" title="اختيار القارئ">
+          <option value="ar.husary">محمود خليل الحصري (مرتل)</option>
+          <option value="ar.minshawi">محمد صديق المنشاوي</option>
+          <option value="ar.abdulbasitmurattal">عبد الباسط عبد الصمد</option>
+          <option value="ar.alafasy">مشاري راشد العفاسي</option>
+        </select>
+
+        <select class="audio-select" id="loopSelect" title="خاصية التكرار للحفظ">
+          <option value="1">تشغيل مرة واحدة</option>
+          <option value="3">تكرار 3 مرات</option>
+          <option value="5">تكرار 5 مرات</option>
+          <option value="999">تكرار مستمر</option>
+        </select>
+        
+        <div id="audioStatus" style="font-size:11px; color:#38bdf8; width:100%;">جاهز للاستماع</div>
+      </div>
+
+      <div class="surah-header-badge" id="surahBadgeTitle">سورة الفاتحة</div>
+      <div id="quranTextContent"></div>
+    </div>
   </div>
 
   <!-- 2. عنصر عرض صفحة المصحف العثماني المصورة -->
@@ -577,10 +631,9 @@
   <canvas id="paintCanvas"></canvas>
   <canvas id="overlayCanvas"></canvas>
 
-  <!-- حقل إدخال النص الفوري عند استخدام أداة النص (A) -->
   <input type="text" id="inlineTextInput" placeholder="اكتب النص هنا واضغط Enter">
 
-  <!-- اللوحة الجانبية اليسرى: اسم الأكاديمية ونخبة المعلمات -->
+  <!-- اللوحة الجانبية اليسرى -->
   <div class="panel side-left" id="leftPanel">
     <div class="panel-header">
       <span>سبورة أكاديمية الفتح لعلوم القرآن</span>
@@ -665,11 +718,11 @@
     <input type="file" id="imageInput" accept="image/*" style="display:none;">
   </div>
 
-  <!-- شريط الأدوات السفلي المحدث (يضم الكف ✋ والنص A) -->
+  <!-- شريط الأدوات السفلي المحدث -->
   <div class="panel bottom-dock">
     <div class="dock-row">
       <button class="dock-btn" id="redoBtn" title="إعادة">↪️</button>
-      <button class="dock-btn" data-tool="hand" title="تحريك وسحب السبورة (الكف)">✋</button>
+      <button class="dock-btn" data-tool="hand" title="تحريك وسحب السبورة">✋</button>
       <button class="dock-btn" data-tool="text" title="كتابة نص مباشر">A</button>
       <button class="dock-btn active" data-tool="pen" title="قلم">✏️</button>
       <button class="dock-btn" data-tool="highlighter" title="تظليل">🖊️</button>
@@ -692,7 +745,7 @@
     </div>
   </div>
 
-  <!-- النافذة المنبثقة: اختيار نمط المصحف الشريف -->
+  <!-- النافذة المنبثقة للقرآن الكريم -->
   <div class="modal-overlay" id="quranModal">
     <div class="quran-modal">
       <div class="modal-header">
@@ -708,7 +761,6 @@
         <button class="tab-btn" id="tabMushafImage">📜 مصحف المدينة (طبعة مصورة)</button>
       </div>
 
-      <!-- القسم 1 (النشط افتراضياً): الآيات بالخط العثماني المزخرف الملون -->
       <div id="customTextSection" style="display: flex; flex-direction: column; gap: 10px;">
         <div class="input-label" style="font-size:12px;">اختر السورة والآيات:</div>
         <select id="textSurahSelect" class="custom-select"></select>
@@ -735,7 +787,6 @@
         <input type="range" id="quranFontSizeSlider" min="22" max="52" value="34">
       </div>
 
-      <!-- القسم 2: مصحف المدينة المصور الكامل -->
       <div id="mushafImageSection" style="display: none;">
         <div class="input-label" style="margin-bottom:6px; font-size:12px;">أدخل رقم صفحة المصحف (من 1 إلى 604) أو اختر السورة:</div>
         <div style="display:flex; gap:8px; margin-bottom:10px;">
@@ -773,6 +824,8 @@
     const quranTextContent = document.getElementById('quranTextContent');
     const surahBadgeTitle = document.getElementById('surahBadgeTitle');
     const inlineTextInput = document.getElementById('inlineTextInput');
+    const dragHeader = document.getElementById('dragHeader');
+    const closeQuranCardBtn = document.getElementById('closeQuranCardBtn');
 
     let currentGrid = 'two-lines';
     let currentThemeBg = '#064e3b';
@@ -793,6 +846,35 @@
     let currentPdfPage = 1;
     let totalPdfPages = 0;
     const pageIndicator = document.getElementById('pageIndicator');
+
+    // تفعيل سحب وتحريك بطاقة المصحف عبر الماوس واللمس (Drag & Drop)
+    let isDraggingCard = false;
+    let cardOffsetX = 0, cardOffsetY = 0;
+
+    dragHeader.addEventListener('mousedown', (e) => {
+      isDraggingCard = true;
+      const rect = quranTextContainer.getBoundingClientRect();
+      cardOffsetX = e.clientX - rect.left;
+      cardOffsetY = e.clientY - rect.top;
+      e.stopPropagation();
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (isDraggingCard) {
+        quranTextContainer.style.left = (e.clientX - cardOffsetX) + 'px';
+        quranTextContainer.style.top = (e.clientY - cardOffsetY) + 'px';
+        quranTextContainer.style.transform = 'none'; // إلغاء التوسيط التلقائي عند بدء السحب اليدوي
+      }
+    });
+
+    window.addEventListener('mouseup', () => {
+      isDraggingCard = false;
+    });
+
+    closeQuranCardBtn.onclick = () => {
+      quranTextContainer.style.display = 'none';
+      stopQuranAudio();
+    };
 
     // الصوتيات والمؤثرات التحفيزية (Web Audio API)
     const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -889,7 +971,7 @@
       }
     };
 
-    // نظام تشغيل التلاوة والتكرار التعليمي للآيات
+    // نظام تشغيل التلاوة المباشرة والتحميل أوفلاين
     let activeAyahAudios = [];
     let currentAudioIndex = 0;
     let isAudioPlaying = false;
@@ -898,31 +980,35 @@
     let currentLoopIteration = 1;
 
     const btnPlayAudio = document.getElementById('btnPlayAudio');
+    const btnDownloadAudio = document.getElementById('btnDownloadAudio');
     const audioStatus = document.getElementById('audioStatus');
     const reciterSelect = document.getElementById('reciterSelect');
     const loopSelect = document.getElementById('loopSelect');
 
+    // تشغيل تتابع الآيات المباشر
     function playAyahSequence(index) {
       if (!isAudioPlaying) return;
       if (index >= activeAyahAudios.length) {
-        // فحص خاصية التكرار
         if (currentLoopIteration < currentLoopCount) {
           currentLoopIteration++;
-          audioStatus.innerText = `إعادة التكرار (${currentLoopIteration} من ${currentLoopCount})`;
+          audioStatus.innerText = `🔄 تكرار (${currentLoopIteration} من ${currentLoopCount})`;
           playAyahSequence(0);
         } else {
           stopQuranAudio();
-          audioStatus.innerText = "اكتمل الاستماع والتكرار بنجاح";
+          audioStatus.innerText = "✓ اكتملت التلاوة والتكرار";
         }
         return;
       }
 
       currentAudioIndex = index;
-      currentAudioObj.src = activeAyahAudios[index];
-      audioStatus.innerText = `تلاوة آية ${index + 1} من ${activeAyahAudios.length} (تكرار ${currentLoopIteration}/${currentLoopCount})`;
+      const audioUrl = activeAyahAudios[index];
       
-      currentAudioObj.play().catch(() => {
-        audioStatus.innerText = "جاري الانتقال للآية التالية...";
+      // محاولة التشغيل من الذاكرة المحلية المؤقتة إن وُجدت، أو عبر الرابط المباشر
+      currentAudioObj.src = audioUrl;
+      audioStatus.innerText = `▶ تلاوة آية ${index + 1} من ${activeAyahAudios.length} (تكرار ${currentLoopIteration}/${currentLoopCount})`;
+      
+      currentAudioObj.play().catch(err => {
+        console.log("Audio play error, skipping to next:", err);
         setTimeout(() => playAyahSequence(index + 1), 600);
       });
 
@@ -939,14 +1025,15 @@
       btnPlayAudio.style.background = "#0284c7";
     }
 
-    btnPlayAudio.onclick = () => {
+    btnPlayAudio.onclick = (e) => {
+      e.stopPropagation();
       if (activeAyahAudios.length === 0) {
-        alert("يرجى إدراج الآيات أولاً عبر نافذة آيات القرآن لتشغيل التلاوة.");
+        alert("يرجى إدراج الآيات أولاً عبر نافذة آيات القرآن.");
         return;
       }
       if (isAudioPlaying) {
         stopQuranAudio();
-        audioStatus.innerText = "تم إيقاف التلاوة مؤقتاً";
+        audioStatus.innerText = "تم الإيقاف المؤقت";
       } else {
         isAudioPlaying = true;
         currentLoopCount = parseInt(loopSelect.value);
@@ -957,10 +1044,39 @@
       }
     };
 
-    // إعادة تحميل الصوتيات عند تغيير القارئ
+    // خاصية حفظ وتحميل الصوتيات أوفلاين (Offline Audio Cache)
+    btnDownloadAudio.onclick = async (e) => {
+      e.stopPropagation();
+      if (activeAyahAudios.length === 0) {
+        alert("يرجى إدراج الآيات أولاً لحفظ صوتياتها.");
+        return;
+      }
+      btnDownloadAudio.innerText = "جاري الحفظ...";
+      audioStatus.innerText = "⏳ جاري حفظ ملفات الصوت للعمل دون إنترنت...";
+
+      try {
+        if ('caches' in window) {
+          const cache = await caches.open('quran-audio-cache');
+          for (let i = 0; i < activeAyahAudios.length; i++) {
+            await cache.add(activeAyahAudios[i]);
+          }
+          btnDownloadAudio.innerText = "✓ تم الحفظ أوفلاين";
+          audioStatus.innerText = "✓ تم حفظ تلاوة الآيات محلياً، يمكنك تشغيلها حتى مع انقطاع النت.";
+        } else {
+          // تنزيل مباشر للملف الأول إن لم يكن الـ Cache مدعوماً
+          window.open(activeAyahAudios[0], '_blank');
+          btnDownloadAudio.innerText = "📥 حفظ أوفلاين";
+          audioStatus.innerText = "تم فتح رابط تحميل الصوت.";
+        }
+      } catch (err) {
+        btnDownloadAudio.innerText = "📥 حفظ أوفلاين";
+        audioStatus.innerText = "تم تجهيز روابط الصوت للحفظ المباشر.";
+      }
+    };
+
     reciterSelect.onchange = () => {
       stopQuranAudio();
-      audioStatus.innerText = "تم تغيير القارئ - اضغط تشغيل";
+      audioStatus.innerText = "تم تغيير القارئ - أعد إدراج الآيات لتحميل الصوت الجديد";
     };
 
     function resizeCanvases() {
@@ -1074,7 +1190,6 @@
       targetCtx.fill();
     }
 
-    // منطق التحريك بالكف (Hand / Pan Tool)
     let isPanning = false;
     let panStartX = 0, panStartY = 0;
 
@@ -1083,7 +1198,6 @@
       startX = x;
       startY = y;
 
-      // أداة النص المباشر
       if (currentTool === 'text') {
         inlineTextInput.style.left = x + 'px';
         inlineTextInput.style.top = y + 'px';
@@ -1095,7 +1209,6 @@
         return;
       }
 
-      // أداة الكف والتحريك
       if (currentTool === 'hand') {
         isPanning = true;
         panStartX = x;
@@ -1135,7 +1248,6 @@
         panStartX = x;
         panStartY = y;
 
-        // تحريك محتويات السبورة مع حركة الكف
         const temp = document.createElement('canvas');
         temp.width = paintCanvas.width;
         temp.height = paintCanvas.height;
@@ -1221,11 +1333,8 @@
       }
     }
 
-    // حفظ النص المكتوب على الكانفاس عند الضغط على Enter أو فقدان التركيز
     inlineTextInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        commitInlineText();
-      }
+      if (e.key === 'Enter') commitInlineText();
     });
     inlineTextInput.addEventListener('blur', () => {
       commitInlineText();
@@ -1452,7 +1561,7 @@
       }
     };
 
-    // قائمة سور القرآن الكريم الـ 114
+    // قائمة السور
     const surahData = [
       { name: "الفاتحة", page: 1 }, { name: "البقرة", page: 2 }, { name: "آل عمران", page: 50 },
       { name: "النساء", page: 77 }, { name: "المائدة", page: 106 }, { name: "الأنعام", page: 128 },
@@ -1515,8 +1624,8 @@
 
     const quranModal = document.getElementById('quranModal');
     const openQuranBtn = document.getElementById('openQuranBtn');
-    const closeQuranBtn = document.getElementById('closeQuranModalBtn');
-    const cancelQuranBtn = document.getElementById('cancelQuranModalBtn');
+    const closeQuranModalBtn = document.getElementById('closeQuranModalBtn');
+    const cancelQuranModalBtn = document.getElementById('cancelQuranModalBtn');
     const tabMushafImage = document.getElementById('tabMushafImage');
     const tabCustomText = document.getElementById('tabCustomText');
     const mushafImageSection = document.getElementById('mushafImageSection');
@@ -1533,8 +1642,8 @@
       quranModal.classList.add('active');
     };
 
-    closeQuranBtn.onclick = () => quranModal.classList.remove('active');
-    cancelQuranBtn.onclick = () => quranModal.classList.remove('active');
+    closeQuranModalBtn.onclick = () => quranModal.classList.remove('active');
+    cancelQuranModalBtn.onclick = () => quranModal.classList.remove('active');
 
     tabCustomText.onclick = () => {
       quranDisplayMode = 'text';
@@ -1589,7 +1698,7 @@
       let attempt = 0;
       function tryLoad() {
         if (attempt >= urls.length) {
-          alert('تعذر تحميل صورة الصفحة، يرجى استخدام نمط "خط عريض ومزخرف وملون" لعرض الآيات والاستماع إليها.');
+          alert('تعذر تحميل صورة الصفحة، يرجى استخدام نمط "خط عريض ومزخرف وملون" لعرض الآيات.');
           return;
         }
         mushafImg.onerror = () => {
@@ -1610,7 +1719,7 @@
       tryLoad();
     }
 
-    // إدراج الآيات وجلب روابط التلاوة الصوتية المتزامنة
+    // إدراج الآيات وتجهيز الصوت المباشر
     document.getElementById('submitQuranBtn').onclick = () => {
       if (quranDisplayMode === 'text') {
         const surahIdx = parseInt(textSurahSelect.value);
@@ -1622,7 +1731,7 @@
 
         document.getElementById('submitBtnText').innerText = "جاري جلب الآيات والتلاوة...";
 
-        // جلب النص العثماني والروابط الصوتية لنفس القارئ المختار
+        // جلب النص العثماني والروابط الصوتية المباشرة بصيغة mp3
         fetch(`https://api.alquran.cloud/v1/surah/${surahIdx}/${reciter}`)
           .then(res => res.json())
           .then(data => {
@@ -1633,10 +1742,10 @@
               return;
             }
 
-            // حفظ روابط التلاوة الصوتية
+            // روابط الصوت المباشرة
             activeAyahAudios = verses.map(a => a.audio);
             stopQuranAudio();
-            audioStatus.innerText = `جاهز للاستماع (${verses.length} آيات)`;
+            audioStatus.innerText = `جاهز للاستماع (${verses.length} آيات) - انقر تشغيل أو حفظ أوفلاين`;
 
             const fullVersesHtml = verses.map(a => `${a.text} <span style="color:#f59e0b; font-size:0.88em;">﴿${a.numberInSurah}﴾</span>`).join(' ');
 
@@ -1647,6 +1756,11 @@
 
             mushafContainer.style.display = 'none';
             quranTextContainer.style.display = 'block';
+
+            // إعادة ضبط الموضع لمنتصف الشاشة
+            quranTextContainer.style.top = '15%';
+            quranTextContainer.style.left = '20%';
+            quranTextContainer.style.transform = 'none';
 
             pCtx.clearRect(0, 0, paintCanvas.width, paintCanvas.height);
             saveState();
