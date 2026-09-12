@@ -76,6 +76,15 @@ function drawGrid() {
       gCtx.lineTo(gridCanvas.width, y + 24);
       gCtx.stroke();
     }
+  } else if (currentGrid === 'four-lines') {
+    for (let y = 50; y < gridCanvas.height; y += 90) {
+      for (let i = 0; i < 4; i++) {
+        gCtx.beginPath();
+        gCtx.moveTo(0, y + i * 16);
+        gCtx.lineTo(gridCanvas.width, y + i * 16);
+        gCtx.stroke();
+      }
+    }
   } else if (currentGrid === 'graph') {
     const step = 38;
     for (let x = 0; x < gridCanvas.width; x += step) {
@@ -391,24 +400,137 @@ document.getElementById('nextPageBtn').onclick = () => {
   }
 };
 
-// استدعاء صفحات القرآن الكريم
-document.getElementById('loadQuranModalBtn').onclick = () => {
-  const pageVal = prompt('أدخل رقم صفحة المصحف الشريف (1 إلى 604):', '1');
-  const num = parseInt(pageVal);
-  if (num >= 1 && num <= 604) {
-    const formatted = String(num).padStart(3, '0');
-    const quranUrl = `https://raw.githubusercontent.com/Quran-Mobile/Quran-Images/master/pages_1024/page_${formatted}.png`;
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.onload = () => {
-      pdfCtx.clearRect(0, 0, pdfCanvas.width, pdfCanvas.height);
-      const scale = Math.min((pdfCanvas.width * 0.7) / img.width, (pdfCanvas.height * 0.95) / img.height);
-      const w = img.width * scale;
-      const h = img.height * scale;
-      pdfCtx.drawImage(img, (pdfCanvas.width - w) / 2, (pdfCanvas.height - h) / 2, w, h);
-      pageIndicator.innerText = `مصحف: صفحة ${num}`;
-    };
-    img.src = quranUrl;
+// قائمة سور القرآن الكريم الـ 114
+const surahNames = [
+  "الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس",
+  "هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه",
+  "الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم",
+  "لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر",
+  "فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","ق",
+  "الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحديد","المجادلة","الحشر","الممتحنة",
+  "الصف","الجمعة","المنافقون","التغابن","الطلاق","التحريم","الملك","القلم","الحاقة","المعارج",
+  "نوح","الجن","المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات","عبس",
+  "التكوير","الانفطار","المطففين","الانشقاق","البروج","الطارق","الأعلى","الغاشية","الفجر","البلد",
+  "الشمس","الليل","الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات",
+  "القارعة","التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون","النصر",
+  "المسد","الإخلاص","الفلق","الناس"
+];
+
+const surahSelect = document.getElementById('surahSelect');
+if (surahSelect) {
+  surahNames.forEach((name, index) => {
+    const opt = document.createElement('option');
+    opt.value = index + 1;
+    opt.innerText = `${index + 1}. سورة ${name}`;
+    surahSelect.appendChild(opt);
+  });
+}
+
+// نافذة المصحف الشريف وتبويباتها
+const quranModal = document.getElementById('quranModal');
+const openQuranBtn = document.getElementById('loadQuranModalBtn');
+const closeQuranBtn = document.getElementById('closeQuranModalBtn');
+const cancelQuranBtn = document.getElementById('cancelQuranModalBtn');
+const tabByPage = document.getElementById('tabByPage');
+const tabBySurah = document.getElementById('tabBySurah');
+const pageSection = document.getElementById('pageSection');
+const surahSection = document.getElementById('surahSection');
+let currentQuranMode = 'page';
+
+if (openQuranBtn) {
+  openQuranBtn.onclick = () => { quranModal.classList.add('active'); };
+}
+if (closeQuranBtn) {
+  closeQuranBtn.onclick = () => { quranModal.classList.remove('active'); };
+}
+if (cancelQuranBtn) {
+  cancelQuranBtn.onclick = () => { quranModal.classList.remove('active'); };
+}
+
+tabByPage.onclick = () => {
+  currentQuranMode = 'page';
+  tabByPage.classList.add('active');
+  tabBySurah.classList.remove('active');
+  pageSection.style.display = 'block';
+  surahSection.style.display = 'none';
+};
+
+tabBySurah.onclick = () => {
+  currentQuranMode = 'surah';
+  tabBySurah.classList.add('active');
+  tabByPage.classList.remove('active');
+  pageSection.style.display = 'none';
+  surahSection.style.display = 'flex';
+};
+
+document.getElementById('submitQuranBtn').onclick = () => {
+  if (currentQuranMode === 'page') {
+    const pageNum = parseInt(document.getElementById('quranPageInput').value);
+    if (pageNum >= 1 && pageNum <= 604) {
+      const formatted = String(pageNum).padStart(3, '0');
+      const quranUrl = `https://raw.githubusercontent.com/Quran-Mobile/Quran-Images/master/pages_1024/page_${formatted}.png`;
+      
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => {
+        pdfCtx.clearRect(0, 0, pdfCanvas.width, pdfCanvas.height);
+        const scale = Math.min((pdfCanvas.width * 0.72) / img.width, (pdfCanvas.height * 0.95) / img.height);
+        const w = img.width * scale;
+        const h = img.height * scale;
+        const x = (pdfCanvas.width - w) / 2;
+        const y = (pdfCanvas.height - h) / 2;
+
+        pdfCtx.drawImage(img, x, y, w, h);
+        if (pageIndicator) pageIndicator.innerText = `مصحف: صفحة ${pageNum}`;
+        quranModal.classList.remove('active');
+      };
+      img.onerror = () => {
+        alert('تعذر تحميل الصفحة، يرجى التأكد من الاتصال بالإنترنت.');
+      };
+      img.src = quranUrl;
+    } else {
+      alert('يرجى إدخال رقم صفحة بين 1 و 604');
+    }
+  } else {
+    const surahNum = surahSelect.value;
+    const fromVerse = parseInt(document.getElementById('verseFrom').value) || 1;
+    const toVerse = parseInt(document.getElementById('verseTo').value) || fromVerse;
+
+    fetch(`https://api.alquran.cloud/v1/surah/${surahNum}`)
+      .then(res => res.json())
+      .then(data => {
+        const verses = data.data.ayahs.filter(a => a.numberInSurah >= fromVerse && a.numberInSurah <= toVerse);
+        const fullText = verses.map(a => `${a.text} ﴿${a.numberInSurah}﴾`).join(' ');
+
+        pCtx.save();
+        pCtx.fillStyle = currentColor;
+        pCtx.font = 'bold 24px "Traditional Arabic", "Amiri", Tahoma, serif';
+        pCtx.textAlign = 'center';
+        pCtx.direction = 'rtl';
+
+        const maxWidth = paintCanvas.width * 0.8;
+        const words = fullText.split(' ');
+        let line = '';
+        let y = paintCanvas.height * 0.3;
+
+        for (let n = 0; n < words.length; n++) {
+          let testLine = line + words[n] + ' ';
+          let metrics = pCtx.measureText(testLine);
+          if (metrics.width > maxWidth && n > 0) {
+            pCtx.fillText(line, paintCanvas.width / 2, y);
+            line = words[n] + ' ';
+            y += 45;
+          } else {
+            line = testLine;
+          }
+        }
+        pCtx.fillText(line, paintCanvas.width / 2, y);
+        pCtx.restore();
+
+        saveState();
+        quranModal.classList.remove('active');
+      })
+      .catch(() => alert('تعذر جلب الآيات المطلوبة، يرجى التحقق من الاتصال بالإنترنت.'));
   }
 };
 
