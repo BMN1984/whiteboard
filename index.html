@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>سبورة أكاديمية الفتح لعلوم القرآن حفظ وتجويد وتفسير</title>
-  <!-- مكتبات الخطوط والـ PDF والاحتفال التفاعلي -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
@@ -24,7 +23,6 @@
       color: #d1d5db;
     }
 
-    /* طبقة الرسوم المتحركة للنجوم والقلوب */
     #celebrationOverlay {
       position: fixed;
       top: 0;
@@ -59,24 +57,63 @@
       max-width: 880px;
       max-height: 86vh;
       overflow-y: auto;
-      background: rgba(15, 23, 42, 0.94);
+      background: rgba(15, 23, 42, 0.95);
       backdrop-filter: blur(14px);
       border: 2px solid #d97706;
       border-radius: 20px;
-      padding: 28px 34px;
+      padding: 24px 30px;
       box-shadow: 0 16px 45px rgba(0,0,0,0.75), 0 0 25px rgba(217, 119, 6, 0.25);
       text-align: center;
       direction: rtl;
     }
+
+    /* شريط تشغيل التلاوة والتكرار المدمج */
+    .audio-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      background: rgba(30, 41, 59, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 8px 14px;
+      margin-bottom: 16px;
+    }
+    .audio-btn {
+      background: #0284c7;
+      border: 1px solid #38bdf8;
+      color: #fff;
+      padding: 5px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: background 0.15s;
+    }
+    .audio-btn:hover { background: #0369a1; }
+    .audio-select {
+      background: #0b111e;
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #e2e8f0;
+      padding: 5px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      outline: none;
+    }
+
     .surah-header-badge {
       display: inline-block;
       background: linear-gradient(135deg, #d97706, #78350f);
       color: #ffffff;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: bold;
-      padding: 6px 24px;
+      padding: 5px 22px;
       border-radius: 30px;
-      margin-bottom: 18px;
+      margin-bottom: 14px;
       border: 1px solid #fef3c7;
       box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     }
@@ -87,7 +124,6 @@
       text-shadow: 0 2px 4px rgba(0,0,0,0.5);
     }
 
-    /* حاوية صفحة المصحف المصورة */
     #mushafContainer {
       position: absolute;
       top: 50%;
@@ -115,6 +151,20 @@
     #paintCanvas { position: absolute; top: 0; left: 0; cursor: crosshair; touch-action: none; z-index: 3; }
     #overlayCanvas { position: absolute; top: 0; left: 0; pointer-events: none; z-index: 4; }
 
+    /* حقل إدخال النص الفوري على السبورة */
+    #inlineTextInput {
+      position: absolute;
+      display: none;
+      z-index: 100;
+      background: transparent;
+      border: 1.5px dashed #38bdf8;
+      border-radius: 4px;
+      outline: none;
+      padding: 4px 8px;
+      direction: rtl;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
     .panel {
       position: fixed;
       background: rgba(18, 24, 38, 0.94);
@@ -137,7 +187,6 @@
       font-size: 13px;
     }
 
-    /* شريط أدوات التحفيز والتصفيق التفاعلي في الشريط العلوي */
     .praise-dock {
       display: flex;
       align-items: center;
@@ -318,7 +367,6 @@
     }
     .dock-btn.btn-sq-color { border-radius: 8px; }
 
-    /* النافذة المنبثقة للقرآن الكريم */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -468,7 +516,6 @@
 </head>
 <body>
 
-  <!-- طبقة الرسوم المتحركة للنجوم والقلوب المحفزة -->
   <div id="celebrationOverlay"></div>
 
   <button class="toggle-panel-btn" id="toggleLeftBtn">☰ سبورة الأكاديمية</button>
@@ -476,16 +523,16 @@
 
   <!-- شريط التحكم العلوي -->
   <div class="panel top-bar">
-    <!-- أزرار التحفيز التفاعلي للمعلمة عند تسميع الطالب الممتاز -->
+    <!-- أدوات التحفيز والتصفيق -->
     <div class="praise-dock">
-      <button class="praise-btn" id="btnClap" title="تصفيق حار مبهج">👏</button>
-      <button class="praise-btn" id="btnStars" title="مطر النجوم المتلألئة">⭐</button>
+      <button class="praise-btn" id="btnClap" title="تصفيق حار">👏</button>
+      <button class="praise-btn" id="btnStars" title="مطر النجوم">⭐</button>
       <button class="praise-btn" id="btnHearts" title="قلوب طائرة">💖</button>
-      <button class="praise-btn" id="btnParty" title="احتفال كلي ومفرقعات">🎊</button>
+      <button class="praise-btn" id="btnParty" title="احتفال كامل">🎊</button>
     </div>
 
-    <!-- زر Google Meet لمشاركة الشاشة -->
-    <button class="btn-meet" id="btnGoogleMeet" title="مشاركة الشاشة الحالية أو الانتقال لـ Google Meet">
+    <!-- زر Google Meet -->
+    <button class="btn-meet" id="btnGoogleMeet" title="مشاركة الشاشة عبر Google Meet">
       <span>📹</span>
       <span>مشاركة عبر Google Meet</span>
     </button>
@@ -493,8 +540,29 @@
     <button class="side-btn" id="fullScreenBtn" style="padding:4px 8px;">⛶ ملء الشاشة</button>
   </div>
 
-  <!-- 1. عنصر عرض الآيات بالخط العربي الكبير والمزخرف والملون -->
+  <!-- 1. حاوية الآيات بالخط العثماني المزخرف والمشغل الصوتي المدمج -->
   <div id="quranTextContainer">
+    <!-- شريط الصوت والتكرار -->
+    <div class="audio-toolbar">
+      <button class="audio-btn" id="btnPlayAudio">▶️ تشغيل التلاوة</button>
+      
+      <select class="audio-select" id="reciterSelect" title="اختيار القارئ">
+        <option value="ar.husary">محمود خليل الحصري (مرتل)</option>
+        <option value="ar.minshawi">محمد صديق المنشاوي</option>
+        <option value="ar.abdulbasitmurattal">عبد الباسط عبد الصمد</option>
+        <option value="ar.alafasy">مشاري راشد العفاسي</option>
+      </select>
+
+      <select class="audio-select" id="loopSelect" title="خاصية التكرار للحفظ">
+        <option value="1">تشغيل مرة واحدة</option>
+        <option value="3">تكرار 3 مرات</option>
+        <option value="5">تكرار 5 مرات</option>
+        <option value="999">تكرار مستمر</option>
+      </select>
+      
+      <span id="audioStatus" style="font-size:11px; color:#38bdf8;">جاهز للاستماع</span>
+    </div>
+
     <div class="surah-header-badge" id="surahBadgeTitle">سورة الفاتحة</div>
     <div id="quranTextContent"></div>
   </div>
@@ -508,6 +576,9 @@
   <canvas id="pdfCanvas"></canvas>
   <canvas id="paintCanvas"></canvas>
   <canvas id="overlayCanvas"></canvas>
+
+  <!-- حقل إدخال النص الفوري عند استخدام أداة النص (A) -->
+  <input type="text" id="inlineTextInput" placeholder="اكتب النص هنا واضغط Enter">
 
   <!-- اللوحة الجانبية اليسرى: اسم الأكاديمية ونخبة المعلمات -->
   <div class="panel side-left" id="leftPanel">
@@ -559,7 +630,7 @@
       <button class="close-btn" id="closeRightBtn">✕</button>
     </div>
 
-    <div class="section-label">ألوان القلم</div>
+    <div class="section-label">ألوان القلم / النص</div>
     <div class="color-palette">
       <div class="palette-dot active" style="background: #ffffff;" data-color="#ffffff"></div>
       <div class="palette-dot" style="background: #facc15;" data-color="#facc15"></div>
@@ -574,8 +645,8 @@
     </div>
 
     <div class="slider-group">
-      <div class="slider-info"><span>سُمك القلم / الشكل</span><span id="sizeVal">4px</span></div>
-      <input type="range" id="brushSize" min="2" max="35" value="4">
+      <div class="slider-info"><span>سُمك القلم / حجم النص</span><span id="sizeVal">4px</span></div>
+      <input type="range" id="brushSize" min="2" max="45" value="4">
     </div>
 
     <div class="slider-group">
@@ -594,10 +665,12 @@
     <input type="file" id="imageInput" accept="image/*" style="display:none;">
   </div>
 
-  <!-- شريط الأدوات السفلي -->
+  <!-- شريط الأدوات السفلي المحدث (يضم الكف ✋ والنص A) -->
   <div class="panel bottom-dock">
     <div class="dock-row">
       <button class="dock-btn" id="redoBtn" title="إعادة">↪️</button>
+      <button class="dock-btn" data-tool="hand" title="تحريك وسحب السبورة (الكف)">✋</button>
+      <button class="dock-btn" data-tool="text" title="كتابة نص مباشر">A</button>
       <button class="dock-btn active" data-tool="pen" title="قلم">✏️</button>
       <button class="dock-btn" data-tool="highlighter" title="تظليل">🖊️</button>
       <button class="dock-btn" data-tool="laser" title="مؤشر ليزر">🔴</button>
@@ -699,6 +772,7 @@
     const quranTextContainer = document.getElementById('quranTextContainer');
     const quranTextContent = document.getElementById('quranTextContent');
     const surahBadgeTitle = document.getElementById('surahBadgeTitle');
+    const inlineTextInput = document.getElementById('inlineTextInput');
 
     let currentGrid = 'two-lines';
     let currentThemeBg = '#064e3b';
@@ -720,7 +794,7 @@
     let totalPdfPages = 0;
     const pageIndicator = document.getElementById('pageIndicator');
 
-    // محرك الصوتيات التفاعلية الداخلي (Web Audio API)
+    // الصوتيات والمؤثرات التحفيزية (Web Audio API)
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     let audioCtx = null;
 
@@ -730,7 +804,6 @@
       return audioCtx;
     }
 
-    // 1. صوت التصفيق الحار المبهج
     function playClapSound() {
       const ctx = getAudioContext();
       for (let i = 0; i < 18; i++) {
@@ -749,10 +822,9 @@
       }
     }
 
-    // 2. صوت الرنين الذهبي التكريمي
     function playChimeSound() {
       const ctx = getAudioContext();
-      const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+      const notes = [523.25, 659.25, 783.99, 1046.50];
       notes.forEach((freq, idx) => {
         setTimeout(() => {
           const osc = ctx.createOscillator();
@@ -769,7 +841,6 @@
       });
     }
 
-    // تأثيرات التحفيز البصرية (النجوم والقلوب العائمة)
     const celebrationOverlay = document.getElementById('celebrationOverlay');
     function triggerFloatingEffect(symbol, count = 25) {
       for (let i = 0; i < count; i++) {
@@ -784,34 +855,26 @@
       }
     }
 
-    // أزرار التشجيع والترحيب
     document.getElementById('btnClap').onclick = () => {
       playClapSound();
       confetti({ particleCount: 60, spread: 70, origin: { y: 0.7 } });
     };
-
     document.getElementById('btnStars').onclick = () => {
       playChimeSound();
       triggerFloatingEffect('⭐', 30);
     };
-
     document.getElementById('btnHearts').onclick = () => {
       playChimeSound();
       triggerFloatingEffect('💖', 30);
     };
-
     document.getElementById('btnParty').onclick = () => {
       playClapSound();
       playChimeSound();
       triggerFloatingEffect('🌟', 20);
       confetti({ particleCount: 120, spread: 100, origin: { y: 0.6 } });
-      setTimeout(() => {
-        confetti({ particleCount: 80, angle: 60, spread: 55, origin: { x: 0 } });
-        confetti({ particleCount: 80, angle: 120, spread: 55, origin: { x: 1 } });
-      }, 300);
     };
 
-    // ميزة مشاركة الشاشة عبر Google Meet
+    // Google Meet
     document.getElementById('btnGoogleMeet').onclick = async () => {
       if (confirm("هل ترغب في بدء مشاركة الشاشة الحالية للمتصفح عبر Google Meet؟")) {
         try {
@@ -824,6 +887,80 @@
           window.open("https://meet.google.com/new", "_blank");
         }
       }
+    };
+
+    // نظام تشغيل التلاوة والتكرار التعليمي للآيات
+    let activeAyahAudios = [];
+    let currentAudioIndex = 0;
+    let isAudioPlaying = false;
+    let currentAudioObj = new Audio();
+    let currentLoopCount = 1;
+    let currentLoopIteration = 1;
+
+    const btnPlayAudio = document.getElementById('btnPlayAudio');
+    const audioStatus = document.getElementById('audioStatus');
+    const reciterSelect = document.getElementById('reciterSelect');
+    const loopSelect = document.getElementById('loopSelect');
+
+    function playAyahSequence(index) {
+      if (!isAudioPlaying) return;
+      if (index >= activeAyahAudios.length) {
+        // فحص خاصية التكرار
+        if (currentLoopIteration < currentLoopCount) {
+          currentLoopIteration++;
+          audioStatus.innerText = `إعادة التكرار (${currentLoopIteration} من ${currentLoopCount})`;
+          playAyahSequence(0);
+        } else {
+          stopQuranAudio();
+          audioStatus.innerText = "اكتمل الاستماع والتكرار بنجاح";
+        }
+        return;
+      }
+
+      currentAudioIndex = index;
+      currentAudioObj.src = activeAyahAudios[index];
+      audioStatus.innerText = `تلاوة آية ${index + 1} من ${activeAyahAudios.length} (تكرار ${currentLoopIteration}/${currentLoopCount})`;
+      
+      currentAudioObj.play().catch(() => {
+        audioStatus.innerText = "جاري الانتقال للآية التالية...";
+        setTimeout(() => playAyahSequence(index + 1), 600);
+      });
+
+      currentAudioObj.onended = () => {
+        playAyahSequence(index + 1);
+      };
+    }
+
+    function stopQuranAudio() {
+      isAudioPlaying = false;
+      currentAudioObj.pause();
+      currentAudioObj.currentTime = 0;
+      btnPlayAudio.innerText = "▶️ تشغيل التلاوة";
+      btnPlayAudio.style.background = "#0284c7";
+    }
+
+    btnPlayAudio.onclick = () => {
+      if (activeAyahAudios.length === 0) {
+        alert("يرجى إدراج الآيات أولاً عبر نافذة آيات القرآن لتشغيل التلاوة.");
+        return;
+      }
+      if (isAudioPlaying) {
+        stopQuranAudio();
+        audioStatus.innerText = "تم إيقاف التلاوة مؤقتاً";
+      } else {
+        isAudioPlaying = true;
+        currentLoopCount = parseInt(loopSelect.value);
+        currentLoopIteration = 1;
+        btnPlayAudio.innerText = "⏸️ إيقاف مؤقت";
+        btnPlayAudio.style.background = "#dc2626";
+        playAyahSequence(0);
+      }
+    };
+
+    // إعادة تحميل الصوتيات عند تغيير القارئ
+    reciterSelect.onchange = () => {
+      stopQuranAudio();
+      audioStatus.innerText = "تم تغيير القارئ - اضغط تشغيل";
     };
 
     function resizeCanvases() {
@@ -937,11 +1074,37 @@
       targetCtx.fill();
     }
 
+    // منطق التحريك بالكف (Hand / Pan Tool)
+    let isPanning = false;
+    let panStartX = 0, panStartY = 0;
+
     function startDraw(e) {
-      isDrawing = true;
       const { x, y } = getCoords(e);
       startX = x;
       startY = y;
+
+      // أداة النص المباشر
+      if (currentTool === 'text') {
+        inlineTextInput.style.left = x + 'px';
+        inlineTextInput.style.top = y + 'px';
+        inlineTextInput.style.color = currentColor;
+        inlineTextInput.style.fontSize = Math.max(16, currentSize * 4) + 'px';
+        inlineTextInput.style.display = 'block';
+        inlineTextInput.value = '';
+        setTimeout(() => inlineTextInput.focus(), 50);
+        return;
+      }
+
+      // أداة الكف والتحريك
+      if (currentTool === 'hand') {
+        isPanning = true;
+        panStartX = x;
+        panStartY = y;
+        paintCanvas.style.cursor = 'grabbing';
+        return;
+      }
+
+      isDrawing = true;
 
       if (['pen', 'highlighter', 'eraser'].includes(currentTool)) {
         pCtx.beginPath();
@@ -964,8 +1127,26 @@
     }
 
     function draw(e) {
-      if (!isDrawing) return;
       const { x, y } = getCoords(e);
+
+      if (isPanning && currentTool === 'hand') {
+        const dx = x - panStartX;
+        const dy = y - panStartY;
+        panStartX = x;
+        panStartY = y;
+
+        // تحريك محتويات السبورة مع حركة الكف
+        const temp = document.createElement('canvas');
+        temp.width = paintCanvas.width;
+        temp.height = paintCanvas.height;
+        temp.getContext('2d').drawImage(paintCanvas, 0, 0);
+
+        pCtx.clearRect(0, 0, paintCanvas.width, paintCanvas.height);
+        pCtx.drawImage(temp, dx, dy);
+        return;
+      }
+
+      if (!isDrawing) return;
 
       if (['pen', 'highlighter', 'eraser'].includes(currentTool)) {
         pCtx.lineTo(x, y);
@@ -997,6 +1178,13 @@
     }
 
     function stopDraw(e) {
+      if (isPanning) {
+        isPanning = false;
+        paintCanvas.style.cursor = 'grab';
+        saveState();
+        return;
+      }
+
       if (!isDrawing) return;
       isDrawing = false;
       const { x, y } = getCoords(e);
@@ -1033,6 +1221,34 @@
       }
     }
 
+    // حفظ النص المكتوب على الكانفاس عند الضغط على Enter أو فقدان التركيز
+    inlineTextInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        commitInlineText();
+      }
+    });
+    inlineTextInput.addEventListener('blur', () => {
+      commitInlineText();
+    });
+
+    function commitInlineText() {
+      const text = inlineTextInput.value.trim();
+      if (text) {
+        pCtx.save();
+        pCtx.fillStyle = currentColor;
+        const fSize = Math.max(16, currentSize * 4);
+        pCtx.font = `bold ${fSize}px -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, sans-serif`;
+        pCtx.direction = 'rtl';
+        const posX = parseInt(inlineTextInput.style.left);
+        const posY = parseInt(inlineTextInput.style.top) + fSize;
+        pCtx.fillText(text, posX, posY);
+        pCtx.restore();
+        saveState();
+      }
+      inlineTextInput.style.display = 'none';
+      inlineTextInput.value = '';
+    }
+
     function renderLaser() {
       if (laserPoints.length > 0) {
         oCtx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
@@ -1067,6 +1283,14 @@
         document.querySelectorAll('[data-tool]').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         currentTool = btn.getAttribute('data-tool');
+
+        if (currentTool === 'hand') {
+          paintCanvas.style.cursor = 'grab';
+        } else if (currentTool === 'text') {
+          paintCanvas.style.cursor = 'text';
+        } else {
+          paintCanvas.style.cursor = 'crosshair';
+        }
       });
     });
 
@@ -1129,6 +1353,7 @@
         pdfCtx.clearRect(0, 0, pdfCanvas.width, pdfCanvas.height);
         mushafContainer.style.display = 'none';
         quranTextContainer.style.display = 'none';
+        stopQuranAudio();
         currentPdf = null;
         pageIndicator.innerText = "صفحة 1 / 1";
         saveState();
@@ -1182,6 +1407,7 @@
             currentPdfPage = 1;
             mushafContainer.style.display = 'none';
             quranTextContainer.style.display = 'none';
+            stopQuranAudio();
             renderPdfPage(currentPdfPage);
           });
         };
@@ -1226,6 +1452,7 @@
       }
     };
 
+    // قائمة سور القرآن الكريم الـ 114
     const surahData = [
       { name: "الفاتحة", page: 1 }, { name: "البقرة", page: 2 }, { name: "آل عمران", page: 50 },
       { name: "النساء", page: 77 }, { name: "المائدة", page: 106 }, { name: "الأنعام", page: 128 },
@@ -1362,7 +1589,7 @@
       let attempt = 0;
       function tryLoad() {
         if (attempt >= urls.length) {
-          alert('تعذر تحميل صورة الصفحة، يرجى استخدام خيار "خط عريض ومزخرف وملون" لعرض الآيات.');
+          alert('تعذر تحميل صورة الصفحة، يرجى استخدام نمط "خط عريض ومزخرف وملون" لعرض الآيات والاستماع إليها.');
           return;
         }
         mushafImg.onerror = () => {
@@ -1372,6 +1599,7 @@
         mushafImg.onload = () => {
           mushafContainer.style.display = 'block';
           quranTextContainer.style.display = 'none';
+          stopQuranAudio();
           pCtx.clearRect(0, 0, paintCanvas.width, paintCanvas.height);
           saveState();
           pageIndicator.innerText = `مصحف: صفحة ${pageNum}`;
@@ -1382,6 +1610,7 @@
       tryLoad();
     }
 
+    // إدراج الآيات وجلب روابط التلاوة الصوتية المتزامنة
     document.getElementById('submitQuranBtn').onclick = () => {
       if (quranDisplayMode === 'text') {
         const surahIdx = parseInt(textSurahSelect.value);
@@ -1389,10 +1618,12 @@
         const fromV = parseInt(document.getElementById('verseFrom').value) || 1;
         const toV = parseInt(document.getElementById('verseTo').value) || fromV;
         const fSize = quranFontSizeSlider.value + 'px';
+        const reciter = reciterSelect.value;
 
-        document.getElementById('submitBtnText').innerText = "جاري جلب الآيات...";
+        document.getElementById('submitBtnText').innerText = "جاري جلب الآيات والتلاوة...";
 
-        fetch(`https://api.alquran.cloud/v1/surah/${surahIdx}/quran-uthmani`)
+        // جلب النص العثماني والروابط الصوتية لنفس القارئ المختار
+        fetch(`https://api.alquran.cloud/v1/surah/${surahIdx}/${reciter}`)
           .then(res => res.json())
           .then(data => {
             const verses = data.data.ayahs.filter(a => a.numberInSurah >= fromV && a.numberInSurah <= toV);
@@ -1401,6 +1632,11 @@
               document.getElementById('submitBtnText').innerText = "إدراج الآيات المزخرفة الملونة";
               return;
             }
+
+            // حفظ روابط التلاوة الصوتية
+            activeAyahAudios = verses.map(a => a.audio);
+            stopQuranAudio();
+            audioStatus.innerText = `جاهز للاستماع (${verses.length} آيات)`;
 
             const fullVersesHtml = verses.map(a => `${a.text} <span style="color:#f59e0b; font-size:0.88em;">﴿${a.numberInSurah}﴾</span>`).join(' ');
 
