@@ -4,12 +4,288 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>سبورة الفتح التفاعلية</title>
-  <link rel="stylesheet" href="style.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+    body {
+      overflow: hidden;
+      background-color: #064e3b; /* أخضر سبورة كلاسيكي */
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #d1d5db;
+    }
+    #gridCanvas, #pdfCanvas, #overlayCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+    }
+    #gridCanvas { z-index: 1; }
+    #pdfCanvas { z-index: 2; }
+    #paintCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      cursor: crosshair;
+      touch-action: none;
+      z-index: 3;
+    }
+    #overlayCanvas { z-index: 4; }
+
+    .panel {
+      position: fixed;
+      background: rgba(18, 24, 38, 0.94);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
+      z-index: 100;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+    .top-bar {
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 6px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+    }
+    .btn-gold {
+      background: linear-gradient(135deg, #d97706, #b45309);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .side-left {
+      top: 14px;
+      left: 14px;
+      width: 220px;
+      max-height: 94vh;
+      overflow-y: auto;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .side-right {
+      top: 14px;
+      right: 14px;
+      width: 220px;
+      max-height: 94vh;
+      overflow-y: auto;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .panel.closed-left { transform: translateX(-260px); opacity: 0; pointer-events: none; }
+    .panel.closed-right { transform: translateX(260px); opacity: 0; pointer-events: none; }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      padding-bottom: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #93c5fd;
+    }
+    .close-btn {
+      background: transparent;
+      border: none;
+      color: #9ca3af;
+      cursor: pointer;
+      font-size: 15px;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .close-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #9ca3af;
+      margin-bottom: 4px;
+    }
+    .color-palette {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+    }
+    .palette-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+    .palette-dot:hover { transform: scale(1.15); }
+    .palette-dot.active { border-color: #fff; transform: scale(1.15); }
+
+    .btn-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    .btn-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+
+    .side-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      color: #e5e7eb;
+      padding: 6px 8px;
+      border-radius: 8px;
+      font-size: 11px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+    .side-btn:hover { background: rgba(255, 255, 255, 0.12); }
+    .side-btn.active { background: #2563eb; border-color: #3b82f6; color: #fff; }
+    .btn-green-spec { background: #059669; border-color: #10b981; color: #fff; font-weight: 600; }
+
+    .slider-group { display: flex; flex-direction: column; gap: 2px; }
+    .slider-info { display: flex; justify-content: space-between; font-size: 10px; color: #9ca3af; }
+    input[type="range"] { width: 100%; accent-color: #38bdf8; cursor: pointer; height: 4px; }
+
+    .bottom-dock {
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 8px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      z-index: 100;
+    }
+    .dock-row { display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .dock-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .dock-btn:hover { background: rgba(255, 255, 255, 0.15); transform: translateY(-2px); }
+    .dock-btn.active {
+      background: #0284c7;
+      border-color: #38bdf8;
+      color: #fff;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+    }
+    .dock-btn.btn-sq-color { border-radius: 8px; }
+
+    /* النافذة المنبثقة للمصحف الشريف */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.72);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+    .modal-overlay.active { display: flex; }
+    .quran-modal {
+      width: 480px;
+      max-width: 92vw;
+      background: #141a29;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 22px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      direction: rtl;
+    }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; }
+    .modal-title { color: #14b8a6; font-size: 15px; font-weight: bold; display: flex; align-items: center; gap: 8px; }
+    .modal-close {
+      background: #1e293b;
+      border: none;
+      color: #94a3b8;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+    }
+    .modal-close:hover { background: #334155; color: #fff; }
+    .edition-box {
+      border: 1.5px solid #0284c7;
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 0 14px rgba(2, 132, 199, 0.25);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .edition-label-row { display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 600; color: #93c5fd; }
+    .badge-orange { background: linear-gradient(135deg, #f97316, #ea580c); color: #fff; font-size: 10px; padding: 2px 7px; border-radius: 5px; font-weight: bold; }
+    .custom-select { width: 100%; background: #0b111e; color: #e2e8f0; border: 1px solid #1e293b; border-radius: 8px; padding: 9px; font-size: 12px; outline: none; }
+    .tabs-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .tab-btn { background: #1e293b; border: 1px solid rgba(255, 255, 255, 0.05); color: #94a3b8; padding: 9px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
+    .tab-btn.active { background: #0f172a; color: #38bdf8; border-color: #0284c7; }
+    .input-label { font-size: 12px; color: #94a3b8; }
+    .quran-field { width: 100%; background: #0b111e; border: 1px solid #1e293b; border-radius: 8px; padding: 10px; color: #fff; font-size: 13px; outline: none; text-align: center; }
+    .modal-footer { display: flex; gap: 10px; margin-top: 4px; }
+    .btn-modal-cancel { flex: 1; background: #1e293b; color: #cbd5e1; border: none; border-radius: 8px; padding: 10px; font-size: 12px; font-weight: 600; cursor: pointer; }
+    .btn-modal-submit { flex: 2; background: #0d9488; color: #fff; border: none; border-radius: 8px; padding: 10px; font-size: 13px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
+    .btn-modal-submit:hover { background: #0f766e; }
+
+    /* أزرار إعادة إظهار القوائم في حال إغلاقها */
+    .toggle-panel-btn {
+      position: fixed;
+      top: 16px;
+      z-index: 99;
+      background: rgba(18, 24, 38, 0.85);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #fff;
+      padding: 6px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: none;
+      font-size: 12px;
+    }
+    #toggleLeftBtn { left: 14px; }
+    #toggleRightBtn { right: 14px; }
+  </style>
 </head>
 <body>
 
-  <!-- شريط الإجراءات العلوي -->
+  <button class="toggle-panel-btn" id="toggleLeftBtn">☰ سبورة الصباح</button>
+  <button class="toggle-panel-btn" id="toggleRightBtn">☰ أدوات الرسم</button>
+
+  <!-- شريط التحكم العلوي -->
   <div class="panel top-bar">
     <div style="display:flex; gap:8px; align-items:center;">
       <span>🌙</span>
@@ -17,20 +293,19 @@
       <span>👁️</span>
     </div>
     <button class="btn-gold">👑 ترقية للنسخة الاحترافية</button>
-    <button class="side-btn" id="fullScreenBtn" style="padding:4px 8px;">⛶ التكبير</button>
+    <button class="side-btn" id="fullScreenBtn" style="padding:4px 8px;">⛶ ملء الشاشة</button>
   </div>
 
-  <!-- مساحات الكانفاس -->
   <canvas id="gridCanvas"></canvas>
   <canvas id="pdfCanvas"></canvas>
   <canvas id="paintCanvas"></canvas>
   <canvas id="overlayCanvas"></canvas>
 
-  <!-- اللوحة الجانبية اليسرى: إعدادات السبورة والمشروع -->
-  <div class="panel side-left">
+  <!-- اللوحة الجانبية اليسرى -->
+  <div class="panel side-left" id="leftPanel">
     <div class="panel-header">
       <span>سبورة الصباح</span>
-      <button class="close-btn">✕</button>
+      <button class="close-btn" id="closeLeftBtn">✕</button>
     </div>
 
     <div style="display:flex; justify-content:space-between; font-size:11px; color:#9ca3af;">
@@ -40,8 +315,8 @@
 
     <div class="section-label">لون السبورة</div>
     <div class="color-palette">
-      <div class="palette-dot active" style="background: #12161f;" data-bg="#12161f"></div>
-      <div class="palette-dot" style="background: #064e3b;" data-bg="#064e3b"></div>
+      <div class="palette-dot" style="background: #12161f;" data-bg="#12161f"></div>
+      <div class="palette-dot active" style="background: #064e3b;" data-bg="#064e3b"></div>
       <div class="palette-dot" style="background: #1e3a8a;" data-bg="#1e3a8a"></div>
       <div class="palette-dot" style="background: #0f172a;" data-bg="#0f172a"></div>
       <div class="palette-dot" style="background: #ffffff;" data-bg="#ffffff"></div>
@@ -52,31 +327,28 @@
       <div class="palette-dot" style="background: #000000;" data-bg="#000000"></div>
     </div>
 
-    <button class="side-btn" id="turboModeBtn">⚡ وضع تسريع الأداء (Turbo)</button>
-
     <div class="section-label">تخطيط الأسطر والشبكة</div>
     <div class="btn-grid-3">
-      <button class="side-btn active" data-grid="none">سادة</button>
+      <button class="side-btn" data-grid="none">سادة</button>
       <button class="side-btn" data-grid="graph">شبكة</button>
       <button class="side-btn" data-grid="ruled">مسطر</button>
-      <button class="side-btn" data-grid="two-lines">سطرين معاً</button>
+      <button class="side-btn active" data-grid="two-lines">سطرين معاً</button>
       <button class="side-btn" data-grid="four-lines">4 أسطر</button>
       <button class="side-btn" data-grid="wide-ruled">عريض</button>
     </div>
 
     <div class="section-label">المشروع والتصدير</div>
-    <button class="side-btn" id="saveProjectBtn">💾 حفظ المشروع</button>
     <button class="side-btn" id="downloadPngBtn">📷 تصدير صورة PNG</button>
     <button class="side-btn" id="downloadJpgBtn">🖼️ تصدير صورة JPG</button>
     <button class="side-btn" id="clearBoardBtn" style="color:#f87171;">🗑️ مسح لوحة الشرح</button>
   </div>
 
-  <!-- اللوحة الجانبية اليمنى: الأدوات والوسائط -->
-  <div class="panel side-right">
+  <!-- اللوحة الجانبية اليمنى -->
+  <div class="panel side-right" id="rightPanel">
     <div class="panel-header">
       <button class="side-btn" id="undoBtn" style="padding:2px 8px;">↩️ التراجع</button>
       <span id="pageIndicator" style="font-size:11px;">صفحة 1 / 1</span>
-      <button class="close-btn">✕</button>
+      <button class="close-btn" id="closeRightBtn">✕</button>
     </div>
 
     <div class="section-label">ألوان القلم</div>
@@ -108,17 +380,16 @@
       <button class="side-btn" id="uploadPdfBtn">📑 شرح PDF</button>
       <button class="side-btn" id="uploadImgBtn">🖼️ إدراج صورة</button>
     </div>
-    <button class="side-btn btn-green-spec" id="loadQuranModalBtn">📖 آيات القرآن</button>
+    <button class="side-btn btn-green-spec" id="openQuranBtn">📖 آيات القرآن</button>
 
     <input type="file" id="pdfInput" accept="application/pdf" style="display:none;">
     <input type="file" id="imageInput" accept="image/*" style="display:none;">
   </div>
 
-  <!-- شريط الأدوات السفلي العريض -->
+  <!-- شريط الأدوات السفلي -->
   <div class="panel bottom-dock">
     <div class="dock-row">
       <button class="dock-btn" id="redoBtn" title="إعادة">↪️</button>
-      <button class="dock-btn" title="تحديد">🔲</button>
       <button class="dock-btn active" data-tool="pen" title="قلم">✏️</button>
       <button class="dock-btn" data-tool="highlighter" title="تظليل">🖊️</button>
       <button class="dock-btn" data-tool="laser" title="مؤشر ليزر">🔴</button>
@@ -127,11 +398,10 @@
       <button class="dock-btn" data-tool="arrow" title="سهم">➡️</button>
       <button class="dock-btn" data-tool="rect" title="مستطيل">▭</button>
       <button class="dock-btn" data-tool="circle" title="دائرة">◯</button>
-      <button class="dock-btn" data-tool="text" title="نص">A</button>
     </div>
     <div class="dock-row">
-      <button class="dock-btn" id="prevPageBtn" title="الصفحة السابقة">◀</button>
-      <button class="dock-btn" id="nextPageBtn" title="الصفحة التالية">▶</button>
+      <button class="dock-btn" id="prevPageBtn" title="السابق">◀</button>
+      <button class="dock-btn" id="nextPageBtn" title="التالي">▶</button>
       <button class="dock-btn btn-sq-color" style="background:#a855f7;" data-color="#a855f7"></button>
       <button class="dock-btn btn-sq-color" style="background:#0284c7;" data-color="#0284c7"></button>
       <button class="dock-btn btn-sq-color" style="background:#22c55e;" data-color="#22c55e"></button>
@@ -141,7 +411,7 @@
     </div>
   </div>
 
-  <!-- نافذة استخراج آيات المصحف الشريف المنبثقة -->
+  <!-- النافذة المنبثقة لاستخراج آيات المصحف الشريف -->
   <div class="modal-overlay" id="quranModal">
     <div class="quran-modal">
       <div class="modal-header">
@@ -168,7 +438,7 @@
       </div>
 
       <div id="pageSection">
-        <div class="input-label">أدخل رقم الصفحة في المصحف (من 1 إلى 604):</div>
+        <div class="input-label" style="margin-bottom:6px;">أدخل رقم الصفحة في المصحف (من 1 إلى 604):</div>
         <input type="number" id="quranPageInput" class="quran-field" value="1" min="1" max="604">
       </div>
 
@@ -177,7 +447,7 @@
         <select id="surahSelect" class="custom-select"></select>
         <div style="display: flex; gap: 8px;">
           <input type="number" id="verseFrom" class="quran-field" placeholder="من آية" min="1" value="1">
-          <input type="number" id="verseTo" class="quran-field" placeholder="إلى آية" min="1" value="5">
+          <input type="number" id="verseTo" class="quran-field" placeholder="إلى آية" min="1" value="7">
         </div>
       </div>
 
@@ -191,6 +461,639 @@
     </div>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+    const paintCanvas = document.getElementById('paintCanvas');
+    const pCtx = paintCanvas.getContext('2d');
+    const gridCanvas = document.getElementById('gridCanvas');
+    const gCtx = gridCanvas.getContext('2d');
+    const pdfCanvas = document.getElementById('pdfCanvas');
+    const pdfCtx = pdfCanvas.getContext('2d');
+    const overlayCanvas = document.getElementById('overlayCanvas');
+    const oCtx = overlayCanvas.getContext('2d');
+
+    let currentGrid = 'two-lines';
+    let currentThemeBg = '#064e3b';
+    let currentTool = 'pen';
+    let currentColor = '#ffffff';
+    let currentSize = 4;
+    let currentOpacity = 1.0;
+    let isDrawing = false;
+    let startX = 0, startY = 0;
+
+    let laserPoints = [];
+    let history = [];
+    let redoList = [];
+    const MAX_HISTORY = 20;
+
+    let currentPdf = null;
+    let currentPdfPage = 1;
+    let totalPdfPages = 0;
+    let currentQuranImg = null;
+    const pageIndicator = document.getElementById('pageIndicator');
+
+    function resizeCanvases() {
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = paintCanvas.width;
+      tempCanvas.height = paintCanvas.height;
+      const tCtx = tempCanvas.getContext('2d');
+      tCtx.drawImage(paintCanvas, 0, 0);
+
+      [paintCanvas, gridCanvas, pdfCanvas, overlayCanvas].forEach(c => {
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
+      });
+
+      pCtx.drawImage(tempCanvas, 0, 0);
+      drawGrid();
+      if (currentPdf) renderPdfPage(currentPdfPage);
+      if (currentQuranImg) drawQuranPageCenter(currentQuranImg);
+    }
+    window.addEventListener('resize', resizeCanvases);
+
+    [paintCanvas, gridCanvas, pdfCanvas, overlayCanvas].forEach(c => {
+      c.width = window.innerWidth;
+      c.height = window.innerHeight;
+    });
+
+    function drawGrid() {
+      gCtx.clearRect(0, 0, gridCanvas.width, gridCanvas.height);
+      if (currentGrid === 'none') return;
+
+      const isLight = currentThemeBg === '#ffffff';
+      gCtx.strokeStyle = isLight ? 'rgba(0, 0, 0, 0.08)' : 'rgba(255, 255, 255, 0.08)';
+      gCtx.lineWidth = 1;
+
+      if (currentGrid === 'ruled' || currentGrid === 'wide-ruled') {
+        const space = currentGrid === 'wide-ruled' ? 56 : 42;
+        for (let y = space; y < gridCanvas.height; y += space) {
+          gCtx.beginPath();
+          gCtx.moveTo(0, y);
+          gCtx.lineTo(gridCanvas.width, y);
+          gCtx.stroke();
+        }
+      } else if (currentGrid === 'two-lines') {
+        for (let y = 50; y < gridCanvas.height; y += 70) {
+          gCtx.beginPath();
+          gCtx.moveTo(0, y);
+          gCtx.lineTo(gridCanvas.width, y);
+          gCtx.moveTo(0, y + 24);
+          gCtx.lineTo(gridCanvas.width, y + 24);
+          gCtx.stroke();
+        }
+      } else if (currentGrid === 'four-lines') {
+        for (let y = 50; y < gridCanvas.height; y += 90) {
+          for (let i = 0; i < 4; i++) {
+            gCtx.beginPath();
+            gCtx.moveTo(0, y + i * 16);
+            gCtx.lineTo(gridCanvas.width, y + i * 16);
+            gCtx.stroke();
+          }
+        }
+      } else if (currentGrid === 'graph') {
+        const step = 38;
+        for (let x = 0; x < gridCanvas.width; x += step) {
+          gCtx.beginPath();
+          gCtx.moveTo(x, 0);
+          gCtx.lineTo(x, gridCanvas.height);
+          gCtx.stroke();
+        }
+        for (let y = 0; y < gridCanvas.height; y += step) {
+          gCtx.beginPath();
+          gCtx.moveTo(0, y);
+          gCtx.lineTo(gridCanvas.width, y);
+          gCtx.stroke();
+        }
+      }
+    }
+    drawGrid();
+
+    function saveState() {
+      if (history.length >= MAX_HISTORY) history.shift();
+      history.push(pCtx.getImageData(0, 0, paintCanvas.width, paintCanvas.height));
+      redoList = [];
+    }
+    saveState();
+
+    function getCoords(e) {
+      if (e.touches && e.touches[0]) {
+        return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      }
+      return { x: e.clientX, y: e.clientY };
+    }
+
+    function drawArrow(targetCtx, fromX, fromY, toX, toY, color, size) {
+      const angle = Math.atan2(toY - fromY, toX - fromX);
+      const headLength = Math.max(18, size * 3.5);
+
+      targetCtx.beginPath();
+      targetCtx.moveTo(fromX, fromY);
+      targetCtx.lineTo(toX, toY);
+      targetCtx.strokeStyle = color;
+      targetCtx.lineWidth = size;
+      targetCtx.lineCap = 'round';
+      targetCtx.stroke();
+
+      targetCtx.beginPath();
+      targetCtx.moveTo(toX, toY);
+      targetCtx.lineTo(toX - headLength * Math.cos(angle - Math.PI / 6), toY - headLength * Math.sin(angle - Math.PI / 6));
+      targetCtx.lineTo(toX - (headLength * 0.7) * Math.cos(angle), toY - (headLength * 0.7) * Math.sin(angle));
+      targetCtx.lineTo(toX - headLength * Math.cos(angle + Math.PI / 6), toY - headLength * Math.sin(angle + Math.PI / 6));
+      targetCtx.closePath();
+      targetCtx.fillStyle = color;
+      targetCtx.fill();
+    }
+
+    function startDraw(e) {
+      isDrawing = true;
+      const { x, y } = getCoords(e);
+      startX = x;
+      startY = y;
+
+      if (['pen', 'highlighter', 'eraser'].includes(currentTool)) {
+        pCtx.beginPath();
+        pCtx.moveTo(x, y);
+
+        if (currentTool === 'eraser') {
+          pCtx.globalCompositeOperation = 'destination-out';
+          pCtx.lineWidth = currentSize * 4;
+        } else {
+          pCtx.globalCompositeOperation = 'source-over';
+          pCtx.strokeStyle = currentTool === 'highlighter' ? currentColor + '55' : currentColor;
+          pCtx.globalAlpha = currentTool === 'highlighter' ? 0.4 : currentOpacity;
+          pCtx.lineWidth = currentTool === 'highlighter' ? currentSize * 3 : currentSize;
+        }
+        pCtx.lineCap = 'round';
+        pCtx.lineJoin = 'round';
+      } else if (currentTool === 'laser') {
+        laserPoints.push({ x, y, time: Date.now() });
+      }
+    }
+
+    function draw(e) {
+      if (!isDrawing) return;
+      const { x, y } = getCoords(e);
+
+      if (['pen', 'highlighter', 'eraser'].includes(currentTool)) {
+        pCtx.lineTo(x, y);
+        pCtx.stroke();
+      } else if (currentTool === 'laser') {
+        laserPoints.push({ x, y, time: Date.now() });
+      } else {
+        oCtx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+        if (currentTool === 'arrow') {
+          drawArrow(oCtx, startX, startY, x, y, currentColor, currentSize);
+        } else {
+          oCtx.strokeStyle = currentColor;
+          oCtx.lineWidth = currentSize;
+          oCtx.lineCap = 'round';
+          if (currentTool === 'line') {
+            oCtx.beginPath();
+            oCtx.moveTo(startX, startY);
+            oCtx.lineTo(x, y);
+            oCtx.stroke();
+          } else if (currentTool === 'rect') {
+            oCtx.strokeRect(startX, startY, x - startX, y - startY);
+          } else if (currentTool === 'circle') {
+            oCtx.beginPath();
+            oCtx.arc(startX, startY, Math.hypot(x - startX, y - startY), 0, Math.PI * 2);
+            oCtx.stroke();
+          }
+        }
+      }
+    }
+
+    function stopDraw(e) {
+      if (!isDrawing) return;
+      isDrawing = false;
+      const { x, y } = getCoords(e);
+
+      if (['pen', 'highlighter', 'eraser'].includes(currentTool)) {
+        pCtx.closePath();
+        pCtx.globalAlpha = 1.0;
+        saveState();
+      } else if (['line', 'arrow', 'rect', 'circle'].includes(currentTool)) {
+        oCtx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+        pCtx.globalCompositeOperation = 'source-over';
+        pCtx.globalAlpha = currentOpacity;
+        if (currentTool === 'arrow') {
+          drawArrow(pCtx, startX, startY, x, y, currentColor, currentSize);
+        } else {
+          pCtx.strokeStyle = currentColor;
+          pCtx.lineWidth = currentSize;
+          pCtx.lineCap = 'round';
+          if (currentTool === 'line') {
+            pCtx.beginPath();
+            pCtx.moveTo(startX, startY);
+            pCtx.lineTo(x, y);
+            pCtx.stroke();
+          } else if (currentTool === 'rect') {
+            pCtx.strokeRect(startX, startY, x - startX, y - startY);
+          } else if (currentTool === 'circle') {
+            pCtx.beginPath();
+            pCtx.arc(startX, startY, Math.hypot(x - startX, y - startY), 0, Math.PI * 2);
+            pCtx.stroke();
+          }
+        }
+        pCtx.globalAlpha = 1.0;
+        saveState();
+      }
+    }
+
+    function renderLaser() {
+      if (laserPoints.length > 0) {
+        oCtx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+        const now = Date.now();
+        laserPoints = laserPoints.filter(p => now - p.time < 1200);
+
+        for (let i = 1; i < laserPoints.length; i++) {
+          const alpha = 1 - (now - laserPoints[i].time) / 1200;
+          oCtx.strokeStyle = `rgba(239, 68, 68, ${alpha})`;
+          oCtx.lineWidth = 6;
+          oCtx.lineCap = 'round';
+          oCtx.beginPath();
+          oCtx.moveTo(laserPoints[i - 1].x, laserPoints[i - 1].y);
+          oCtx.lineTo(laserPoints[i].x, laserPoints[i].y);
+          oCtx.stroke();
+        }
+      }
+      requestAnimationFrame(renderLaser);
+    }
+    renderLaser();
+
+    paintCanvas.addEventListener('mousedown', startDraw);
+    paintCanvas.addEventListener('mousemove', draw);
+    window.addEventListener('mouseup', stopDraw);
+
+    paintCanvas.addEventListener('touchstart', (e) => { e.preventDefault(); startDraw(e); }, { passive: false });
+    paintCanvas.addEventListener('touchmove', (e) => { e.preventDefault(); draw(e); }, { passive: false });
+    window.addEventListener('touchend', (e) => { stopDraw(e); });
+
+    document.querySelectorAll('[data-tool]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('[data-tool]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentTool = btn.getAttribute('data-tool');
+      });
+    });
+
+    document.querySelectorAll('[data-color]').forEach(dot => {
+      dot.addEventListener('click', () => {
+        document.querySelectorAll('[data-color]').forEach(d => d.classList.remove('active'));
+        dot.classList.add('active');
+        currentColor = dot.getAttribute('data-color');
+        if (currentTool === 'eraser') {
+          document.querySelector('[data-tool="pen"]').click();
+        }
+      });
+    });
+
+    document.querySelectorAll('[data-bg]').forEach(dot => {
+      dot.addEventListener('click', () => {
+        document.querySelectorAll('[data-bg]').forEach(d => d.classList.remove('active'));
+        dot.classList.add('active');
+        currentThemeBg = dot.getAttribute('data-bg');
+        document.body.style.backgroundColor = currentThemeBg;
+        drawGrid();
+      });
+    });
+
+    document.querySelectorAll('[data-grid]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('[data-grid]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentGrid = btn.getAttribute('data-grid');
+        drawGrid();
+      });
+    });
+
+    document.getElementById('brushSize').oninput = (e) => {
+      currentSize = parseInt(e.target.value);
+      document.getElementById('sizeVal').innerText = currentSize + 'px';
+    };
+    document.getElementById('brushOpacity').oninput = (e) => {
+      currentOpacity = parseInt(e.target.value) / 100;
+      document.getElementById('opacityVal').innerText = e.target.value + '%';
+    };
+
+    document.getElementById('undoBtn').onclick = () => {
+      if (history.length > 1) {
+        redoList.push(history.pop());
+        pCtx.putImageData(history[history.length - 1], 0, 0);
+      }
+    };
+    document.getElementById('redoBtn').onclick = () => {
+      if (redoList.length > 0) {
+        const nextState = redoList.pop();
+        history.push(nextState);
+        pCtx.putImageData(nextState, 0, 0);
+      }
+    };
+
+    document.getElementById('clearBoardBtn').onclick = () => {
+      if (confirm('مسح كامل محتوى السبورة؟')) {
+        pCtx.clearRect(0, 0, paintCanvas.width, paintCanvas.height);
+        pdfCtx.clearRect(0, 0, pdfCanvas.width, pdfCanvas.height);
+        currentPdf = null;
+        currentQuranImg = null;
+        pageIndicator.innerText = "صفحة 1 / 1";
+        saveState();
+      }
+    };
+
+    document.getElementById('fullScreenBtn').onclick = () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    };
+
+    // إغلاق وإظهار القوائم الجانبية
+    const leftPanel = document.getElementById('leftPanel');
+    const rightPanel = document.getElementById('rightPanel');
+    const toggleLeftBtn = document.getElementById('toggleLeftBtn');
+    const toggleRightBtn = document.getElementById('toggleRightBtn');
+
+    document.getElementById('closeLeftBtn').onclick = () => {
+      leftPanel.classList.add('closed-left');
+      toggleLeftBtn.style.display = 'block';
+    };
+    toggleLeftBtn.onclick = () => {
+      leftPanel.classList.remove('closed-left');
+      toggleLeftBtn.style.display = 'none';
+    };
+
+    document.getElementById('closeRightBtn').onclick = () => {
+      rightPanel.classList.add('closed-right');
+      toggleRightBtn.style.display = 'block';
+    };
+    toggleRightBtn.onclick = () => {
+      rightPanel.classList.remove('closed-right');
+      toggleRightBtn.style.display = 'none';
+    };
+
+    // رفع واستعراض PDF
+    const pdfInput = document.getElementById('pdfInput');
+    document.getElementById('uploadPdfBtn').onclick = () => pdfInput.click();
+
+    pdfInput.onchange = function(e) {
+      const file = e.target.files[0];
+      if (file && file.type === 'application/pdf') {
+        const fileReader = new FileReader();
+        fileReader.onload = function() {
+          const typedarray = new Uint8Array(this.result);
+          pdfjsLib.getDocument(typedarray).promise.then(pdf => {
+            currentPdf = pdf;
+            totalPdfPages = pdf.numPages;
+            currentPdfPage = 1;
+            renderPdfPage(currentPdfPage);
+          });
+        };
+        fileReader.readAsArrayBuffer(file);
+      }
+    };
+
+    function renderPdfPage(pageNumber) {
+      if (!currentPdf) return;
+      currentPdf.getPage(pageNumber).then(page => {
+        const viewport = page.getViewport({ scale: 1 });
+        const scale = Math.min((pdfCanvas.width * 0.55) / viewport.width, (pdfCanvas.height * 0.88) / viewport.height);
+        const scaledViewport = page.getViewport({ scale: scale });
+
+        pdfCtx.clearRect(0, 0, pdfCanvas.width, pdfCanvas.height);
+        const x = (pdfCanvas.width - scaledViewport.width) / 2;
+        const y = (pdfCanvas.height - scaledViewport.height) / 2;
+
+        page.render({
+          canvasContext: pdfCtx,
+          viewport: scaledViewport,
+          transform: [1, 0, 0, 1, x, y]
+        });
+        pageIndicator.innerText = `صفحة PDF: ${pageNumber} / ${totalPdfPages}`;
+      });
+    }
+
+    document.getElementById('prevPageBtn').onclick = () => {
+      if (currentPdf && currentPdfPage > 1) {
+        currentPdfPage--;
+        renderPdfPage(currentPdfPage);
+      }
+    };
+    document.getElementById('nextPageBtn').onclick = () => {
+      if (currentPdf && currentPdfPage < totalPdfPages) {
+        currentPdfPage++;
+        renderPdfPage(currentPdfPage);
+      }
+    };
+
+    // قائمة السور الـ 114
+    const surahNames = [
+      "الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس",
+      "هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه",
+      "الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم",
+      "لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر",
+      "فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","ق",
+      "الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحديد","المجادلة","الحشر","الممتحنة",
+      "الصف","الجمعة","المنافقون","التغابن","الطلاق","التحريم","الملك","القلم","الحاقة","المعارج",
+      "نوح","الجن","المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات","عبس",
+      "التكوير","الانفطار","المطففين","الانشقاق","البروج","الطارق","الأعلى","الغاشية","الفجر","البلد",
+      "الشمس","الليل","الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات",
+      "القارعة","التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون","النصر",
+      "المسد","الإخلاص","الفلق","الناس"
+    ];
+
+    const surahSelect = document.getElementById('surahSelect');
+    surahNames.forEach((name, index) => {
+      const opt = document.createElement('option');
+      opt.value = index + 1;
+      opt.innerText = `${index + 1}. سورة ${name}`;
+      surahSelect.appendChild(opt);
+    });
+
+    const quranModal = document.getElementById('quranModal');
+    const openQuranBtn = document.getElementById('openQuranBtn');
+    const closeQuranBtn = document.getElementById('closeQuranModalBtn');
+    const cancelQuranBtn = document.getElementById('cancelQuranModalBtn');
+    const tabByPage = document.getElementById('tabByPage');
+    const tabBySurah = document.getElementById('tabBySurah');
+    const pageSection = document.getElementById('pageSection');
+    const surahSection = document.getElementById('surahSection');
+    let currentQuranMode = 'page';
+
+    openQuranBtn.onclick = () => quranModal.classList.add('active');
+    closeQuranBtn.onclick = () => quranModal.classList.remove('active');
+    cancelQuranBtn.onclick = () => quranModal.classList.remove('active');
+
+    tabByPage.onclick = () => {
+      currentQuranMode = 'page';
+      tabByPage.classList.add('active');
+      tabBySurah.classList.remove('active');
+      pageSection.style.display = 'block';
+      surahSection.style.display = 'none';
+    };
+
+    tabBySurah.onclick = () => {
+      currentQuranMode = 'surah';
+      tabBySurah.classList.add('active');
+      tabByPage.classList.remove('active');
+      pageSection.style.display = 'none';
+      surahSection.style.display = 'flex';
+    };
+
+    // دالة رسم صفحة المصحف في منتصف الشاشة بدقة بين القائمتين
+    function drawQuranPageCenter(img) {
+      currentQuranImg = img;
+      pdfCtx.clearRect(0, 0, pdfCanvas.width, pdfCanvas.height);
+
+      // مساحة العرض بين القائمتين (العرض الكلي - عرض القائمتين وهوامشهما)
+      const availableWidth = Math.max(pdfCanvas.width - 520, pdfCanvas.width * 0.45);
+      const availableHeight = pdfCanvas.height * 0.90;
+
+      const scale = Math.min(availableWidth / img.width, availableHeight / img.height);
+      const w = img.width * scale;
+      const h = img.height * scale;
+
+      const x = (pdfCanvas.width - w) / 2;
+      const y = (pdfCanvas.height - h) / 2 + 10;
+
+      // رسم خلفية بيضاء وارفة بظل خفيف خلف صفحة المصحف
+      pdfCtx.save();
+      pdfCtx.shadowColor = 'rgba(0,0,0,0.5)';
+      pdfCtx.shadowBlur = 25;
+      pdfCtx.fillStyle = '#ffffff';
+      pdfCtx.fillRect(x, y, w, h);
+      pdfCtx.restore();
+
+      pdfCtx.drawImage(img, x, y, w, h);
+    }
+
+    // إدراج صفحة أو آيات المصحف الشريف
+    document.getElementById('submitQuranBtn').onclick = () => {
+      if (currentQuranMode === 'page') {
+        const pageNum = parseInt(document.getElementById('quranPageInput').value);
+        if (pageNum >= 1 && pageNum <= 604) {
+          const formatted = String(pageNum).padStart(3, '0');
+          // رابط مباشر عالي الجودة لصفحات مجمع الملك فهد المصورة الأصلية
+          const quranUrl = `https://raw.githubusercontent.com/Quran-Mobile/Quran-Images/master/pages_1024/page_${formatted}.png`;
+          
+          const img = new Image();
+          img.crossOrigin = 'anonymous';
+          img.onload = () => {
+            drawQuranPageCenter(img);
+            pageIndicator.innerText = `مصحف: صفحة ${pageNum}`;
+            quranModal.classList.remove('active');
+          };
+          img.onerror = () => {
+            // رابط احتياطي فوري
+            const fallbackUrl = `https://quran.ksu.edu.sa/ayat/safahat/${pageNum}.png`;
+            const img2 = new Image();
+            img2.crossOrigin = 'anonymous';
+            img2.onload = () => {
+              drawQuranPageCenter(img2);
+              pageIndicator.innerText = `مصحف: صفحة ${pageNum}`;
+              quranModal.classList.remove('active');
+            };
+            img2.onerror = () => alert('تعذر تحميل صفحة المصحف، يرجى التحقق من اتصال الإنترنت.');
+            img2.src = fallbackUrl;
+          };
+          img.src = quranUrl;
+        } else {
+          alert('يرجى إدخال رقم صفحة صحيح من 1 إلى 604');
+        }
+      } else {
+        // الخيار الثاني: جلب نص الآيات وحصرها وسط الشاشة بدقة
+        const surahNum = surahSelect.value;
+        const fromVerse = parseInt(document.getElementById('verseFrom').value) || 1;
+        const toVerse = parseInt(document.getElementById('verseTo').value) || fromVerse;
+
+        fetch(`https://api.alquran.cloud/v1/surah/${surahNum}`)
+          .then(res => res.json())
+          .then(data => {
+            const verses = data.data.ayahs.filter(a => a.numberInSurah >= fromVerse && a.numberInSurah <= toVerse);
+            const fullText = verses.map(a => `${a.text} ﴿${a.numberInSurah}﴾`).join(' ');
+
+            pCtx.save();
+            pCtx.fillStyle = currentColor;
+            pCtx.font = 'bold 24px "Traditional Arabic", "Amiri", Tahoma, serif';
+            pCtx.textAlign = 'center';
+            pCtx.direction = 'rtl';
+
+            // حصر عرض النص في منتصف الشاشة بين القائمتين بدقة
+            const maxLineWidth = Math.max(paintCanvas.width - 540, 320);
+            const words = fullText.split(' ');
+            let line = '';
+            let y = paintCanvas.height * 0.25;
+
+            for (let n = 0; n < words.length; n++) {
+              let testLine = line + words[n] + ' ';
+              let metrics = pCtx.measureText(testLine);
+              if (metrics.width > maxLineWidth && n > 0) {
+                pCtx.fillText(line, paintCanvas.width / 2, y);
+                line = words[n] + ' ';
+                y += 46;
+              } else {
+                line = testLine;
+              }
+            }
+            pCtx.fillText(line, paintCanvas.width / 2, y);
+            pCtx.restore();
+
+            saveState();
+            quranModal.classList.remove('active');
+          })
+          .catch(() => alert('تعذر جلب الآيات، يرجى التحقق من اتصال الإنترنت.'));
+      }
+    };
+
+    // إدراج الصور
+    const imageInput = document.getElementById('imageInput');
+    document.getElementById('uploadImgBtn').onclick = () => imageInput.click();
+
+    function placeImage(src) {
+      const img = new Image();
+      img.onload = () => {
+        const maxWidth = (paintCanvas.width - 500);
+        const scale = Math.min(1, maxWidth / img.width);
+        const w = img.width * scale;
+        const h = img.height * scale;
+        pCtx.drawImage(img, (paintCanvas.width - w) / 2, (paintCanvas.height - h) / 2, w, h);
+        saveState();
+      };
+      img.src = src;
+    }
+
+    imageInput.onchange = (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (ev) => placeImage(ev.target.result);
+        reader.readAsDataURL(file);
+      }
+    };
+
+    function exportImage(format) {
+      const exportCanvas = document.createElement('canvas');
+      exportCanvas.width = paintCanvas.width;
+      exportCanvas.height = paintCanvas.height;
+      const eCtx = exportCanvas.getContext('2d');
+
+      eCtx.fillStyle = currentThemeBg;
+      eCtx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
+      eCtx.drawImage(gridCanvas, 0, 0);
+      eCtx.drawImage(pdfCanvas, 0, 0);
+      eCtx.drawImage(paintCanvas, 0, 0);
+
+      const link = document.createElement('a');
+      link.download = `سبورة-${Date.now()}.${format}`;
+      link.href = exportCanvas.toDataURL(`image/${format === 'png' ? 'png' : 'jpeg'}`);
+      link.click();
+    }
+
+    document.getElementById('downloadPngBtn').onclick = () => exportImage('png');
+    document.getElementById('downloadJpgBtn').onclick = () => exportImage('jpeg');
+    document.getElementById('quickSaveBtn').onclick = () => exportImage('png');
+  </script>
 </body>
 </html>
