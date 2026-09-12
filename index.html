@@ -26,7 +26,7 @@
       color: #d1d5db;
     }
 
-    /* البنر الدعائي المتحرك الفاخر */
+    /* البنر الدعائي لدار التحفيظ بأعلى الشاشة */
     .academy-marquee-banner {
       position: fixed;
       top: 0;
@@ -94,28 +94,33 @@
       100% { transform: translateY(-15vh) scale(1.4) rotate(360deg); opacity: 0; }
     }
 
-    /* صناديق النصوص الحرة المنفصلة والقابلة للتحريك والتحرير الفردي */
+    /* صناديق النصوص الحرة المستقلة تماماً والقابلة للتكبير من الحواف */
     .custom-textbox-widget {
       position: absolute;
-      z-index: 120;
-      min-width: 280px;
-      max-width: 80vw;
-      background: rgba(15, 23, 42, 0.95);
-      border: 1.5px solid #38bdf8;
+      z-index: 150;
+      min-width: 260px;
+      min-height: 160px;
+      width: 380px;
+      height: 220px;
+      background: rgba(15, 23, 42, 0.96);
+      border: 2px solid #38bdf8;
       border-radius: 12px;
-      box-shadow: 0 12px 35px rgba(0,0,0,0.7);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.85);
       direction: rtl;
+      display: flex;
+      flex-direction: column;
+      resize: both; /* يدعم تغيير الأبعاد من الحواف طبيعياً */
+      overflow: hidden;
     }
     .widget-drag-bar {
       background: #1e293b;
-      padding: 6px 10px;
-      border-top-left-radius: 10px;
-      border-top-right-radius: 10px;
+      padding: 6px 12px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       cursor: grab;
       border-bottom: 1px solid rgba(255,255,255,0.1);
+      flex-shrink: 0;
     }
     .widget-drag-bar:active { cursor: grabbing; }
     .widget-drag-label {
@@ -127,22 +132,22 @@
       gap: 4px;
     }
 
-    /* شريط أدوات التنسيق المباشر فوق مربع النص */
     .widget-toolbar {
       display: flex;
       align-items: center;
       flex-wrap: wrap;
       gap: 5px;
       padding: 6px 10px;
-      background: rgba(30, 41, 59, 0.8);
+      background: rgba(30, 41, 59, 0.9);
       border-bottom: 1px solid rgba(255,255,255,0.08);
+      flex-shrink: 0;
     }
     .w-btn {
       background: rgba(255,255,255,0.08);
       border: 1px solid rgba(255,255,255,0.15);
       color: #fff;
       border-radius: 6px;
-      padding: 3px 7px;
+      padding: 3px 8px;
       font-size: 11px;
       cursor: pointer;
       font-weight: bold;
@@ -160,8 +165,9 @@
       outline: none;
     }
     .w-editor-area {
+      flex: 1;
       width: 100%;
-      min-height: 80px;
+      height: 100%;
       padding: 10px 14px;
       background: transparent;
       border: none;
@@ -172,7 +178,7 @@
       font-family: 'Traditional Arabic', 'Scheherazade New', 'Amiri', serif;
       direction: rtl;
       user-select: text;
-      resize: both;
+      resize: none; /* يتم تغيير حجم الصندوق بالكامل من حواف الحاوية */
     }
     .w-del-btn {
       background: transparent;
@@ -184,7 +190,20 @@
     }
     .w-del-btn:hover { color: #ef4444; }
 
-    /* حاوية الآيات العائمة والقابلة للتحريك المنفصل */
+    /* مقبض تغيير الأبعاد البصري في أسفل يسار المربع */
+    .resize-handle-corner {
+      position: absolute;
+      bottom: 2px;
+      left: 2px;
+      width: 16px;
+      height: 16px;
+      cursor: sw-resize;
+      background: linear-gradient(135deg, transparent 50%, #38bdf8 50%);
+      border-bottom-left-radius: 8px;
+      pointer-events: auto;
+    }
+
+    /* حاوية الآيات العائمة المستقلة */
     #quranTextContainer {
       position: absolute;
       top: 16%;
@@ -201,6 +220,8 @@
       box-shadow: 0 20px 50px rgba(0,0,0,0.85), 0 0 25px rgba(217, 119, 6, 0.3);
       direction: rtl;
       cursor: default;
+      resize: both;
+      overflow: hidden;
     }
     .drag-header {
       background: linear-gradient(90deg, #1e293b, #0f172a);
@@ -212,6 +233,7 @@
       align-items: center;
       justify-content: space-between;
       cursor: grab;
+      flex-shrink: 0;
     }
     .drag-header:active { cursor: grabbing; }
     .drag-title {
@@ -237,7 +259,7 @@
     .card-body {
       padding: 18px 26px;
       overflow-y: auto;
-      max-height: 68vh;
+      max-height: 70vh;
       text-align: center;
     }
 
@@ -588,6 +610,7 @@
     }
     .dock-btn.btn-sq-color { border-radius: 8px; }
 
+    /* النافذة المنبثقة */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -784,15 +807,15 @@
     <button class="side-btn" id="fullScreenBtn" style="padding:4px 8px;">⛶ ملء الشاشة</button>
   </div>
 
-  <!-- حاوية الصناديق النصية الحرة المستقلة -->
+  <!-- حاوية الصناديق النصية الحرة المستقلة والقابلة للتكبير والتحريك الفردي -->
   <div id="textWidgetsContainer"></div>
 
-  <!-- 1. حاوية الآيات القابلة للسحب والتحريك المستقل مع المشغل الصوتي المتقدم -->
+  <!-- 1. حاوية الآيات القابلة للسحب والتحريك المنفصل -->
   <div id="quranTextContainer">
     <div class="drag-header" id="dragHeader">
       <div class="drag-title">
         <span>✥</span>
-        <span>أدوات مصحف الشرح — اسحب لتحريك الموضع</span>
+        <span>أدوات مصحف الشرح — اسحب لتحريك الموضع بشكل منفصل</span>
       </div>
       <button class="card-close-btn" id="closeQuranCardBtn" title="إغلاق اللوحة">✕</button>
     </div>
@@ -947,8 +970,8 @@
   <div class="panel bottom-dock">
     <div class="dock-row">
       <button class="dock-btn" id="redoBtn" title="إعادة">↪️</button>
-      <button class="dock-btn" data-tool="hand" title="تحريك وسحب العناصر والسبورة">✋</button>
-      <button class="dock-btn" data-tool="text" title="إدراج مربع نص للكتابة بلوحة المفاتيح">A</button>
+      <button class="dock-btn" data-tool="hand" title="تحريك وسحب السبورة">✋</button>
+      <button class="dock-btn" data-tool="text" title="إدراج مربع نص للكتابة والتحكم المستقل">A</button>
       <button class="dock-btn active" data-tool="pen" title="قلم">✏️</button>
       <button class="dock-btn" data-tool="highlighter" title="تظليل">🖊️</button>
       <button class="dock-btn" data-tool="laser" title="مؤشر ليزر">🔴</button>
@@ -1078,23 +1101,23 @@
     let totalPdfPages = 0;
     const pageIndicator = document.getElementById('pageIndicator');
 
-    // =========================================================
-    // 1. نظام صناديق النصوص الحرة المستقلة والتحكم المنفصل بها
-    // =========================================================
-    let widgetCounter = 0;
+    // ====================================================================
+    // 1. نظام إنشاء الصناديق النصية المستقلة والتكبير الحر من الحواف والأركان
+    // ====================================================================
+    let widgetIdCounter = 0;
 
     function createCustomTextWidget(x, y) {
-      widgetCounter++;
+      widgetIdCounter++;
       const widget = document.createElement('div');
       widget.className = 'custom-textbox-widget';
-      widget.id = `textWidget_${widgetCounter}`;
-      widget.style.left = Math.min(x, window.innerWidth - 380) + 'px';
-      widget.style.top = Math.min(y, window.innerHeight - 250) + 'px';
+      widget.id = `textWidget_${widgetIdCounter}`;
+      widget.style.left = Math.min(x, window.innerWidth - 420) + 'px';
+      widget.style.top = Math.min(y, window.innerHeight - 280) + 'px';
 
       widget.innerHTML = `
         <div class="widget-drag-bar">
-          <span class="widget-drag-label">✥ اسحب للتحريك</span>
-          <button class="w-del-btn" title="حذف مربع النص">✕</button>
+          <span class="widget-drag-label">✥ اسحب لتحريك المربع بمفرده</span>
+          <button class="w-del-btn" title="حذف هذا المربع">✕</button>
         </div>
         <div class="widget-toolbar">
           <select class="w-select font-family-sel" title="نوع الخط">
@@ -1112,6 +1135,8 @@
           <input type="color" class="color-picker-input" value="#ffffff" title="لون النص" style="width:22px; height:22px; border:none; border-radius:4px; cursor:pointer; background:none;">
         </div>
         <textarea class="w-editor-area" placeholder="اكتب الشرح أو القاعدة التجويدية هنا بطلاقة..."></textarea>
+        <!-- مقبض زاوية السحب لتغيير الحجم والتحكم في الحواف -->
+        <div class="resize-handle-corner" title="اسحب لتكبير أو تصغير حجم المربع"></div>
       `;
 
       textWidgetsContainer.appendChild(widget);
@@ -1126,10 +1151,11 @@
       const italicBtn = widget.querySelector('.italic-btn');
       const alignBtns = widget.querySelectorAll('.align-btn');
       const colorInput = widget.querySelector('.color-picker-input');
+      const resizeCorner = widget.querySelector('.resize-handle-corner');
 
       let currentFontSize = 30;
 
-      // سحب المربع بشكل مستقل تماماً
+      // سحب هذا المربع فقط بمفرده بشكل مستقل تماماً
       let isDraggingThisWidget = false;
       let wOffsetX = 0, wOffsetY = 0;
 
@@ -1141,16 +1167,39 @@
         e.stopPropagation();
       });
 
+      // تغيير الأبعاد من زاوية المربع
+      let isResizing = false;
+      let startW = 0, startH = 0, startMouseX = 0, startMouseY = 0;
+
+      resizeCorner.addEventListener('mousedown', (e) => {
+        isResizing = true;
+        startW = widget.offsetWidth;
+        startH = widget.offsetHeight;
+        startMouseX = e.clientX;
+        startMouseY = e.clientY;
+        e.stopPropagation();
+        e.preventDefault();
+      });
+
       window.addEventListener('mousemove', (e) => {
         if (isDraggingThisWidget) {
           widget.style.left = (e.clientX - wOffsetX) + 'px';
           widget.style.top = (e.clientY - wOffsetY) + 'px';
+        } else if (isResizing) {
+          // حساب الحجم الجديد بناءً على حركة الماوس
+          const deltaX = startMouseX - e.clientX; // RTL اتجاه اليمين لليسار
+          const deltaY = e.clientY - startMouseY;
+          widget.style.width = Math.max(260, startW + deltaX) + 'px';
+          widget.style.height = Math.max(160, startH + deltaY) + 'px';
         }
       });
 
-      window.addEventListener('mouseup', () => { isDraggingThisWidget = false; });
+      window.addEventListener('mouseup', () => {
+        isDraggingThisWidget = false;
+        isResizing = false;
+      });
 
-      // أدوات التنسيق المباشرة
+      // أدوات التنسيق المباشرة المرفقة
       fontSel.onchange = () => { textarea.style.fontFamily = fontSel.value; };
       incBtn.onclick = () => { currentFontSize += 4; textarea.style.fontSize = currentFontSize + 'px'; };
       decBtn.onclick = () => { if (currentFontSize > 16) currentFontSize -= 4; textarea.style.fontSize = currentFontSize + 'px'; };
@@ -1175,9 +1224,9 @@
       setTimeout(() => textarea.focus(), 60);
     }
 
-    // =========================================================
-    // 2. سحب وتحريك بطاقة الآيات بشكل منفصل
-    // =========================================================
+    // ====================================================================
+    // 2. سحب وتحريك بطاقة الآيات بشكل منفصل ومستقل 100%
+    // ====================================================================
     let isDraggingCard = false;
     let cardOffsetX = 0, cardOffsetY = 0;
 
@@ -1204,9 +1253,9 @@
       stopQuranAudio();
     };
 
-    // =========================================================
-    // 3. قاعدة البيانات أوفلاين الشاملة (IndexedDB)
-    // =========================================================
+    // ====================================================================
+    // 3. قاعدة البيانات أوفلاين (IndexedDB)
+    // ====================================================================
     let quranDB = null;
     function initIndexedDB() {
       const request = indexedDB.open('AlFatehQuranDB', 1);
@@ -1292,9 +1341,9 @@
       });
     }
 
-    // =========================================================
+    // ====================================================================
     // 4. الصوتيات والمؤثرات التحفيزية
-    // =========================================================
+    // ====================================================================
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     let audioCtx = null;
 
@@ -1388,9 +1437,9 @@
       }
     };
 
-    // =========================================================
+    // ====================================================================
     // 5. مشغل التلاوة والفاصل الزمني والترديد
-    // =========================================================
+    // ====================================================================
     let activeAyahAudios = [];
     let activeAyahNumbers = [];
     let currentAudioIndex = 0;
@@ -1613,9 +1662,9 @@
       audioStatus.innerText = `جاهز للاستماع بصوت القارئ المختار (${activeAyahAudios.length} آيات)`;
     }
 
-    // =========================================================
-    // 6. منطق الرسم والأشكال والأدوات
-    // =========================================================
+    // ====================================================================
+    // 6. منطق الرسم على الكانفاس وسحب السبورة بالأيدي
+    // ====================================================================
     function resizeCanvases() {
       const tempCanvas = document.createElement('canvas');
       tempCanvas.width = paintCanvas.width;
@@ -1727,14 +1776,26 @@
       targetCtx.fill();
     }
 
+    let isPanningCanvas = false;
+    let panStartX = 0, panStartY = 0;
+
     function startDraw(e) {
       const { x, y } = getCoords(e);
       startX = x;
       startY = y;
 
-      // أداة إنشاء مربع نص مستقل عند النقر في أي مكان
+      // إنشاء مربع نص مستقل عند النقر في أي مكان
       if (currentTool === 'text') {
         createCustomTextWidget(x, y);
+        return;
+      }
+
+      // تحريك السبورة فقط عند اختيار أداة الكف والنقر على مساحة فارغة
+      if (currentTool === 'hand') {
+        isPanningCanvas = true;
+        panStartX = x;
+        panStartY = y;
+        paintCanvas.style.cursor = 'grabbing';
         return;
       }
 
@@ -1761,8 +1822,26 @@
     }
 
     function draw(e) {
-      if (!isDrawing) return;
       const { x, y } = getCoords(e);
+
+      // سحب السبورة فقط دون تحريك المربعات المستقلة
+      if (isPanningCanvas && currentTool === 'hand') {
+        const dx = x - panStartX;
+        const dy = y - panStartY;
+        panStartX = x;
+        panStartY = y;
+
+        const temp = document.createElement('canvas');
+        temp.width = paintCanvas.width;
+        temp.height = paintCanvas.height;
+        temp.getContext('2d').drawImage(paintCanvas, 0, 0);
+
+        pCtx.clearRect(0, 0, paintCanvas.width, paintCanvas.height);
+        pCtx.drawImage(temp, dx, dy);
+        return;
+      }
+
+      if (!isDrawing) return;
 
       if (['pen', 'highlighter', 'eraser'].includes(currentTool)) {
         pCtx.lineTo(x, y);
@@ -1794,6 +1873,13 @@
     }
 
     function stopDraw(e) {
+      if (isPanningCanvas) {
+        isPanningCanvas = false;
+        paintCanvas.style.cursor = 'grab';
+        saveState();
+        return;
+      }
+
       if (!isDrawing) return;
       isDrawing = false;
       const { x, y } = getCoords(e);
