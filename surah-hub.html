@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مركز تحديات السورة | أكاديمية الفتح</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&family=Amiri+Quran&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; user-select: none; }
+    body {
+      background: radial-gradient(circle at center, #0f172a 0%, #030712 100%);
+      color: #f8fafc;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    .sun-planet {
+      position: fixed;
+      top: 18%; left: 8%;
+      width: 140px; height: 140px;
+      background: radial-gradient(circle, #eab308, #ca8a04);
+      border-radius: 50%;
+      box-shadow: 0 0 50px rgba(234, 179, 8, 0.4), inset -10px -10px 20px rgba(0,0,0,0.5);
+      z-index: 1;
+      opacity: 0.85;
+    }
+
+    .top-header {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 28px;
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .nav-btn {
+      background: rgba(255,255,255,0.08);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 6px 16px;
+      border-radius: 20px;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: bold;
+      transition: all 0.2s;
+    }
+    .nav-btn:hover { background: #0284c7; color: #fff; }
+
+    .hub-container {
+      position: relative;
+      z-index: 10;
+      max-width: 1050px;
+      margin: 20px auto;
+      padding: 0 20px;
+      text-align: center;
+    }
+
+    .surah-title-header {
+      font-family: 'Amiri Quran', serif;
+      font-size: 44px;
+      color: #facc15;
+      text-shadow: 0 0 25px rgba(250, 204, 21, 0.6);
+      margin-bottom: 4px;
+    }
+
+    /* تقسيمات السورة (كاملة / أرباع) كما في صورتك */
+    .quarters-bar {
+      display: inline-flex;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 30px;
+      padding: 4px;
+      gap: 6px;
+      margin: 18px 0 30px 0;
+    }
+    .quarter-btn {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      padding: 6px 18px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .quarter-btn.active {
+      background: linear-gradient(135deg, #d97706, #b45309);
+      color: #fff;
+      box-shadow: 0 2px 10px rgba(217, 119, 6, 0.4);
+    }
+
+    /* شبكة الألعاب الـ 10 التفاعلية */
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 900px) { .games-grid { grid-template-columns: repeat(2, 1fr); } }
+
+    .game-card-hub {
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(12px);
+      border: 1.5px solid rgba(255, 255, 255, 0.08);
+      border-radius: 18px;
+      padding: 24px 14px;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    }
+    .game-card-hub:hover {
+      transform: translateY(-6px);
+      border-color: #38bdf8;
+      box-shadow: 0 12px 30px rgba(56, 189, 248, 0.3);
+      background: rgba(30, 41, 59, 0.9);
+    }
+    .game-icon-circle {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 12px;
+    }
+    .game-title-hub {
+      font-size: 16px;
+      font-weight: 800;
+      color: #fef08a;
+      margin-bottom: 6px;
+    }
+    .game-desc-hub {
+      font-size: 11px;
+      color: #94a3b8;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sun-planet"></div>
+
+  <div class="top-header">
+    <a href="quran-games.html" class="nav-btn">⬅ السور</a>
+    <div style="font-weight:bold; color:#facc15;">🌟 ألعاب التميز القرآني</div>
+    <a href="index.html" class="nav-btn">الرئيسية</a>
+  </div>
+
+  <div class="hub-container">
+    <div class="surah-title-header" id="surahTitleDisplay">سُورَةُ النَّازِعَاتِ</div>
+    <p style="color:#94a3b8; font-size:13px;">اختر طريقة التعلم والتحدي:</p>
+
+    <!-- اختيار النطاق (كاملة / أرباع) -->
+    <div class="quarters-bar">
+      <button class="quarter-btn active" data-q="all">السورة كاملة</button>
+      <button class="quarter-btn" data-q="q1">الربع الأول</button>
+      <button class="quarter-btn" data-q="q2">الربع الثاني</button>
+      <button class="quarter-btn" data-q="q3">الربع الثالث</button>
+      <button class="quarter-btn" data-q="q4">الربع الرابع</button>
+    </div>
+
+    <!-- شبكة الألعاب الـ 10 المطابقة للصورة -->
+    <div class="games-grid">
+      <a href="#" class="game-card-hub" data-game="flying">
+        <div class="game-icon-circle">🕊️</div>
+        <div class="game-title-hub">الآيات الطائرة</div>
+        <div class="game-desc-hub">اضغط على الآيات بالترتيب الصحيح لتختفي</div>
+      </a>
+
+      <a href="#" class="game-card-hub" data-game="arrange">
+        <div class="game-icon-circle">🔢</div>
+        <div class="game-title-hub">رتّب الآيات</div>
+        <div class="game-desc-hub">رتّب مقاطع الآيات بالتسلسل الصحيح</div>
+      </a>
+
+      <a href="#" class="game-card-hub" data-game="blank">
+        <div class="game-icon-circle">✏️</div>
+        <div class="game-title-hub">أكمل الفراغ</div>
+        <div class="game-desc-hub">اختر الكلمة القرآنية المفقودة من كل آية</div>
+      </a>
+
+      <a href="#" class="game-card-hub" data-game="memory">
+        <div class="game-icon-circle">🧠</div>
+        <div class="game-title-hub">لعبة الذاكرة</div>
+        <div class="game-desc-hub">طابق بدايات الآيات ونهاياتها</div>
+      </a>
+
+      <a href="#" class="game-card-hub" data-game="listen">
+        <div class="game-icon-circle">🎧</div>
+        <div class="game-title-hub">اسمع واختر</div>
+        <div class="game-desc-hub">استمع للآية بصوت الشيخ ثم اخترها</div>
+      </a>
+
+      <a href="#" class="game-card-hub" data-game="speed">
+        <div class="game-icon-circle">⚡</div>
+        <div class="game-title-hub">تحدي السرعة</div>
+        <div class="game-desc-hub">حدد الآية المطلوبة قبل نفاذ الوقت</div>
+      </a>
+
+      <a href="#" class="game-card-hub" data-game="hide">
+        <div class="game-icon-circle">🙈</div>
+        <div class="game-title-hub">اختفاء الكلمات</div>
+        <div class="game-desc-hub">اضغط لاكتشاف الكلمات المخفية وتسميعها</div>
+      </a>
+
+      <a href="#" class="game-card-hub" data-game="read">
+        <div class="game-icon-circle">📖</div>
+        <div class="game-title-hub">اقرأ واستمع</div>
+        <div class="game-desc-hub">تعلم السورة بالاستماع المرتل مع التكرار</div>
+      </a>
+    </div>
+  </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const surahId = parseInt(urlParams.get('id')) || 79;
+    let selectedQuarter = 'all';
+
+    // قائمة السور لتحديد الاسم
+    const surahNames = {
+      78: "النبأ", 79: "النازعات", 80: "عبس", 81: "التكوير", 82: "الانفطار",
+      83: "المطففين", 84: "الانشقاق", 85: "البروج", 86: "الطارق", 87: "الأعلى",
+      88: "الغاشية", 89: "الفجر", 90: "البلد", 91: "الشمس", 92: "الليل",
+      93: "الضحى", 94: "الشرح", 95: "التين", 96: "العلق", 97: "القدر",
+      98: "البينة", 99: "الزلزلة", 100: "العاديات", 101: "القارعة", 102: "التكاثر",
+      103: "العصر", 104: "الهمزة", 105: "الفيل", 106: "قريش", 107: "الماعون",
+      108: "الكوثر", 109: "الكافرون", 110: "النصر", 111: "المسد", 112: "الإخلاص",
+      113: "الفلق", 114: "الناس"
+    };
+
+    const sName = surahNames[surahId] || "النازعات";
+    document.getElementById('surahTitleDisplay').innerText = `سُورَةُ ${sName}`;
+
+    // تبديل الأرباع وتحديث روابط الألعاب
+    document.querySelectorAll('.quarter-btn').forEach(btn => {
+      btn.onclick = () => {
+        document.querySelectorAll('.quarter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedQuarter = btn.getAttribute('data-q');
+        updateGameLinks();
+      };
+    });
+
+    function updateGameLinks() {
+      document.querySelectorAll('.game-card-hub').forEach(card => {
+        const gameType = card.getAttribute('data-game');
+        // نقل الطالب لشاشة اللعب مع تمرير كل المعطيات
+        card.href = `game-play.html?surah=${surahId}&game=${gameType}&q=${selectedQuarter}`;
+      });
+    }
+    updateGameLinks();
+  </script>
+</body>
+</html>
