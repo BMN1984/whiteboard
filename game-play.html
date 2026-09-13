@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مسرح اللعب التفاعلي | أكاديمية الفتح</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&family=Amiri+Quran&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; user-select: none; }
+    body {
+      background: radial-gradient(circle at center, #0f172a 0%, #030712 100%);
+      color: #f8fafc;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .sun-planet {
+      position: fixed;
+      top: 25%; left: 6%;
+      width: 130px; height: 130px;
+      background: radial-gradient(circle, #eab308, #ca8a04);
+      border-radius: 50%;
+      box-shadow: 0 0 50px rgba(234, 179, 8, 0.4);
+      z-index: 1;
+      opacity: 0.85;
+    }
+
+    /* الشريط العلوي: النجوم، التقدم، زر الرجوع */
+    .game-top-bar {
+      position: relative;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 28px;
+    }
+    .score-box {
+      font-size: 16px;
+      font-weight: 900;
+      color: #facc15;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .progress-track {
+      width: 40vw;
+      max-width: 420px;
+      height: 8px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 10%;
+      background: linear-gradient(90deg, #f59e0b, #eab308);
+      transition: width 0.3s ease;
+    }
+    .btn-exit {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      padding: 6px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 13px;
+      text-decoration: none;
+    }
+
+    /* لافتة التوجيه الذهبية مثل الصورة 3 */
+    .instruction-banner {
+      position: relative;
+      z-index: 20;
+      max-width: 850px;
+      margin: 10px auto 14px auto;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      border-radius: 14px;
+      padding: 10px 20px;
+      text-align: center;
+      color: #fef08a;
+      font-size: 15px;
+      font-weight: 700;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    }
+
+    /* مسرح الطفو الفلكي للآيات الكريمة */
+    .cosmic-stage {
+      position: relative;
+      z-index: 20;
+      width: 86vw;
+      height: 68vh;
+      margin: 0 auto;
+      border: 1.5px solid rgba(245, 158, 11, 0.3);
+      border-radius: 20px;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(10px);
+      box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
+      overflow: hidden;
+    }
+
+    /* كبسولات الآيات العائمة */
+    .floating-ayah-chip {
+      position: absolute;
+      background: rgba(30, 41, 59, 0.9);
+      border: 1.5px solid rgba(255, 255, 255, 0.2);
+      border-radius: 14px;
+      padding: 12px 22px;
+      font-family: 'Amiri Quran', serif;
+      font-size: 22px;
+      color: #ffffff;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+      transition: transform 0.15s, border-color 0.15s, background 0.15s;
+      animation: floatMotion 4s ease-in-out infinite alternate;
+    }
+    .floating-ayah-chip:hover {
+      transform: scale(1.08);
+      border-color: #facc15;
+      background: rgba(15, 23, 42, 0.95);
+      box-shadow: 0 0 20px rgba(250, 204, 21, 0.5);
+    }
+    .floating-ayah-chip.correct-disappear {
+      animation: popOut 0.4s forwards;
+      background: #059669 !important;
+      border-color: #34d399 !important;
+    }
+    @keyframes popOut { to { transform: scale(1.3); opacity: 0; } }
+    @keyframes floatMotion {
+      from { transform: translateY(0px); }
+      to { transform: translateY(-10px); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sun-planet"></div>
+
+  <!-- الشريط العلوي -->
+  <div class="game-top-bar">
+    <div class="score-box">
+      <span>★</span>
+      <span id="starScore">0</span>
+    </div>
+
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <a href="#" id="exitLink" class="btn-exit">رجوع</a>
+  </div>
+
+  <!-- توجيه التحدي -->
+  <div class="instruction-banner" id="instructionText">
+    👍 صحيح! الآن اضغط على الآية التالية بالترتيب الصحيح
+  </div>
+
+  <!-- ساحة الآيات العائمة المفرقة -->
+  <div class="cosmic-stage" id="stage"></div>
+
+  <script>
+    // نظام الصوت المدمج بدون إنترنت
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null;
+    function getAudio() {
+      if (!audioCtx) audioCtx = new AudioContext();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    }
+    function playClap() {
+      const ctx = getAudio();
+      for (let i = 0; i < 18; i++) {
+        setTimeout(() => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(140 + Math.random() * 260, ctx.currentTime);
+          gain.gain.setValueAtTime(0.3, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.08);
+          osc.connect(gain); gain.connect(ctx.destination);
+          osc.start(); osc.stop(ctx.currentTime + 0.09);
+        }, i * 40 + Math.random() * 15);
+      }
+    }
+    function playWrong() {
+      const ctx = getAudio();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(180, ctx.currentTime);
+      gain.gain.setValueAtTime(0.2, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.start(); osc.stop(ctx.currentTime + 0.3);
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const surahId = parseInt(urlParams.get('surah')) || 79;
+    document.getElementById('exitLink').href = `surah-hub.html?id=${surahId}`;
+
+    const stage = document.getElementById('stage');
+    const instructionText = document.getElementById('instructionText');
+    const progressFill = document.getElementById('progressFill');
+    const starScore = document.getElementById('starScore');
+
+    let currentExpectedAyah = 1;
+    let totalAyahsInBatch = 5;
+    let score = 0;
+
+    // جلب آيات السورة
+    fetch(`https://api.alquran.cloud/v1/surah/${surahId}/quran-uthmani`)
+      .then(r => r.json())
+      .then(data => {
+        const ayahs = data.data.ayahs;
+        startFlyingGame(ayahs.slice(0, 8)); // تشغيل مجموعة الآيات
+      })
+      .catch(() => {
+        stage.innerHTML = '<div style="text-align:center; padding:50px; color:#f87171;">يرجى الاتصال بالإنترنت أول مرة لجلب الآيات، أو حفظها أوفلاين.</div>';
+      });
+
+    function startFlyingGame(batch) {
+      stage.innerHTML = '';
+      currentExpectedAyah = 1;
+      totalAyahsInBatch = batch.length;
+      instructionText.innerText = `🎯 ابدأ بالضغط على الآية رقم (1)`;
+
+      // توزيع الآيات في مواضع عشوائية غير متداخلة على الشاشة
+      batch.forEach(a => {
+        const chip = document.createElement('div');
+        chip.className = 'floating-ayah-chip';
+        chip.innerText = a.text;
+        chip.setAttribute('data-num', a.numberInSurah);
+
+        // إحداثيات عشوائية داخل مساحة المسرح
+        const posX = Math.floor(Math.random() * 65) + 5;
+        const posY = Math.floor(Math.random() * 65) + 10;
+        chip.style.left = posX + '%';
+        chip.style.top = posY + '%';
+
+        // تفاعل النقر بالماوس أو التابلت
+        chip.onclick = () => {
+          const num = parseInt(chip.getAttribute('data-num'));
+          if (num === currentExpectedAyah) {
+            playClap();
+            chip.classList.add('correct-disappear');
+            score += 10;
+            starScore.innerText = score;
+            currentExpectedAyah++;
+
+            const progress = (currentExpectedAyah / (totalAyahsInBatch + 1)) * 100;
+            progressFill.style.width = progress + '%';
+
+            if (currentExpectedAyah > totalAyahsInBatch) {
+              confetti({ particleCount: 120, spread: 100 });
+              instructionText.innerText = `🎉 رائع جداً! أتممت ترتيب آيات التحدي بنجاح!`;
+              setTimeout(() => { window.location.href = `surah-hub.html?id=${surahId}`; }, 2500);
+            } else {
+              instructionText.innerText = `👍 صحيح! الآن اضغط على الآية رقم (${currentExpectedAyah})`;
+            }
+          } else {
+            playWrong();
+            chip.style.borderColor = '#ef4444';
+            setTimeout(() => { chip.style.borderColor = 'rgba(255,255,255,0.2)'; }, 500);
+          }
+        };
+
+        stage.appendChild(chip);
+      });
+    }
+  </script>
+</body>
+</html>
