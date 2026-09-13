@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>خريطة جزء عم الفلكية | أكاديمية الفتح</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&family=Amiri+Quran&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; user-select: none; }
+    body {
+      background: radial-gradient(circle at center, #0f172a 0%, #030712 100%);
+      color: #f8fafc;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* خلفية الفضاء والنجوم والكوكب المضيء */
+    .cosmic-canvas {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .sun-planet {
+      position: fixed;
+      top: 20%; left: 8%;
+      width: 140px; height: 140px;
+      background: radial-gradient(circle, #eab308, #ca8a04);
+      border-radius: 50%;
+      box-shadow: 0 0 50px rgba(234, 179, 8, 0.4), inset -10px -10px 20px rgba(0,0,0,0.5);
+      z-index: 1;
+      opacity: 0.85;
+    }
+    .geo-mesh {
+      position: fixed;
+      bottom: 15%; right: 4%;
+      width: 220px; height: 220px;
+      border: 1.5px dashed rgba(245, 158, 11, 0.25);
+      border-radius: 50%;
+      animation: rotateMesh 40s linear infinite;
+      z-index: 1;
+    }
+    @keyframes rotateMesh { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+    .header-nav {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 30px;
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .btn-return-board {
+      background: rgba(255,255,255,0.08);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 7px 18px;
+      border-radius: 25px;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: bold;
+      transition: all 0.2s;
+    }
+    .btn-return-board:hover { background: #0284c7; color: #fff; }
+
+    .main-wrapper {
+      position: relative;
+      z-index: 10;
+      max-width: 1100px;
+      margin: 25px auto;
+      padding: 0 20px;
+      text-align: center;
+    }
+
+    /* تبويبات الأجزاء مثل الصورة 1 */
+    .parts-tabs {
+      display: inline-flex;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 30px;
+      padding: 4px;
+      gap: 6px;
+      margin-bottom: 20px;
+    }
+    .part-tab {
+      padding: 6px 18px;
+      border-radius: 20px;
+      font-size: 12px;
+      color: #94a3b8;
+      cursor: pointer;
+      font-weight: 700;
+      transition: all 0.2s;
+    }
+    .part-tab.active {
+      background: linear-gradient(135deg, #d97706, #b45309);
+      color: #fff;
+      box-shadow: 0 2px 10px rgba(217, 119, 6, 0.4);
+    }
+
+    .title-banner {
+      margin-bottom: 25px;
+    }
+    .title-banner h1 {
+      font-family: 'Amiri Quran', serif;
+      font-size: 38px;
+      color: #facc15;
+      text-shadow: 0 0 20px rgba(250, 204, 21, 0.5);
+    }
+    .title-banner p {
+      font-size: 13px;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+
+    /* شبكة السور بنمط الكروت الزجاجية الذهبية */
+    .surahs-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 10px;
+    }
+    @media (max-width: 900px) { .surahs-grid { grid-template-columns: repeat(2, 1fr); } }
+
+    .surah-card-cosmic {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(10px);
+      border: 1.5px solid rgba(245, 158, 11, 0.2);
+      border-radius: 16px;
+      padding: 20px 14px;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    }
+    .surah-card-cosmic:hover {
+      transform: translateY(-5px);
+      border-color: #facc15;
+      box-shadow: 0 12px 30px rgba(250, 204, 21, 0.25);
+      background: rgba(30, 41, 59, 0.85);
+    }
+    .surah-badge-num {
+      position: absolute;
+      top: 12px; right: 12px;
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid #f59e0b;
+      color: #fbbf24;
+      font-size: 11px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .surah-name-text {
+      font-family: 'Amiri Quran', serif;
+      font-size: 26px;
+      color: #f8fafc;
+      margin: 10px 0 6px 0;
+    }
+    .surah-sub-desc {
+      font-size: 11px;
+      color: #38bdf8;
+      display: flex;
+      gap: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas class="cosmic-canvas" id="starsCanvas"></canvas>
+  <div class="sun-planet"></div>
+  <div class="geo-mesh"></div>
+
+  <div class="header-nav">
+    <a href="index.html" class="btn-return-board">⬅ العودة إلى السبورة الأصلية</a>
+    <div style="font-weight:800; color:#facc15; font-size:14px;">أكاديمية الفتح لعلوم القرآن</div>
+  </div>
+
+  <div class="main-wrapper">
+    <div class="parts-tabs">
+      <div class="part-tab">جزء تبارك</div>
+      <div class="part-tab">جزء قد سمع</div>
+      <div class="part-tab active">جزء عم</div>
+    </div>
+
+    <div class="title-banner">
+      <h1>جُـزْءُ عَــمَّ</h1>
+      <p>اختر السورة لبدء رحلة الألعاب والتحديات التفاعلية</p>
+    </div>
+
+    <!-- شبكة السور -->
+    <div class="surahs-grid" id="surahsGrid"></div>
+  </div>
+
+  <script>
+    // رسم النجوم الفلكية المتحركة
+    const canvas = document.getElementById('starsCanvas');
+    const ctx = canvas.getContext('2d');
+    function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    window.onresize = resizeCanvas;
+    resizeCanvas();
+
+    const stars = Array.from({ length: 90 }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      radius: Math.random() * 1.5,
+      alpha: Math.random(),
+      speed: Math.random() * 0.015 + 0.005
+    }));
+
+    function drawStars() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      stars.forEach(s => {
+        s.alpha += s.speed;
+        ctx.fillStyle = `rgba(255, 255, 255, ${Math.abs(Math.sin(s.alpha))})`;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      requestAnimationFrame(drawStars);
+    }
+    drawStars();
+
+    // قائمة سور جزء عم
+    const surahsList = [
+      { id: 78, name: "النبأ", count: 40, type: "مكية" },
+      { id: 79, name: "النازعات", count: 46, type: "مكية" },
+      { id: 80, name: "عبس", count: 42, type: "مكية" },
+      { id: 81, name: "التكوير", count: 29, type: "مكية" },
+      { id: 82, name: "الانفطار", count: 19, type: "مكية" },
+      { id: 83, name: "المطففين", count: 36, type: "مكية" },
+      { id: 84, name: "الانشقاق", count: 25, type: "مكية" },
+      { id: 85, name: "البروج", count: 22, type: "مكية" },
+      { id: 86, name: "الطارق", count: 17, type: "مكية" },
+      { id: 87, name: "الأعلى", count: 19, type: "مكية" },
+      { id: 88, name: "الغاشية", count: 26, type: "مكية" },
+      { id: 89, name: "الفجر", count: 30, type: "مكية" },
+      { id: 90, name: "البلد", count: 20, type: "مكية" },
+      { id: 91, name: "الشمس", count: 15, type: "مكية" },
+      { id: 92, name: "الليل", count: 21, type: "مكية" },
+      { id: 93, name: "الضحى", count: 11, type: "مكية" },
+      { id: 94, name: "الشرح", count: 8, type: "مكية" },
+      { id: 95, name: "التين", count: 8, type: "مكية" },
+      { id: 96, name: "العلق", count: 19, type: "مكية" },
+      { id: 97, name: "القدر", count: 5, type: "مكية" },
+      { id: 98, name: "البينة", count: 8, type: "مدنية" },
+      { id: 99, name: "الزلزلة", count: 8, type: "مدنية" },
+      { id: 100, name: "العاديات", count: 11, type: "مكية" },
+      { id: 101, name: "القارعة", count: 11, type: "مكية" },
+      { id: 102, name: "التكاثر", count: 8, type: "مكية" },
+      { id: 103, name: "العصر", count: 3, type: "مكية" },
+      { id: 104, name: "الهمزة", count: 9, type: "مكية" },
+      { id: 105, name: "الفيل", count: 5, type: "مكية" },
+      { id: 106, name: "قريش", count: 4, type: "مكية" },
+      { id: 107, name: "الماعون", count: 7, type: "مكية" },
+      { id: 108, name: "الكوثر", count: 3, type: "مكية" },
+      { id: 109, name: "الكافرون", count: 6, type: "مكية" },
+      { id: 110, name: "النصر", count: 3, type: "مدنية" },
+      { id: 111, name: "المسد", count: 5, type: "مكية" },
+      { id: 112, name: "الإخلاص", count: 4, type: "مكية" },
+      { id: 113, name: "الفلق", count: 5, type: "مكية" },
+      { id: 114, name: "الناس", count: 6, type: "مكية" }
+    ];
+
+    const grid = document.getElementById('surahsGrid');
+    surahsList.forEach(s => {
+      const card = document.createElement('a');
+      card.className = 'surah-card-cosmic';
+      // الربط التلقائي بالصفحة الثانية عبر تمرير ID السورة
+      card.href = `surah-hub.html?id=${s.id}`;
+      card.innerHTML = `
+        <div class="surah-badge-num">${s.id}</div>
+        <div class="surah-name-text">سُورَةُ ${s.name}</div>
+        <div class="surah-sub-desc">
+          <span>${s.type}</span>
+          <span>•</span>
+          <span>${s.count} آية</span>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  </script>
+</body>
+</html>
