@@ -1,3 +1,8 @@
+// تسجيل الـ Service Worker لضمان وصول التحديثات للهواتف
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').catch(() => {});
+}
+
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
 const paintCanvas = document.getElementById('paintCanvas');
@@ -279,7 +284,8 @@ document.querySelectorAll('[data-color]').forEach(dot => {
     dot.classList.add('active');
     currentColor = dot.getAttribute('data-color');
     if (currentTool === 'eraser') {
-      document.querySelector('[data-tool="pen"]').click();
+      const pen = document.querySelector('[data-tool="pen"]');
+      if (pen) pen.click();
     }
   });
 });
@@ -295,7 +301,7 @@ document.querySelectorAll('[data-bg]').forEach(dot => {
   });
 });
 
-// التحكم في نوع التسطير
+// التسطير
 document.querySelectorAll('[data-grid]').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('[data-grid]').forEach(b => b.classList.remove('active'));
@@ -305,67 +311,85 @@ document.querySelectorAll('[data-grid]').forEach(btn => {
   });
 });
 
-// منزلقات السُمك والشفافية
-document.getElementById('brushSize').oninput = (e) => {
-  currentSize = parseInt(e.target.value);
-  document.getElementById('sizeVal').innerText = currentSize + 'px';
-};
-document.getElementById('brushOpacity').oninput = (e) => {
-  currentOpacity = parseInt(e.target.value) / 100;
-  document.getElementById('opacityVal').innerText = e.target.value + '%';
-};
+// سُمك الفرشاة
+const brushSizeEl = document.getElementById('brushSize');
+if (brushSizeEl) {
+  brushSizeEl.oninput = (e) => {
+    currentSize = parseInt(e.target.value);
+    const val = document.getElementById('sizeVal');
+    if (val) val.innerText = currentSize + 'px';
+  };
+}
+const brushOpacityEl = document.getElementById('brushOpacity');
+if (brushOpacityEl) {
+  brushOpacityEl.oninput = (e) => {
+    currentOpacity = parseInt(e.target.value) / 100;
+    const val = document.getElementById('opacityVal');
+    if (val) val.innerText = e.target.value + '%';
+  };
+}
 
-// التراجع والإعادة
-document.getElementById('undoBtn').onclick = () => {
-  if (history.length > 1) {
-    redoList.push(history.pop());
-    pCtx.putImageData(history[history.length - 1], 0, 0);
-  }
-};
-document.getElementById('redoBtn').onclick = () => {
-  if (redoList.length > 0) {
-    const nextState = redoList.pop();
-    history.push(nextState);
-    pCtx.putImageData(nextState, 0, 0);
-  }
-};
+// تراجع وإعادة ومسح
+const undoBtn = document.getElementById('undoBtn');
+if (undoBtn) {
+  undoBtn.onclick = () => {
+    if (history.length > 1) {
+      redoList.push(history.pop());
+      pCtx.putImageData(history[history.length - 1], 0, 0);
+    }
+  };
+}
+const redoBtn = document.getElementById('redoBtn');
+if (redoBtn) {
+  redoBtn.onclick = () => {
+    if (redoList.length > 0) {
+      const nextState = redoList.pop();
+      history.push(nextState);
+      pCtx.putImageData(nextState, 0, 0);
+    }
+  };
+}
+const clearBoardBtn = document.getElementById('clearBoardBtn');
+if (clearBoardBtn) {
+  clearBoardBtn.onclick = () => {
+    if (confirm('مسح كامل محتوى السبورة؟')) {
+      pCtx.clearRect(0, 0, paintCanvas.width, paintCanvas.height);
+      saveState();
+    }
+  };
+}
 
-document.getElementById('clearBoardBtn').onclick = () => {
-  if (confirm('مسح كامل محتوى السبورة؟')) {
-    pCtx.clearRect(0, 0, paintCanvas.width, paintCanvas.height);
-    saveState();
-  }
-};
+// تكبير وملء الشاشة
+const fullScreenBtn = document.getElementById('fullScreenBtn');
+if (fullScreenBtn) {
+  fullScreenBtn.onclick = () => {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+    else document.exitFullscreen();
+  };
+}
 
-// ملء الشاشة
-document.getElementById('fullScreenBtn').onclick = () => {
-  if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen();
-  } else {
-    document.exitFullscreen();
-  }
-};
-
-// رفع وعرض الـ PDF
+// تشغيل الـ PDF
 const pdfInput = document.getElementById('pdfInput');
-document.getElementById('uploadPdfBtn').onclick = () => pdfInput.click();
-
-pdfInput.onchange = function(e) {
-  const file = e.target.files[0];
-  if (file && file.type === 'application/pdf') {
-    const fileReader = new FileReader();
-    fileReader.onload = function() {
-      const typedarray = new Uint8Array(this.result);
-      pdfjsLib.getDocument(typedarray).promise.then(pdf => {
-        currentPdf = pdf;
-        totalPdfPages = pdf.numPages;
-        currentPdfPage = 1;
-        renderPdfPage(currentPdfPage);
-      });
-    };
-    fileReader.readAsArrayBuffer(file);
-  }
-};
+const uploadPdfBtn = document.getElementById('uploadPdfBtn');
+if (uploadPdfBtn && pdfInput) uploadPdfBtn.onclick = () => pdfInput.click();
+if (pdfInput) {
+  pdfInput.onchange = function(e) {
+    const file = e.target.files[0];
+    if (file && file.type === 'application/pdf') {
+      const fileReader = new FileReader();
+      fileReader.onload = function() {
+        const typedarray = new Uint8Array(this.result);
+        pdfjsLib.getDocument(typedarray).promise.then(pdf => {
+          currentPdf = pdf;
+          totalPdfPages = pdf.numPages;
+          currentPdfPage = 1;
+          renderPdfPage(currentPdfPage);
+        });
+      };
+      fileReader.readAsArrayBuffer(file);
+    }
+  };
+}
 
 function renderPdfPage(pageNumber) {
   if (!currentPdf) return;
@@ -383,24 +407,18 @@ function renderPdfPage(pageNumber) {
       viewport: scaledViewport,
       transform: [1, 0, 0, 1, x, y]
     });
-    pageIndicator.innerText = `صفحة PDF: ${pageNumber} / ${totalPdfPages}`;
+    if (pageIndicator) pageIndicator.innerText = `صفحة PDF: ${pageNumber} / ${totalPdfPages}`;
   });
 }
 
-document.getElementById('prevPageBtn').onclick = () => {
-  if (currentPdf && currentPdfPage > 1) {
-    currentPdfPage--;
-    renderPdfPage(currentPdfPage);
-  }
-};
-document.getElementById('nextPageBtn').onclick = () => {
-  if (currentPdf && currentPdfPage < totalPdfPages) {
-    currentPdfPage++;
-    renderPdfPage(currentPdfPage);
-  }
-};
+const prevPageBtn = document.getElementById('prevPageBtn');
+if (prevPageBtn) prevPageBtn.onclick = () => { if (currentPdf && currentPdfPage > 1) { currentPdfPage--; renderPdfPage(currentPdfPage); } };
+const nextPageBtn = document.getElementById('nextPageBtn');
+if (nextPageBtn) nextPageBtn.onclick = () => { if (currentPdf && currentPdfPage < totalPdfPages) { currentPdfPage++; renderPdfPage(currentPdfPage); } };
 
-// قائمة سور القرآن الكريم الـ 114
+// ==========================================
+// قسم المصحف التفاعلي المتكامل (صوت + لمس + فهرس)
+// ==========================================
 const surahNames = [
   "الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس",
   "هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه",
@@ -426,159 +444,228 @@ if (surahSelect) {
   });
 }
 
-// نافذة المصحف الشريف وتبويباتها
+// نافذة المصحف
 const quranModal = document.getElementById('quranModal');
-const openQuranBtn = document.getElementById('loadQuranModalBtn');
+const loadQuranBtn = document.getElementById('loadQuranModalBtn') || document.getElementById('openQuranBtn');
 const closeQuranBtn = document.getElementById('closeQuranModalBtn');
 const cancelQuranBtn = document.getElementById('cancelQuranModalBtn');
 const tabByPage = document.getElementById('tabByPage');
 const tabBySurah = document.getElementById('tabBySurah');
 const pageSection = document.getElementById('pageSection');
 const surahSection = document.getElementById('surahSection');
-let currentQuranMode = 'page';
+let currentQuranMode = 'surah';
 
-if (openQuranBtn) {
-  openQuranBtn.onclick = () => { quranModal.classList.add('active'); };
-}
-if (closeQuranBtn) {
-  closeQuranBtn.onclick = () => { quranModal.classList.remove('active'); };
-}
-if (cancelQuranBtn) {
-  cancelQuranBtn.onclick = () => { quranModal.classList.remove('active'); };
-}
+if (loadQuranBtn && quranModal) loadQuranBtn.onclick = () => quranModal.classList.add('active');
+if (closeQuranBtn && quranModal) closeQuranBtn.onclick = () => quranModal.classList.remove('active');
+if (cancelQuranBtn && quranModal) cancelQuranBtn.onclick = () => quranModal.classList.remove('active');
 
-tabByPage.onclick = () => {
-  currentQuranMode = 'page';
-  tabByPage.classList.add('active');
-  tabBySurah.classList.remove('active');
-  pageSection.style.display = 'block';
-  surahSection.style.display = 'none';
-};
-
-tabBySurah.onclick = () => {
-  currentQuranMode = 'surah';
-  tabBySurah.classList.add('active');
-  tabByPage.classList.remove('active');
-  pageSection.style.display = 'none';
-  surahSection.style.display = 'flex';
-};
-
-document.getElementById('submitQuranBtn').onclick = () => {
-  if (currentQuranMode === 'page') {
-    const pageNum = parseInt(document.getElementById('quranPageInput').value);
-    if (pageNum >= 1 && pageNum <= 604) {
-      const formatted = String(pageNum).padStart(3, '0');
-      const quranUrl = `https://raw.githubusercontent.com/Quran-Mobile/Quran-Images/master/pages_1024/page_${formatted}.png`;
-      
-      const img = new Image();
-      img.crossOrigin = 'anonymous';
-      img.onload = () => {
-        pdfCtx.clearRect(0, 0, pdfCanvas.width, pdfCanvas.height);
-        const scale = Math.min((pdfCanvas.width * 0.72) / img.width, (pdfCanvas.height * 0.95) / img.height);
-        const w = img.width * scale;
-        const h = img.height * scale;
-        const x = (pdfCanvas.width - w) / 2;
-        const y = (pdfCanvas.height - h) / 2;
-
-        pdfCtx.drawImage(img, x, y, w, h);
-        if (pageIndicator) pageIndicator.innerText = `مصحف: صفحة ${pageNum}`;
-        quranModal.classList.remove('active');
-      };
-      img.onerror = () => {
-        alert('تعذر تحميل الصفحة، يرجى التأكد من الاتصال بالإنترنت.');
-      };
-      img.src = quranUrl;
-    } else {
-      alert('يرجى إدخال رقم صفحة بين 1 و 604');
-    }
-  } else {
-    const surahNum = surahSelect.value;
-    const fromVerse = parseInt(document.getElementById('verseFrom').value) || 1;
-    const toVerse = parseInt(document.getElementById('verseTo').value) || fromVerse;
-
-    fetch(`https://api.alquran.cloud/v1/surah/${surahNum}`)
-      .then(res => res.json())
-      .then(data => {
-        const verses = data.data.ayahs.filter(a => a.numberInSurah >= fromVerse && a.numberInSurah <= toVerse);
-        const fullText = verses.map(a => `${a.text} ﴿${a.numberInSurah}﴾`).join(' ');
-
-        pCtx.save();
-        pCtx.fillStyle = currentColor;
-        pCtx.font = 'bold 24px "Traditional Arabic", "Amiri", Tahoma, serif';
-        pCtx.textAlign = 'center';
-        pCtx.direction = 'rtl';
-
-        const maxWidth = paintCanvas.width * 0.8;
-        const words = fullText.split(' ');
-        let line = '';
-        let y = paintCanvas.height * 0.3;
-
-        for (let n = 0; n < words.length; n++) {
-          let testLine = line + words[n] + ' ';
-          let metrics = pCtx.measureText(testLine);
-          if (metrics.width > maxWidth && n > 0) {
-            pCtx.fillText(line, paintCanvas.width / 2, y);
-            line = words[n] + ' ';
-            y += 45;
-          } else {
-            line = testLine;
-          }
-        }
-        pCtx.fillText(line, paintCanvas.width / 2, y);
-        pCtx.restore();
-
-        saveState();
-        quranModal.classList.remove('active');
-      })
-      .catch(() => alert('تعذر جلب الآيات المطلوبة، يرجى التحقق من الاتصال بالإنترنت.'));
-  }
-};
-
-// إدراج الصور
-const imageInput = document.getElementById('imageInput');
-document.getElementById('uploadImgBtn').onclick = () => imageInput.click();
-
-function placeImage(src) {
-  const img = new Image();
-  img.onload = () => {
-    const maxWidth = paintCanvas.width * 0.7;
-    const scale = Math.min(1, maxWidth / img.width);
-    const w = img.width * scale;
-    const h = img.height * scale;
-    pCtx.drawImage(img, (paintCanvas.width - w) / 2, (paintCanvas.height - h) / 2, w, h);
-    saveState();
+if (tabByPage && tabBySurah) {
+  tabByPage.onclick = () => {
+    currentQuranMode = 'page';
+    tabByPage.classList.add('active');
+    tabBySurah.classList.remove('active');
+    if (pageSection) pageSection.style.display = 'block';
+    if (surahSection) surahSection.style.display = 'none';
   };
-  img.src = src;
+  tabBySurah.onclick = () => {
+    currentQuranMode = 'surah';
+    tabBySurah.classList.add('active');
+    tabByPage.classList.remove('active');
+    if (pageSection) pageSection.style.display = 'none';
+    if (surahSection) surahSection.style.display = 'flex';
+  };
 }
 
-imageInput.onchange = (e) => {
-  const file = e.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = (ev) => placeImage(ev.target.result);
-    reader.readAsDataURL(file);
+// عناصر الصندوق التفاعلي
+const quranContainer = document.getElementById('quranTextContainer');
+const quranTextContent = document.getElementById('quranTextContent');
+const sidebarAyahList = document.getElementById('sidebarAyahList');
+const surahBadgeTitle = document.getElementById('surahBadgeTitle');
+const btnPlayAudio = document.getElementById('btnPlayAudio');
+const audioStatus = document.getElementById('audioStatus');
+const reciterSelect = document.getElementById('reciterSelect');
+
+let activeAyahsData = [];
+let currentAudioIndex = 0;
+let isPlaying = false;
+let audioPlayer = new Audio();
+
+// دالة الانتقال للآية بالنقر أو اللمس
+window.jumpToAyah = function(index) {
+  if (index < 0 || index >= activeAyahsData.length) return;
+  currentAudioIndex = index;
+  const ayah = activeAyahsData[index];
+
+  // تظليل النص الرئيسي
+  document.querySelectorAll('.ayah-span').forEach(el => el.classList.remove('active-highlight'));
+  const span = document.getElementById(`ayah-main-${ayah.numberInSurah}`);
+  if (span) {
+    span.classList.add('active-highlight');
+    span.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
+
+  // تظليل الفهرس الجانبي
+  document.querySelectorAll('.sidebar-ayah-item').forEach(el => el.classList.remove('active-nav-ayah'));
+  const side = document.getElementById(`sidebar-item-${ayah.numberInSurah}`);
+  if (side) {
+    side.classList.add('active-nav-ayah');
+    side.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  playAyahAudio(index);
 };
 
-// تصدير الصور
-function exportImage(format) {
-  const exportCanvas = document.createElement('canvas');
-  exportCanvas.width = paintCanvas.width;
-  exportCanvas.height = paintCanvas.height;
-  const eCtx = exportCanvas.getContext('2d');
+function playAyahAudio(index) {
+  if (index >= activeAyahsData.length) {
+    stopQuranAudio();
+    if (audioStatus) audioStatus.innerText = "✓ اكتملت تلاوة الآيات بنجاح";
+    return;
+  }
 
-  eCtx.fillStyle = currentThemeBg;
-  eCtx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
-  eCtx.drawImage(gridCanvas, 0, 0);
-  eCtx.drawImage(pdfCanvas, 0, 0);
-  eCtx.drawImage(paintCanvas, 0, 0);
+  const ayah = activeAyahsData[index];
+  const sNum = surahSelect ? surahSelect.value : 1;
+  const sPad = String(sNum).padStart(3, '0');
+  const vPad = String(ayah.numberInSurah).padStart(3, '0');
+  const reciter = reciterSelect ? reciterSelect.value : 'Husary_64kbps';
+  const url = `https://everyayah.com/data/${reciter}/${sPad}${vPad}.mp3`;
 
-  const link = document.createElement('a');
-  link.download = `سبورة-${Date.now()}.${format}`;
-  link.href = exportCanvas.toDataURL(`image/${format === 'png' ? 'png' : 'jpeg'}`);
-  link.click();
+  audioPlayer.src = url;
+  if (audioStatus) audioStatus.innerText = `▶ تلاوة آية (${ayah.numberInSurah}) — [${index + 1}/${activeAyahsData.length}]`;
+
+  audioPlayer.play().catch(() => {});
+  isPlaying = true;
+  if (btnPlayAudio) {
+    btnPlayAudio.innerText = "⏸️ إيقاف مؤقت";
+    btnPlayAudio.style.background = "#dc2626";
+  }
+
+  audioPlayer.onended = () => {
+    window.jumpToAyah(index + 1);
+  };
 }
 
-document.getElementById('downloadPngBtn').onclick = () => exportImage('png');
-document.getElementById('downloadJpgBtn').onclick = () => exportImage('jpeg');
-document.getElementById('quickSaveBtn').onclick = () => exportImage('png');
+function stopQuranAudio() {
+  isPlaying = false;
+  audioPlayer.pause();
+  if (btnPlayAudio) {
+    btnPlayAudio.innerText = "▶️ تشغيل التلاوة";
+    btnPlayAudio.style.background = "#0284c7";
+  }
+}
+
+if (btnPlayAudio) {
+  btnPlayAudio.onclick = () => {
+    if (activeAyahsData.length === 0) return;
+    if (isPlaying) stopQuranAudio();
+    else window.jumpToAyah(currentAudioIndex);
+  };
+}
+
+// تنفيذ زر إدراج الآيات
+const submitQuranBtn = document.getElementById('submitQuranBtn');
+if (submitQuranBtn) {
+  submitQuranBtn.onclick = () => {
+    if (currentQuranMode === 'page') {
+      const pageNum = parseInt(document.getElementById('quranPageInput').value);
+      if (pageNum >= 1 && pageNum <= 604) {
+        const formatted = String(pageNum).padStart(3, '0');
+        const quranUrl = `https://raw.githubusercontent.com/Quran-Mobile/Quran-Images/master/pages_1024/page_${formatted}.png`;
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => {
+          pdfCtx.clearRect(0, 0, pdfCanvas.width, pdfCanvas.height);
+          const scale = Math.min((pdfCanvas.width * 0.72) / img.width, (pdfCanvas.height * 0.95) / img.height);
+          const w = img.width * scale;
+          const h = img.height * scale;
+          pdfCtx.drawImage(img, (pdfCanvas.width - w) / 2, (pdfCanvas.height - h) / 2, w, h);
+          if (pageIndicator) pageIndicator.innerText = `مصحف: صفحة ${pageNum}`;
+          quranModal.classList.remove('active');
+        };
+        img.src = quranUrl;
+      }
+    } else {
+      const surahNum = surahSelect ? surahSelect.value : 1;
+      const fromVerse = parseInt(document.getElementById('verseFrom').value) || 1;
+      const toVerse = parseInt(document.getElementById('verseTo').value) || fromVerse;
+
+      fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/quran-uthmani`)
+        .then(res => res.json())
+        .then(data => {
+          const ayahs = data.data.ayahs.filter(a => a.numberInSurah >= fromVerse && a.numberInSurah <= toVerse);
+          if (ayahs.length === 0) return alert('يرجى التحقق من أرقام الآيات');
+
+          activeAyahsData = ayahs;
+          currentAudioIndex = 0;
+
+          if (surahBadgeTitle) surahBadgeTitle.innerText = `سورة ${data.data.name} (${fromVerse} - ${toVerse})`;
+
+          // 1. توليد النص في الساحة الرئيسية وربط النقر واللمس
+          if (quranTextContent) {
+            quranTextContent.innerHTML = '';
+            ayahs.forEach((a, idx) => {
+              const span = document.createElement('span');
+              span.className = 'ayah-span';
+              span.id = `ayah-main-${a.numberInSurah}`;
+              span.innerHTML = `${a.text} <span style="color:#f59e0b; font-size:0.85em; pointer-events:none;">﴿${a.numberInSurah}﴾</span> `;
+              
+              span.addEventListener('click', (e) => { e.stopPropagation(); window.jumpToAyah(idx); });
+              span.addEventListener('touchend', (e) => { e.stopPropagation(); window.jumpToAyah(idx); });
+
+              quranTextContent.appendChild(span);
+            });
+          }
+
+          // 2. توليد عناصر الفهرس الجانبي السريع
+          if (sidebarAyahList) {
+            sidebarAyahList.innerHTML = '';
+            ayahs.forEach((a, idx) => {
+              const item = document.createElement('div');
+              item.className = 'sidebar-ayah-item';
+              item.id = `sidebar-item-${a.numberInSurah}`;
+              item.innerHTML = `
+                <span class="sidebar-num-badge">${a.numberInSurah}</span>
+                <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; pointer-events:none;">${a.text}</span>
+              `;
+
+              item.addEventListener('click', (e) => { e.stopPropagation(); window.jumpToAyah(idx); });
+              item.addEventListener('touchend', (e) => { e.stopPropagation(); window.jumpToAyah(idx); });
+
+              sidebarAyahList.appendChild(item);
+            });
+          }
+
+          if (quranContainer) quranContainer.style.display = 'flex';
+          quranModal.classList.remove('active');
+          if (audioStatus) audioStatus.innerText = `جاهز — انقر أو المس أي آية باليد للانتقال إليها مباشرة`;
+        })
+        .catch(() => alert('تعذر جلب الآيات، يرجى التحقق من الاتصال بالإنترنت.'));
+    }
+  };
+}
+
+// تحريك صندوق المصحف
+const dragHeader = document.getElementById('dragHeader');
+const closeCardBtn = document.getElementById('closeQuranCardBtn');
+let isDraggingBox = false, boxOffX = 0, boxOffY = 0;
+
+if (dragHeader && quranContainer) {
+  dragHeader.onmousedown = (e) => {
+    isDraggingBox = true;
+    const rect = quranContainer.getBoundingClientRect();
+    boxOffX = e.clientX - rect.left;
+    boxOffY = e.clientY - rect.top;
+  };
+  window.addEventListener('mousemove', (e) => {
+    if (isDraggingBox) {
+      quranContainer.style.left = (e.clientX - boxOffX) + 'px';
+      quranContainer.style.top = (e.clientY - boxOffY) + 'px';
+    }
+  });
+  window.addEventListener('mouseup', () => { isDraggingBox = false; });
+}
+if (closeCardBtn && quranContainer) {
+  closeCardBtn.onclick = () => {
+    quranContainer.style.display = 'none';
+    stopQuranAudio();
+  };
+}
