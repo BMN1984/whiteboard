@@ -4,16 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>بنك ألعاب واختبارات جزء عم | أكاديمية الفتح</title>
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&family=Amiri+Quran&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
       font-family: 'Cairo', sans-serif;
+      user-select: none;
     }
     body {
       background: radial-gradient(circle at top, #0f172a, #064e3b);
@@ -22,7 +25,6 @@
       padding-bottom: 50px;
     }
 
-    /* الشريط العلوي ورابط الرجوع للسبورة */
     header {
       background: rgba(15, 23, 42, 0.95);
       border-bottom: 2px solid #facc15;
@@ -36,7 +38,7 @@
       box-shadow: 0 4px 20px rgba(0,0,0,0.5);
     }
     .brand-title {
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 900;
       color: #facc15;
       display: flex;
@@ -62,11 +64,11 @@
 
     .container {
       max-width: 1000px;
-      margin: 24px auto;
+      margin: 22px auto;
       padding: 0 16px;
     }
 
-    /* قسم بطاقة السور */
+    /* شبكة اختيار السور */
     .surah-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
@@ -104,9 +106,9 @@
       margin-top: 4px;
     }
 
-    /* شاشات أنماط الألعاب */
+    /* مساحة الاختبار النشط */
     .game-section {
-      background: rgba(15, 23, 42, 0.95);
+      background: rgba(15, 23, 42, 0.96);
       border: 2px solid #0284c7;
       border-radius: 20px;
       padding: 24px;
@@ -142,68 +144,89 @@
       box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
     }
 
-    /* أسئلة إكمال الآيات */
     .quiz-box {
       text-align: center;
-      margin: 20px 0;
+      margin: 10px 0;
     }
     .ayah-prompt {
       font-family: 'Amiri Quran', serif;
       font-size: 26px;
       line-height: 2.2;
       color: #fde047;
-      margin-bottom: 20px;
+      margin-bottom: 22px;
       background: rgba(2, 132, 199, 0.1);
-      padding: 16px;
+      padding: 18px;
       border-radius: 16px;
       border: 1px dashed rgba(56, 189, 248, 0.4);
     }
     .choices-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      gap: 14px;
     }
     .choice-btn {
       background: #1e293b;
       border: 1.5px solid rgba(255,255,255,0.15);
       color: #fff;
-      padding: 14px;
-      border-radius: 12px;
-      font-size: 16px;
+      padding: 16px;
+      border-radius: 14px;
+      font-size: 17px;
       font-weight: 700;
       cursor: pointer;
       transition: all 0.2s;
       font-family: 'Amiri Quran', 'Cairo', serif;
     }
-    .choice-btn:hover { background: #334155; }
-    .choice-btn.correct { background: #16a34a !important; border-color: #4ade80 !important; }
-    .choice-btn.wrong { background: #dc2626 !important; border-color: #f87171 !important; }
+    .choice-btn:hover {
+      background: #334155;
+      transform: translateY(-2px);
+    }
+    .choice-btn.selected-correct {
+      background: #16a34a !important;
+      border-color: #4ade80 !important;
+      color: #fff;
+      box-shadow: 0 0 18px rgba(74, 222, 128, 0.6);
+    }
+    .choice-btn.selected-wrong {
+      background: #dc2626 !important;
+      border-color: #f87171 !important;
+      color: #fff;
+      animation: shake 0.4s;
+    }
 
-    /* لعبة ترتيب الكلمات (Word Arrangement) */
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      75% { transform: translateX(6px); }
+    }
+
+    /* لعبة ترتيب كلمات الآية */
     .word-pool, .arranged-pool {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 10px;
       justify-content: center;
-      min-height: 60px;
-      padding: 12px;
+      min-height: 70px;
+      padding: 14px;
       background: rgba(30, 41, 59, 0.6);
-      border-radius: 12px;
+      border-radius: 14px;
       margin-bottom: 16px;
     }
     .word-chip {
       background: #0284c7;
       color: #fff;
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-size: 18px;
+      padding: 8px 18px;
+      border-radius: 25px;
+      font-size: 19px;
       font-family: 'Amiri Quran', serif;
       cursor: pointer;
       font-weight: bold;
       box-shadow: 0 3px 8px rgba(0,0,0,0.3);
-      transition: transform 0.15s;
+      transition: transform 0.15s, background 0.15s;
     }
-    .word-chip:hover { transform: scale(1.08); }
+    .word-chip:hover {
+      transform: scale(1.08);
+      background: #0369a1;
+    }
 
     .score-badge {
       display: inline-flex;
@@ -216,6 +239,91 @@
       font-weight: 800;
       font-size: 13px;
     }
+
+    /* نافذة معالجة الخطأ التشجيعية */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.78);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+    .modal-backdrop.show { display: flex; }
+    .retry-card {
+      background: #141a29;
+      border: 2px solid #f87171;
+      border-radius: 20px;
+      padding: 26px;
+      width: 440px;
+      max-width: 90vw;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.85);
+      animation: popIn 0.25s ease-out;
+    }
+    @keyframes popIn {
+      from { transform: scale(0.85); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .retry-icon {
+      font-size: 42px;
+      margin-bottom: 10px;
+    }
+    .retry-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #f87171;
+      margin-bottom: 6px;
+    }
+    .retry-desc {
+      font-size: 13px;
+      color: #cbd5e1;
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+    .retry-actions {
+      display: flex;
+      gap: 10px;
+    }
+    .btn-retry {
+      flex: 1;
+      background: #0284c7;
+      color: #fff;
+      border: none;
+      padding: 12px;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background 0.15s;
+    }
+    .btn-retry:hover { background: #0369a1; }
+    .btn-skip {
+      flex: 1;
+      background: rgba(255,255,255,0.08);
+      color: #94a3b8;
+      border: 1px solid rgba(255,255,255,0.15);
+      padding: 12px;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+    .btn-skip:hover { background: rgba(255,255,255,0.15); color: #fff; }
   </style>
 </head>
 <body>
@@ -225,7 +333,6 @@
       <span>🌟</span>
       <span>أكاديمية الفتح — بنك ألعاب واختبارات جزء عم</span>
     </div>
-    <!-- رابط العودة إلى السبورة التفاعلية الأصلية -->
     <a href="index.html" class="back-btn">⬅ العودة إلى السبورة التفاعلية</a>
   </header>
 
@@ -235,82 +342,130 @@
       <div class="score-badge">🏆 النقاط: <span id="userScore">0</span></div>
     </div>
 
-    <!-- شبكة سور جزء عم (من النبأ إلى الناس) -->
+    <!-- شبكة سور جزء عم (من النبأ 78 إلى الناس 114) -->
     <div class="surah-grid" id="surahsList"></div>
 
-    <!-- قسم الألعاب والاختبارات التفاعلية -->
+    <!-- قسم الاختبارات النشط -->
     <div class="game-section" id="gameArea">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
         <h3 id="selectedSurahTitle" style="color:#fef08a; font-size:20px;">سورة النبأ</h3>
-        <span id="gameStatus" style="font-size:12px; color:#38bdf8;">اختر نوع الاختبار أدناه</span>
+        <span id="gameStatus" style="font-size:12px; color:#38bdf8;">اختر نمط الاختبار أدناه</span>
       </div>
 
-      <!-- أنماط الاختبارات التفاعلية -->
       <div class="game-modes-nav">
         <button class="mode-tab active" data-mode="next-ayah">🎯 اختر الآية التالية</button>
         <button class="mode-tab" data-mode="arrange">🧩 ترتيب كلمات الآية</button>
         <button class="mode-tab" data-mode="who-surah">🔍 ما اسم السورة؟</button>
       </div>
 
-      <!-- مساحة الاختبار التفاعلي النشط -->
-      <div id="quizContent">
-        <!-- يتم توليد الأسئلة ديناميكياً هنا -->
+      <div id="quizContent"></div>
+    </div>
+  </div>
+
+  <!-- نافذة معالجة الخطأ التشجيعية (دون إظهار الإجابة لحث الطالب على التذكر) -->
+  <div class="modal-backdrop" id="retryModal">
+    <div class="retry-card">
+      <div class="retry-icon">🤔</div>
+      <div class="retry-title">حاول ثانية يا بطل!</div>
+      <div class="retry-desc">الإجابة التي اخترتها غير صحيحة. ركّز واستحضر الآية الكريمة من حفظك ثم جرّب مجدداً.</div>
+      <div class="retry-actions">
+        <button class="btn-retry" id="btnDoRetry">
+          <span>🔄</span>
+          <span>إعادة المحاولة</span>
+        </button>
+        <button class="btn-skip" id="btnDoSkip">
+          <span>⏭️</span>
+          <span>تجاوز السؤال</span>
+        </button>
       </div>
     </div>
   </div>
 
   <script>
+    // =========================================================
+    // محرك الصوتيات البرمجي الداخلي بالكامل (Web Audio API)
+    // =========================================================
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null;
+
+    function getAudioCtx() {
+      if (!audioCtx) audioCtx = new AudioContext();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    }
+
+    // 1. صوت التصفيق الحار المبهج عند الإجابة الصحيحة
+    function playClapSound() {
+      const ctx = getAudioCtx();
+      for (let i = 0; i < 22; i++) {
+        setTimeout(() => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(130 + Math.random() * 260, ctx.currentTime);
+          gain.gain.setValueAtTime(0.32, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.08);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.09);
+        }, i * 38 + Math.random() * 20);
+      }
+    }
+
+    // 2. نغمة خافتة ولطيفة تناسب الإجابة الخاطئة دون إحباط الطالب
+    function playWrongSound() {
+      const ctx = getAudioCtx();
+      const notes = [220, 185]; // A3 ثم F#3 منخفض وهادئ
+      notes.forEach((freq, idx) => {
+        setTimeout(() => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, ctx.currentTime);
+          gain.gain.setValueAtTime(0.18, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.28);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.3);
+        }, idx * 160);
+      });
+    }
+
+    // =========================================================
     // قائمة سور جزء عم كاملة (من النبأ 78 إلى الناس 114)
+    // =========================================================
     const juzAmmaSurahs = [
-      { id: 78, name: "النبأ", count: 40 },
-      { id: 79, name: "النازعات", count: 46 },
-      { id: 80, name: "عبس", count: 42 },
-      { id: 81, name: "التكوير", count: 29 },
-      { id: 82, name: "الانفطار", count: 19 },
-      { id: 83, name: "المطففين", count: 36 },
-      { id: 84, name: "الانشقاق", count: 25 },
-      { id: 85, name: "البروج", count: 22 },
-      { id: 86, name: "الطارق", count: 17 },
-      { id: 87, name: "الأعلى", count: 19 },
-      { id: 88, name: "الغاشية", count: 26 },
-      { id: 89, name: "الفجر", count: 30 },
-      { id: 90, name: "البلد", count: 20 },
-      { id: 91, name: "الشمس", count: 15 },
-      { id: 92, name: "الليل", count: 21 },
-      { id: 93, name: "الضحى", count: 11 },
-      { id: 94, name: "الشرح", count: 8 },
-      { id: 95, name: "التين", count: 8 },
-      { id: 96, name: "العلق", count: 19 },
-      { id: 97, name: "القدر", count: 5 },
-      { id: 98, name: "البينة", count: 8 },
-      { id: 99, name: "الزلزلة", count: 8 },
-      { id: 100, name: "العاديات", count: 11 },
-      { id: 101, name: "القارعة", count: 11 },
-      { id: 102, name: "التكاثر", count: 8 },
-      { id: 103, name: "العصر", count: 3 },
-      { id: 104, name: "الهمزة", count: 9 },
-      { id: 105, name: "الفيل", count: 5 },
-      { id: 106, name: "قريش", count: 4 },
-      { id: 107, name: "الماعون", count: 7 },
-      { id: 108, name: "الكوثر", count: 3 },
-      { id: 109, name: "الكافرون", count: 6 },
-      { id: 110, name: "النصر", count: 3 },
-      { id: 111, name: "المسد", count: 5 },
-      { id: 112, name: "الإخلاص", count: 4 },
-      { id: 113, name: "الفلق", count: 5 },
-      { id: 114, name: "الناس", count: 6 }
+      { id: 78, name: "النبأ" }, { id: 79, name: "النازعات" }, { id: 80, name: "عبس" },
+      { id: 81, name: "التكوير" }, { id: 82, name: "الانفطار" }, { id: 83, name: "المطففين" },
+      { id: 84, name: "الانشقاق" }, { id: 85, name: "البروج" }, { id: 86, name: "الطارق" },
+      { id: 87, name: "الأعلى" }, { id: 88, name: "الغاشية" }, { id: 89, name: "الفجر" },
+      { id: 90, name: "البلد" }, { id: 91, name: "الشمس" }, { id: 92, name: "الليل" },
+      { id: 93, name: "الضحى" }, { id: 94, name: "الشرح" }, { id: 95, name: "التين" },
+      { id: 96, name: "العلق" }, { id: 97, name: "القدر" }, { id: 98, name: "البينة" },
+      { id: 99, name: "الزلزلة" }, { id: 100, name: "العاديات" }, { id: 101, name: "القارعة" },
+      { id: 102, name: "التكاثر" }, { id: 103, name: "العصر" }, { id: 104, name: "الهمزة" },
+      { id: 105, name: "الفيل" }, { id: 106, name: "قريش" }, { id: 107, name: "الماعون" },
+      { id: 108, name: "الكوثر" }, { id: 109, name: "الكافرون" }, { id: 110, name: "النصر" },
+      { id: 111, name: "المسد" }, { id: 112, name: "الإخلاص" }, { id: 113, name: "الفلق" },
+      { id: 114, name: "الناس" }
     ];
 
     let currentSurah = juzAmmaSurahs[0];
     let currentMode = 'next-ayah';
     let userScore = 0;
     let surahAyahsCache = {};
+    let isQuestionLocked = false;
 
     const surahsList = document.getElementById('surahsList');
     const gameArea = document.getElementById('gameArea');
     const selectedSurahTitle = document.getElementById('selectedSurahTitle');
     const quizContent = document.getElementById('quizContent');
     const userScoreEl = document.getElementById('userScore');
+    const retryModal = document.getElementById('retryModal');
+    const btnDoRetry = document.getElementById('btnDoRetry');
+    const btnDoSkip = document.getElementById('btnDoSkip');
 
     // رسم بطاقات السور
     juzAmmaSurahs.forEach((surah, idx) => {
@@ -328,7 +483,6 @@
       surahsList.appendChild(card);
     });
 
-    // اختيار نمط اللعبة
     document.querySelectorAll('.mode-tab').forEach(tab => {
       tab.onclick = () => {
         document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
@@ -347,7 +501,9 @@
 
     // جلب آيات السورة وبناء الاختبار
     async function loadQuizForSurah() {
-      quizContent.innerHTML = '<div style="text-align:center; padding:30px; color:#38bdf8;">⏳ جاري تجهيز الاختبار التفاعلي...</div>';
+      isQuestionLocked = false;
+      retryModal.classList.remove('show');
+      quizContent.innerHTML = '<div style="text-align:center; padding:35px; color:#38bdf8;">⏳ جاري تجهيز السؤال من السورة...</div>';
 
       try {
         let ayahs = surahAyahsCache[currentSurah.id];
@@ -366,23 +522,23 @@
           renderWhoSurahQuiz(ayahs);
         }
       } catch (e) {
-        quizContent.innerHTML = '<div style="text-align:center; color:#f87171;">يرجى التأكد من اتصال الإنترنت لجلب الآيات.</div>';
+        quizContent.innerHTML = '<div style="text-align:center; color:#f87171; padding:20px;">تعذر جلب الآيات. يرجى التأكد من اتصال الإنترنت أو حفظ النسخة المحلية.</div>';
       }
     }
 
-    // النمط 1: اختر الآية التالية
+    // =========================================================
+    // 1. نمط: اختر الآية التالية
+    // =========================================================
     function renderNextAyahQuiz(ayahs) {
       if (ayahs.length < 2) {
-        quizContent.innerHTML = '<div style="text-align:center;">السورة قصيرة جداً لهذا النمط. اختر سورة أخرى أو نمطاً آخر.</div>';
+        quizContent.innerHTML = '<div style="text-align:center; padding:20px;">السورة قصيرة جداً لهذا النمط. اختر سورة أخرى.</div>';
         return;
       }
 
-      // اختيار آية عشوائية ليست الأخيرة
       const randIdx = Math.floor(Math.random() * (ayahs.length - 1));
       const promptAyah = ayahs[randIdx];
       const correctNextAyah = ayahs[randIdx + 1];
 
-      // خيارات مشتتة عشوائية
       let wrongChoices = ayahs.filter((_, i) => i !== (randIdx + 1));
       wrongChoices = wrongChoices.sort(() => 0.5 - Math.random()).slice(0, 3);
       
@@ -402,10 +558,12 @@
         </div>
       `;
 
-      bindChoiceEvents();
+      bindChoiceEvents(ayahs);
     }
 
-    // النمط 2: ترتيب كلمات الآية
+    // =========================================================
+    // 2. نمط: ترتيب كلمات الآية
+    // =========================================================
     function renderArrangeQuiz(ayahs) {
       const randAyah = ayahs[Math.floor(Math.random() * ayahs.length)];
       const originalWords = randAyah.text.split(' ');
@@ -424,7 +582,7 @@
             ${shuffledWords.map((w, idx) => `<span class="word-chip" data-idx="${idx}">${w}</span>`).join('')}
           </div>
 
-          <button id="btnResetArrange" style="background:#334155; color:#fff; border:none; padding:6px 14px; border-radius:8px; cursor:pointer; font-size:12px;">🔄 إعادة المحاولة</button>
+          <button id="btnResetArrange" style="background:#334155; color:#fff; border:none; padding:6px 16px; border-radius:8px; cursor:pointer; font-size:12px;">🔄 إعادة الترتيب من البداية</button>
         </div>
       `;
 
@@ -434,21 +592,19 @@
 
       sourcePool.querySelectorAll('.word-chip').forEach(chip => {
         chip.onclick = () => {
+          if (isQuestionLocked) return;
           if (hint) hint.style.display = 'none';
           userWords.push(chip.innerText);
           arrangedPool.appendChild(chip);
 
           if (userWords.length === originalWords.length) {
+            isQuestionLocked = true;
             if (userWords.join(' ') === originalWords.join(' ')) {
-              confetti({ particleCount: 80, spread: 70 });
-              userScore += 10;
-              userScoreEl.innerText = userScore;
-              setTimeout(() => {
-                alert('🎉 أحسنت ممتاز! إجابة صحيحة.');
-                renderArrangeQuiz(ayahs);
-              }, 400);
+              // الإجابة الصحيحة
+              handleCorrectAnswer();
             } else {
-              alert('❌ الترتيب غير صحيح، حاول مرة أخرى.');
+              // الإجابة الخاطئة
+              handleWrongAnswer();
             }
           }
         };
@@ -457,7 +613,9 @@
       document.getElementById('btnResetArrange').onclick = () => renderArrangeQuiz(ayahs);
     }
 
-    // النمط 3: ما اسم السورة
+    // =========================================================
+    // 3. نمط: في أي سورة وردت هذه الآية؟
+    // =========================================================
     function renderWhoSurahQuiz(ayahs) {
       const randAyah = ayahs[Math.floor(Math.random() * ayahs.length)];
       
@@ -479,29 +637,77 @@
         </div>
       `;
 
-      bindChoiceEvents();
+      bindChoiceEvents(ayahs);
     }
 
-    function bindChoiceEvents() {
+    // =========================================================
+    // ربط الأحداث والتعامل مع الإجابة (صح / خطأ)
+    // =========================================================
+    function bindChoiceEvents(ayahs) {
       document.querySelectorAll('.choice-btn').forEach(btn => {
         btn.onclick = () => {
+          if (isQuestionLocked) return;
+          isQuestionLocked = true;
+
           const isCorrect = btn.getAttribute('data-correct') === 'true';
+
           if (isCorrect) {
-            btn.classList.add('correct');
-            confetti({ particleCount: 70, spread: 70 });
-            userScore += 10;
-            userScoreEl.innerText = userScore;
-            setTimeout(() => loadQuizForSurah(), 1000);
+            btn.classList.add('selected-correct');
+            handleCorrectAnswer();
           } else {
-            btn.classList.add('wrong');
-            document.querySelectorAll('.choice-btn[data-correct="true"]').forEach(c => c.classList.add('correct'));
-            setTimeout(() => loadQuizForSurah(), 1500);
+            btn.classList.add('selected-wrong');
+            handleWrongAnswer();
           }
         };
       });
     }
 
-    // فتح السورة الأولى تلقائياً عند الدخول
+    // التعامل مع الإجابة الصحيحة
+    function handleCorrectAnswer() {
+      playClapSound();
+      confetti({
+        particleCount: 80,
+        spread: 80,
+        origin: { y: 0.65 }
+      });
+      userScore += 10;
+      userScoreEl.innerText = userScore;
+
+      // الانتقال فوراً وتلقائياً بعد ثانية ونصف دون أي تلميحات
+      setTimeout(() => {
+        loadQuizForSurah();
+      }, 1500);
+    }
+
+    // التعامل مع الإجابة الخطأ
+    function handleWrongAnswer() {
+      playWrongSound();
+      // فتح نافذة إعادة المحاولة دون إظهار الإجابة الصحيحة إطلاقاً
+      setTimeout(() => {
+        retryModal.classList.add('show');
+      }, 500);
+    }
+
+    // إجراءات نافذة الخطأ
+    btnDoRetry.onclick = () => {
+      retryModal.classList.remove('show');
+      isQuestionLocked = false;
+      // إعادة السؤال نفسه ليتسنى له التفكير واختيار الإجابة الصحيحة
+      document.querySelectorAll('.choice-btn').forEach(btn => {
+        btn.classList.remove('selected-wrong');
+      });
+      // إن كان في نمط الترتيب، نعيد ترتيب الكلمات
+      if (currentMode === 'arrange') {
+        renderArrangeQuiz(surahAyahsCache[currentSurah.id]);
+      }
+    };
+
+    btnDoSkip.onclick = () => {
+      retryModal.classList.remove('show');
+      loadQuizForSurah();
+    };
+
+    // بدء السورة الأولى تلقائياً
     selectSurah(juzAmmaSurahs[0]);
   </script>
 </body>
