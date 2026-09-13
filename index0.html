@@ -1,1 +1,990 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>سبورة أكاديمية الفتح لعلوم القرآن حفظ وتجويد وتفسير</title>
+  <title>سبورة أكاديمية الفتح لعلوم القرآن حفظ وتجويد وتفسير</title>
+<link rel="manifest" href="manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&family=Amiri+Quran&family=Amiri:wght@400;700&family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
 
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      overflow: hidden;
+      background-color: #064e3b;
+      font-family: 'Cairo', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: #d1d5db;
+      user-select: none;
+    }
+
+    .academy-marquee-banner {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      background: linear-gradient(90deg, #0f172a, #78350f, #064e3b, #78350f, #0f172a);
+      background-size: 300% 300%;
+      animation: bannerGradient 12s ease infinite;
+      border-bottom: 2.5px solid #facc15;
+      padding: 6px 0;
+      z-index: 1100;
+      display: flex;
+      align-items: center;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+      overflow: hidden;
+    }
+    @keyframes bannerGradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .marquee-track {
+      display: inline-block;
+      white-space: nowrap;
+      animation: marqueeScroll 30s linear infinite;
+      font-family: 'Cairo', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: #fef08a;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+    }
+    .marquee-track:hover { animation-play-state: paused; }
+    @keyframes marqueeScroll {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+    .badge-sparkle {
+      background: #facc15;
+      color: #0f172a;
+      padding: 2px 10px;
+      border-radius: 12px;
+      margin: 0 8px;
+      font-size: 13px;
+      font-weight: 800;
+    }
+    .whatsapp-marquee-link {
+      color: #4ade80;
+      text-decoration: none;
+      background: rgba(34, 197, 94, 0.2);
+      border: 1.5px solid #22c55e;
+      padding: 3px 12px;
+      border-radius: 20px;
+      margin: 0 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    #celebrationOverlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      pointer-events: none;
+      z-index: 1500;
+      overflow: hidden;
+    }
+
+    #boardStage {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      transform-origin: 50% 50%;
+      transition: transform 0.15s ease-out;
+    }
+
+    /* صندوق المصحف المطور */
+    #quranTextContainer {
+      position: absolute;
+      top: 14%;
+      left: 14%;
+      z-index: 200;
+      display: none;
+      min-width: 500px;
+      min-height: 300px;
+      width: 74vw;
+      max-width: 1100px;
+      height: 78vh;
+      background: rgba(15, 23, 42, 0.98);
+      backdrop-filter: blur(14px);
+      border: 2.5px solid #d97706;
+      border-radius: 18px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.9), 0 0 25px rgba(217, 119, 6, 0.3);
+      direction: rtl;
+      cursor: default;
+      resize: both;
+      overflow: hidden;
+      flex-direction: column;
+    }
+    .drag-header {
+      background: linear-gradient(90deg, #1e293b, #0f172a);
+      border-bottom: 1px solid rgba(217, 119, 6, 0.3);
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: grab;
+      flex-shrink: 0;
+    }
+    .drag-header:active { cursor: grabbing; }
+    .drag-title {
+      font-size: 13px;
+      color: #fbbf24;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .card-close-btn {
+      background: #dc2626;
+      border: none;
+      color: #fff;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: bold;
+    }
+    .card-close-btn:hover { background: #b91c1c; }
+
+    .quran-interactive-layout {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+    }
+
+    /* الشريط الجانبي لفهرس الآيات */
+    .ayah-sidebar-nav {
+      width: 230px;
+      background: rgba(15, 23, 42, 0.94);
+      border-left: 2px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+    .sidebar-header-title {
+      padding: 10px;
+      background: #1e293b;
+      font-size: 12px;
+      font-weight: bold;
+      color: #38bdf8;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      text-align: center;
+    }
+    .sidebar-ayah-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .sidebar-ayah-item {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-family: 'Amiri Quran', serif;
+      font-size: 15px;
+      color: #e2e8f0;
+      cursor: pointer;
+      line-height: 1.5;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      user-select: none;
+    }
+    .sidebar-ayah-item:hover {
+      background: rgba(2, 132, 199, 0.3);
+      border-color: #38bdf8;
+      color: #fff;
+    }
+    .sidebar-ayah-item.active-nav-ayah {
+      background: #0284c7 !important;
+      border-color: #38bdf8 !important;
+      color: #ffffff !important;
+      font-weight: bold;
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.6);
+    }
+    .sidebar-num-badge {
+      font-size: 11px;
+      background: rgba(0,0,0,0.5);
+      padding: 2px 6px;
+      border-radius: 12px;
+      color: #facc15;
+      font-family: 'Cairo', sans-serif;
+      font-weight: bold;
+    }
+
+    /* ساحة قراءة الآيات وتفعيل النقر */
+    .card-body-main {
+      flex: 1;
+      padding: 16px 22px;
+      overflow-y: auto;
+      text-align: center;
+    }
+
+    .audio-toolbar {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      background: rgba(30, 41, 59, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+    }
+    .toolbar-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .audio-btn {
+      background: #0284c7;
+      border: 1px solid #38bdf8;
+      color: #fff;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: background 0.15s;
+    }
+    .audio-btn:hover { background: #0369a1; }
+    .audio-btn.download-btn { background: #059669; border-color: #34d399; }
+
+    .audio-select {
+      background: #0b111e;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #e2e8f0;
+      padding: 6px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .interval-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      color: #fbbf24;
+    }
+    .interval-slider {
+      width: 80px;
+      accent-color: #f59e0b;
+      cursor: pointer;
+      height: 4px;
+    }
+
+    .countdown-bar-container {
+      width: 100%;
+      height: 4px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 4px;
+      overflow: hidden;
+      display: none;
+      margin-top: 4px;
+    }
+    .countdown-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: #10b981;
+      transition: width 0.1s linear;
+    }
+
+    .surah-header-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #d97706, #78350f);
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: bold;
+      padding: 5px 22px;
+      border-radius: 30px;
+      margin-bottom: 14px;
+      border: 1px solid #fef3c7;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+    #quranTextContent {
+      font-family: 'Amiri Quran', 'Amiri', serif;
+      line-height: 2.5;
+      letter-spacing: 0.6px;
+      user-select: text;
+    }
+
+    /* الآية التفاعلية: النقر أو اللمس باليد ينقل التلاوة فوراً إليها */
+    .ayah-span {
+      display: inline;
+      padding: 4px 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .ayah-span:hover {
+      background: rgba(56, 189, 248, 0.2);
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+    }
+    .ayah-span.active-highlight {
+      background: rgba(250, 204, 21, 0.28);
+      box-shadow: 0 0 20px rgba(250, 204, 21, 0.6);
+      border-bottom: 3px solid #facc15;
+      color: #ffffff !important;
+      text-shadow: 0 0 10px rgba(250, 204, 21, 0.9);
+    }
+
+    .quran-resize-corner {
+      position: absolute;
+      bottom: 2px;
+      left: 2px;
+      width: 18px;
+      height: 18px;
+      cursor: sw-resize;
+      background: linear-gradient(135deg, transparent 50%, #f59e0b 50%);
+      border-bottom-left-radius: 12px;
+    }
+
+    /* لوحات الكانفاس */
+    #gridCanvas { position: absolute; top: 0; left: 0; pointer-events: none; z-index: 1; }
+    #pdfCanvas { position: absolute; top: 0; left: 0; pointer-events: none; z-index: 2; }
+    #paintCanvas { position: absolute; top: 0; left: 0; cursor: crosshair; touch-action: none; z-index: 10; }
+    #overlayCanvas { position: absolute; top: 0; left: 0; pointer-events: none; z-index: 11; }
+
+    .panel {
+      position: fixed;
+      background: rgba(18, 24, 38, 0.94);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
+      z-index: 1000;
+    }
+    .top-bar {
+      top: 42px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 6px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+    }
+    .btn-applause-main {
+      background: linear-gradient(135deg, #16a34a, #15803d);
+      color: #ffffff;
+      border: 1.5px solid #4ade80;
+      border-radius: 10px;
+      padding: 6px 14px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .scale-control-box {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #0f172a;
+      border: 1.5px solid #0284c7;
+      border-radius: 10px;
+      padding: 3px 8px;
+    }
+    .scale-btn {
+      background: #1e293b;
+      border: 1px solid #38bdf8;
+      color: #fff;
+      font-weight: 900;
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .scale-text {
+      font-size: 12px;
+      font-weight: 800;
+      color: #38bdf8;
+      min-width: 44px;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .side-right {
+      top: 42px;
+      right: 14px;
+      width: 220px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .side-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      color: #e5e7eb;
+      padding: 8px;
+      border-radius: 8px;
+      font-size: 12px;
+      cursor: pointer;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+    .btn-green-spec { background: #059669; border-color: #10b981; color: #fff; font-weight: 600; }
+
+    .bottom-dock {
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 8px 14px;
+      display: flex;
+      gap: 6px;
+    }
+    .dock-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      cursor: pointer;
+    }
+    .dock-btn.active { background: #0284c7; border-color: #38bdf8; color: #fff; }
+
+    /* النافذة المنبثقة */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.78);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+    .modal-overlay.active { display: flex; }
+    .quran-modal {
+      width: 530px;
+      max-width: 92vw;
+      background: #141a29;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      direction: rtl;
+    }
+    .custom-select, .quran-field {
+      width: 100%;
+      background: #0b111e;
+      color: #e2e8f0;
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      padding: 9px;
+      font-size: 13px;
+      outline: none;
+    }
+    .btn-offline-sync {
+      background: rgba(245, 158, 11, 0.15);
+      border: 1.5px dashed #f59e0b;
+      color: #fde68a;
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+    }
+    .btn-offline-sync:hover { background: #f59e0b; color: #1e1b4b; }
+  </style>
+</head>
+<body>
+
+  <div class="academy-marquee-banner">
+    <div class="marquee-track">
+      🌟 مرحباً بكم في سبورة <span style="color:#ffffff; font-weight:900; font-size:16px;">أكاديمية الفتح لعلوم القرآن الكريم</span> 
+      <span class="badge-sparkle">حفظ وتجويد وتفسير</span> 
+      تحت إشراف <span style="color:#38bdf8;">نخبة متميزة من المعلمات المتخصصات والمجازات</span> بالسند المتصل 🌸 
+      للتسجيل والتواصل عبر واتساب: 
+      <a href="https://wa.me/201116845186" target="_blank" class="whatsapp-marquee-link">
+        <span>💬</span>
+        <span>00201116845186</span>
+      </a> 
+    </div>
+  </div>
+
+  <div id="celebrationOverlay"></div>
+
+  <!-- شريط التحكم العلوي -->
+  <div class="panel top-bar">
+    <button class="btn-applause-main" id="btnApplauseMain">
+      <span>👏</span>
+      <span>سقفة وتشجيع</span>
+    </button>
+
+    <div class="scale-control-box">
+      <button class="scale-btn" id="btnZoomOut">−</button>
+      <span class="scale-text" id="scaleIndicator">100%</span>
+      <button class="scale-btn" id="btnZoomIn">+</button>
+    </div>
+
+    <a href="quran-games.html" target="_blank" style="background: linear-gradient(135deg, #d97706, #b45309); color: #ffffff; border: 1.5px solid #facc15; border-radius: 8px; padding: 6px 12px; font-size: 12px; font-weight: bold; text-decoration: none; display: flex; align-items: center; gap: 6px;">
+      <span>🎮</span>
+      <span>ألعاب واختبارات جزء عم</span>
+    </a>
+  </div>
+
+  <!-- مسرح التحجيم والسبورة -->
+  <div id="boardStage">
+    <div id="quranTextContainer">
+      <div class="drag-header" id="dragHeader">
+        <div class="drag-title">
+          <span>✥</span>
+          <span>مصحف الشرح التفاعلي — انقر أو المس أي آية بالماوس أو بيدك للانتقال إليها مباشرة</span>
+        </div>
+        <button class="card-close-btn" id="closeQuranCardBtn">✕</button>
+      </div>
+
+      <div class="quran-interactive-layout">
+        <!-- الشريط الجانبي لقائمة الآيات السريعة -->
+        <div class="ayah-sidebar-nav">
+          <div class="sidebar-header-title">فهرس آيات السورة 📑</div>
+          <div class="sidebar-ayah-list" id="sidebarAyahList"></div>
+        </div>
+
+        <!-- ساحة الآيات الرئيسية والقراءة والتظليل -->
+        <div class="card-body-main">
+          <div class="audio-toolbar">
+            <div class="toolbar-row">
+              <button class="audio-btn" id="btnPlayAudio">▶️ تشغيل التلاوة</button>
+              <button class="audio-btn download-btn" id="btnDownloadAudio">📥 حفظ التلاوة أوفلاين</button>
+              
+              <select class="audio-select" id="reciterSelect">
+                <option value="Husary_64kbps">محمود خليل الحصري (مرتل)</option>
+                <option value="Minshawy_Murattal_128kbps">محمد صديق المنشاوي (مرتل)</option>
+                <option value="Abdul_Basit_Murattal_64kbps">عبد الباسط عبد الصمد (مرتل)</option>
+                <option value="Alafasy_128kbps">مشاري راشد العفاسي</option>
+              </select>
+
+              <div class="interval-box">
+                <span>⏱️ الترديد:</span>
+                <input type="range" id="intervalSlider" class="interval-slider" min="0" max="25" value="4">
+                <span id="intervalSecDisplay" style="font-weight:bold; min-width:24px;">4 ث</span>
+              </div>
+            </div>
+            
+            <div class="countdown-bar-container" id="countdownBarContainer">
+              <div class="countdown-bar-fill" id="countdownBarFill"></div>
+            </div>
+
+            <div id="audioStatus" style="font-size:11px; color:#38bdf8; width:100%; margin-top:2px;">جاهز للاستماع</div>
+          </div>
+
+          <div class="surah-header-badge" id="surahBadgeTitle">سورة الفاتحة</div>
+          <div id="quranTextContent"></div>
+        </div>
+      </div>
+
+      <div class="quran-resize-corner" id="quranResizeCorner"></div>
+    </div>
+
+    <canvas id="gridCanvas"></canvas>
+    <canvas id="pdfCanvas"></canvas>
+    <canvas id="paintCanvas"></canvas>
+    <canvas id="overlayCanvas"></canvas>
+  </div>
+
+  <div class="panel side-right">
+    <button class="side-btn btn-green-spec" id="openQuranBtn">📖 آيات وسور القرآن</button>
+    <button class="side-btn" id="clearBoardBtn" style="color:#f87171;">🗑️ مسح السبورة</button>
+  </div>
+
+  <div class="panel bottom-dock">
+    <button class="dock-btn active" data-tool="pen" title="قلم">✏️</button>
+    <button class="dock-btn" data-tool="eraser" title="ممحاة">🧹</button>
+    <button class="dock-btn" data-tool="highlighter" title="تظليل">🖊️</button>
+  </div>
+
+  <!-- النافذة المنبثقة -->
+  <div class="modal-overlay" id="quranModal">
+    <div class="quran-modal">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h3 style="color:#14b8a6; font-size:16px;">📖 استخراج وتحميل آيات القرآن</h3>
+        <button id="closeQuranModalBtn" style="background:none; border:none; color:#94a3b8; font-size:16px; cursor:pointer;">✕</button>
+      </div>
+
+      <select id="textSurahSelect" class="custom-select"></select>
+
+      <div style="display:flex; gap:8px;">
+        <input type="number" id="verseFrom" class="quran-field" placeholder="من آية" min="1" value="1">
+        <input type="number" id="verseTo" class="quran-field" placeholder="إلى آية" min="1" value="7">
+      </div>
+
+      <button class="btn-offline-sync" id="btnSyncQuranOffline">
+        📦 تحميل وتخزين القرآن كاملاً داخل التطبيق للعمل أوفلاين
+      </button>
+
+      <div style="display:flex; gap:10px; margin-top:6px;">
+        <button id="cancelQuranModalBtn" class="side-btn" style="flex:1;">إلغاء</button>
+        <button id="submitQuranBtn" class="btn-green-spec" style="flex:2; padding:10px; border-radius:8px;">إدراج وعرض الآيات</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const boardStage = document.getElementById('boardStage');
+    const paintCanvas = document.getElementById('paintCanvas');
+    const pCtx = paintCanvas.getContext('2d');
+    const quranTextContainer = document.getElementById('quranTextContainer');
+    const quranTextContent = document.getElementById('quranTextContent');
+    const sidebarAyahList = document.getElementById('sidebarAyahList');
+    const surahBadgeTitle = document.getElementById('surahBadgeTitle');
+    const dragHeader = document.getElementById('dragHeader');
+    const closeQuranCardBtn = document.getElementById('closeQuranCardBtn');
+    const quranResizeCorner = document.getElementById('quranResizeCorner');
+    const textSurahSelect = document.getElementById('textSurahSelect');
+
+    let currentScale = 1.0;
+    let isDrawing = false;
+    let currentTool = 'pen';
+
+    function resizeCanvases() {
+      [paintCanvas, document.getElementById('gridCanvas'), document.getElementById('overlayCanvas')].forEach(c => {
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
+      });
+    }
+    window.onresize = resizeCanvases;
+    resizeCanvases();
+
+    document.getElementById('btnZoomIn').onclick = () => { currentScale += 0.1; boardStage.style.transform = `scale(${currentScale})`; document.getElementById('scaleIndicator').innerText = Math.round(currentScale * 100) + '%'; };
+    document.getElementById('btnZoomOut').onclick = () => { if(currentScale > 0.5) currentScale -= 0.1; boardStage.style.transform = `scale(${currentScale})`; document.getElementById('scaleIndicator').innerText = Math.round(currentScale * 100) + '%'; };
+
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null;
+    function getAudioCtx() { if(!audioCtx) audioCtx = new AudioContext(); return audioCtx; }
+
+    document.getElementById('btnApplauseMain').onclick = () => {
+      const ctx = getAudioCtx();
+      for(let i=0; i<20; i++) {
+        setTimeout(() => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(140 + Math.random() * 260, ctx.currentTime);
+          gain.gain.setValueAtTime(0.3, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.08);
+          osc.connect(gain); gain.connect(ctx.destination);
+          osc.start(); osc.stop(ctx.currentTime + 0.09);
+        }, i * 36);
+      }
+      confetti({ particleCount: 70, spread: 80, origin: { y: 0.65 } });
+    };
+
+    // سحب وتحريك صندوق المصحف
+    let isDragging = false, offX = 0, offY = 0;
+    dragHeader.onmousedown = (e) => {
+      isDragging = true;
+      const rect = quranTextContainer.getBoundingClientRect();
+      offX = (e.clientX - rect.left) / currentScale;
+      offY = (e.clientY - rect.top) / currentScale;
+    };
+    window.onmousemove = (e) => {
+      if (isDragging) {
+        quranTextContainer.style.left = (e.clientX / currentScale - offX) + 'px';
+        quranTextContainer.style.top = (e.clientY / currentScale - offY) + 'px';
+      }
+    };
+    window.onmouseup = () => { isDragging = false; };
+    closeQuranCardBtn.onclick = () => { quranTextContainer.style.display = 'none'; stopQuranAudio(); };
+
+    // تكبير وتصغير صندوق المصحف
+    let isResizing = false, startW, startH, sX, sY;
+    quranResizeCorner.onmousedown = (e) => {
+      isResizing = true;
+      startW = quranTextContainer.offsetWidth;
+      startH = quranTextContainer.offsetHeight;
+      sX = e.clientX; sY = e.clientY;
+      e.stopPropagation(); e.preventDefault();
+    };
+    window.addEventListener('mousemove', (e) => {
+      if (isResizing) {
+        quranTextContainer.style.width = Math.max(450, startW + (sX - e.clientX) / currentScale) + 'px';
+        quranTextContainer.style.height = Math.max(280, startH + (e.clientY - sY) / currentScale) + 'px';
+      }
+    });
+    window.addEventListener('mouseup', () => { isResizing = false; });
+
+    // قاعدة بيانات IndexedDB
+    let quranDB = null;
+    const req = indexedDB.open('AlFatehQuranAppDB', 1);
+    req.onupgradeneeded = (e) => {
+      quranDB = e.target.result;
+      if (!quranDB.objectStoreNames.contains('surahs')) quranDB.createObjectStore('surahs', { keyPath: 'number' });
+    };
+    req.onsuccess = (e) => { quranDB = e.target.result; };
+
+    document.getElementById('btnSyncQuranOffline').onclick = async () => {
+      const btn = document.getElementById('btnSyncQuranOffline');
+      btn.innerText = "⏳ جاري التحميل داخل التطبيق...";
+      try {
+        const res = await fetch('https://api.alquran.cloud/v1/quran/quran-uthmani');
+        const data = await res.json();
+        const tx = quranDB.transaction('surahs', 'readwrite');
+        data.data.surahs.forEach(s => tx.objectStore('surahs').put(s));
+        btn.innerText = "✓ تم حفظ القرآن كاملاً بنجاح داخل التطبيق!";
+      } catch (err) {
+        btn.innerText = "تعذر الاتصال، يرجى تشغيل الإنترنت لتحميل السور لأول مرة.";
+      }
+    };
+
+    async function getSurahData(num) {
+      return new Promise((resolve) => {
+        if (quranDB) {
+          const tx = quranDB.transaction('surahs', 'readonly');
+          const r = tx.objectStore('surahs').get(num);
+          r.onsuccess = () => { if (r.result) return resolve(r.result); fetchOnline(); };
+          r.onerror = () => fetchOnline();
+        } else fetchOnline();
+
+        function fetchOnline() {
+          fetch(`https://api.alquran.cloud/v1/surah/${num}/quran-uthmani`)
+            .then(res => res.json()).then(d => resolve(d.data));
+        }
+      });
+    }
+
+    const surahNamesArray = [
+      "الفاتحة", "البقرة", "آل عمران", "النساء", "المائدة", "الأنعام", "الأعراف", "الأنفال", "التوبة", "يونس",
+      "هود", "يوسف", "الرعد", "إبراهيم", "الحجر", "النحل", "الإسراء", "الكهف", "مريم", "طه",
+      "الأنبياء", "الحج", "المؤمنون", "النور", "الفرقان", "الشعراء", "النمل", "القصص", "العنكبوت", "الروم",
+      "لقمان", "السجدة", "الأحزاب", "سبأ", "فاطر", "يس", "الصافات", "ص", "الزمر", "غافر",
+      "فصلت", "الشورى", "الزخرف", "الدخان", "الجاثية", "الأحقاف", "محمد", "الفتح", "الحجرات", "ق",
+      "الذاريات", "الطور", "النجم", "القمر", "الرحمن", "الواقعة", "الحديد", "المجادلة", "الحشر", "الممتحنة",
+      "الصف", "الجمعة", "المنافقون", "التغابن", "الطلاق", "التحريم", "الملك", "القلم", "الحاقة", "المعارج",
+      "نوح", "الجن", "المزمل", "المدثر", "القيامة", "الإنسان", "المرسلات", "النبأ", "النازعات", "عبس",
+      "التكوير", "الانفطار", "المطففين", "الانشقاق", "البروج", "الطارق", "الأعلى", "الغاشية", "الفجر", "البلد",
+      "الشمس", "الليل", "الضحى", "الشرح", "التين", "العلق", "القدر", "البينة", "الزلزلة", "العاديات",
+      "القارعة", "التكاثر", "العصر", "الهمزة", "الفيل", "قريش", "الماعون", "الكوثر", "الكافرون", "النصر",
+      "المسد", "الإخلاص", "الفلق", "الناس"
+    ];
+
+    surahNamesArray.forEach((name, i) => {
+      const opt = document.createElement('option');
+      opt.value = i + 1;
+      opt.innerText = `${i + 1}. سورة ${name}`;
+      textSurahSelect.appendChild(opt);
+    });
+
+    document.getElementById('openQuranBtn').onclick = () => document.getElementById('quranModal').classList.add('active');
+    document.getElementById('closeQuranModalBtn').onclick = () => document.getElementById('quranModal').classList.remove('active');
+    document.getElementById('cancelQuranModalBtn').onclick = () => document.getElementById('quranModal').classList.remove('active');
+
+    let activeAyahsData = [];
+    let currentAudioIndex = 0;
+    let isPlaying = false;
+    let audioObj = new Audio();
+    let repeatTimer = null;
+
+    const btnPlayAudio = document.getElementById('btnPlayAudio');
+    const audioStatus = document.getElementById('audioStatus');
+    const reciterSelect = document.getElementById('reciterSelect');
+    const intervalSlider = document.getElementById('intervalSlider');
+    const countdownBarContainer = document.getElementById('countdownBarContainer');
+    const countdownBarFill = document.getElementById('countdownBarFill');
+
+    intervalSlider.oninput = (e) => document.getElementById('intervalSecDisplay').innerText = e.target.value + ' ث';
+
+    // تثبيت دالة الانتقال للآية عالمياً لتعمل عند النقر بالماوس واللمس باليد
+    window.jumpToAyah = function(index) {
+      if (index < 0 || index >= activeAyahsData.length) return;
+      currentAudioIndex = index;
+      const ayah = activeAyahsData[index];
+
+      // 1. تظليل الآية في النص الرئيسي
+      document.querySelectorAll('.ayah-span').forEach(el => el.classList.remove('active-highlight'));
+      const spanEl = document.getElementById(`ayah-main-${ayah.numberInSurah}`);
+      if (spanEl) {
+        spanEl.classList.add('active-highlight');
+        spanEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+
+      // 2. تظليل الآية في الفهرس الجانبي
+      document.querySelectorAll('.sidebar-ayah-item').forEach(el => el.classList.remove('active-nav-ayah'));
+      const sideEl = document.getElementById(`sidebar-item-${ayah.numberInSurah}`);
+      if (sideEl) {
+        sideEl.classList.add('active-nav-ayah');
+        sideEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+
+      // 3. تشغيل التلاوة مباشرة من الآية المختارة
+      playAyahAudio(index);
+    };
+
+    function playAyahAudio(index) {
+      if (index >= activeAyahsData.length) {
+        stopQuranAudio();
+        audioStatus.innerText = "✓ اكتملت تلاوة الآيات بنجاح";
+        return;
+      }
+
+      const ayah = activeAyahsData[index];
+      const sPad = String(textSurahSelect.value).padStart(3, '0');
+      const vPad = String(ayah.numberInSurah).padStart(3, '0');
+      const url = `https://everyayah.com/data/${reciterSelect.value}/${sPad}${vPad}.mp3`;
+
+      audioObj.src = url;
+      audioStatus.innerText = `▶ تلاوة آية (${ayah.numberInSurah}) — [${index + 1}/${activeAyahsData.length}]`;
+      countdownBarContainer.style.display = 'none';
+
+      audioObj.play().catch(() => {});
+      isPlaying = true;
+      btnPlayAudio.innerText = "⏸️ إيقاف مؤقت";
+      btnPlayAudio.style.background = "#dc2626";
+
+      audioObj.onended = () => {
+        const pauseSec = parseInt(intervalSlider.value);
+        if (pauseSec > 0 && index < activeAyahsData.length - 1) {
+          let totalMs = pauseSec * 1000, elapsed = 0;
+          countdownBarContainer.style.display = 'block';
+          countdownBarFill.style.width = '100%';
+
+          if (repeatTimer) clearInterval(repeatTimer);
+          repeatTimer = setInterval(() => {
+            elapsed += 100;
+            countdownBarFill.style.width = Math.max(0, 100 - (elapsed / totalMs) * 100) + '%';
+            if (elapsed >= totalMs) {
+              clearInterval(repeatTimer);
+              countdownBarContainer.style.display = 'none';
+              window.jumpToAyah(index + 1);
+            }
+          }, 100);
+        } else {
+          window.jumpToAyah(index + 1);
+        }
+      };
+    }
+
+    function stopQuranAudio() {
+      isPlaying = false;
+      if (repeatTimer) clearInterval(repeatTimer);
+      countdownBarContainer.style.display = 'none';
+      audioObj.pause();
+      btnPlayAudio.innerText = "▶️ تشغيل التلاوة";
+      btnPlayAudio.style.background = "#0284c7";
+    }
+
+    btnPlayAudio.onclick = () => {
+      if (activeAyahsData.length === 0) return;
+      if (isPlaying) stopQuranAudio();
+      else window.jumpToAyah(currentAudioIndex);
+    };
+
+    // إدراج السورة وبناء العرض التفاعلي
+    document.getElementById('submitQuranBtn').onclick = async () => {
+      const sNum = parseInt(textSurahSelect.value);
+      const fromV = parseInt(document.getElementById('verseFrom').value) || 1;
+      const toV = parseInt(document.getElementById('verseTo').value) || fromV;
+
+      const surah = await getSurahData(sNum);
+      const ayahs = surah.ayahs.filter(a => a.numberInSurah >= fromV && a.numberInSurah <= toV);
+
+      if (ayahs.length === 0) return alert('يرجى التحقق من أرقام الآيات');
+
+      activeAyahsData = ayahs;
+      currentAudioIndex = 0;
+      surahBadgeTitle.innerText = `سورة ${surah.name} (الآيات ${fromV} - ${toV})`;
+
+      // 1. توليد نص الآيات الرئيسي وربط كل آية باللمس والنقر المباشر
+      quranTextContent.innerHTML = '';
+      ayahs.forEach((a, idx) => {
+        const span = document.createElement('span');
+        span.className = 'ayah-span';
+        span.id = `ayah-main-${a.numberInSurah}`;
+        span.innerHTML = `${a.text} <span style="color:#f59e0b; font-size:0.85em; pointer-events:none;">﴿${a.numberInSurah}﴾</span> `;
+        
+        // استجابة صريحة للمس باليد وللنقر بالفأرة
+        span.addEventListener('click', (e) => {
+          e.stopPropagation();
+          window.jumpToAyah(idx);
+        });
+        span.addEventListener('touchend', (e) => {
+          e.stopPropagation();
+          window.jumpToAyah(idx);
+        });
+
+        quranTextContent.appendChild(span);
+      });
+
+      // 2. توليد فهرس الآيات الجانبي وربطه باللمس والنقر المباشر
+      sidebarAyahList.innerHTML = '';
+      ayahs.forEach((a, idx) => {
+        const item = document.createElement('div');
+        item.className = 'sidebar-ayah-item';
+        item.id = `sidebar-item-${a.numberInSurah}`;
+        item.innerHTML = `
+          <span class="sidebar-num-badge">${a.numberInSurah}</span>
+          <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; pointer-events:none;">${a.text}</span>
+        `;
+
+        item.addEventListener('click', (e) => {
+          e.stopPropagation();
+          window.jumpToAyah(idx);
+        });
+        item.addEventListener('touchend', (e) => {
+          e.stopPropagation();
+          window.jumpToAyah(idx);
+        });
+
+        sidebarAyahList.appendChild(item);
+      });
+
+      quranTextContainer.style.display = 'flex';
+      document.getElementById('quranModal').classList.remove('active');
+      audioStatus.innerText = `تم تجهيز ${ayahs.length} آيات — انقر أو المس أي آية باليد للانتقال إليها فوراً`;
+    };
+
+    // الرسم بالكانفاس
+    paintCanvas.onmousedown = (e) => { isDrawing = true; pCtx.beginPath(); pCtx.moveTo(e.clientX/currentScale, e.clientY/currentScale); };
+    paintCanvas.onmousemove = (e) => { if (isDrawing && currentTool==='pen') { pCtx.lineTo(e.clientX/currentScale, e.clientY/currentScale); pCtx.strokeStyle='#fff'; pCtx.lineWidth=4; pCtx.stroke(); } };
+    window.onmouseup = () => isDrawing = false;
+    document.getElementById('clearBoardBtn').onclick = () => pCtx.clearRect(0,0,paintCanvas.width,paintCanvas.height);
+  </script>
+</body>
+</html>
