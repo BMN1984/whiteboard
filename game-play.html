@@ -4,32 +4,51 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>مسرح اللعب التفاعلي | أكاديمية الفتح</title>
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&family=Amiri+Quran&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; user-select: none; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Cairo', sans-serif;
+      user-select: none;
+    }
     body {
       background: radial-gradient(circle at center, #0f172a 0%, #030712 100%);
       color: #f8fafc;
-      height: 100vh;
-      overflow: hidden;
+      min-height: 100vh;
+      overflow-x: hidden;
       position: relative;
     }
 
+    /* كواكب وزخارف الفضاء */
     .sun-planet {
       position: fixed;
-      top: 25%; left: 6%;
+      top: 25%; left: 5%;
       width: 130px; height: 130px;
       background: radial-gradient(circle, #eab308, #ca8a04);
       border-radius: 50%;
-      box-shadow: 0 0 50px rgba(234, 179, 8, 0.4);
+      box-shadow: 0 0 50px rgba(234, 179, 8, 0.35);
       z-index: 1;
       opacity: 0.85;
+      pointer-events: none;
+    }
+    .geo-mesh {
+      position: fixed;
+      bottom: 8%; right: 4%;
+      width: 220px; height: 220px;
+      border: 1.5px dashed rgba(245, 158, 11, 0.2);
+      border-radius: 50%;
+      z-index: 1;
+      pointer-events: none;
     }
 
-    /* الشريط العلوي: النجوم، التقدم، زر الرجوع */
+    /* الشريط العلوي */
     .game-top-bar {
       position: relative;
       z-index: 20;
@@ -37,9 +56,12 @@
       align-items: center;
       justify-content: space-between;
       padding: 14px 28px;
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
     }
     .score-box {
-      font-size: 16px;
+      font-size: 17px;
       font-weight: 900;
       color: #facc15;
       display: flex;
@@ -47,10 +69,10 @@
       gap: 6px;
     }
     .progress-track {
-      width: 40vw;
-      max-width: 420px;
-      height: 8px;
-      background: rgba(255,255,255,0.15);
+      width: 38vw;
+      max-width: 440px;
+      height: 9px;
+      background: rgba(255,255,255,0.12);
       border-radius: 10px;
       overflow: hidden;
     }
@@ -64,82 +86,242 @@
       background: rgba(255,255,255,0.1);
       border: 1px solid rgba(255,255,255,0.2);
       color: #fff;
-      padding: 6px 20px;
+      padding: 6px 22px;
       border-radius: 20px;
       cursor: pointer;
       font-weight: bold;
       font-size: 13px;
       text-decoration: none;
+      transition: all 0.2s;
     }
+    .btn-exit:hover { background: #dc2626; border-color: #f87171; }
 
-    /* لافتة التوجيه الذهبية مثل الصورة 3 */
+    /* لافتة التوجيه الذهبية */
     .instruction-banner {
       position: relative;
       z-index: 20;
-      max-width: 850px;
-      margin: 10px auto 14px auto;
+      max-width: 860px;
+      margin: 14px auto;
       background: rgba(15, 23, 42, 0.85);
-      border: 1px solid rgba(245, 158, 11, 0.4);
+      border: 1.5px solid rgba(245, 158, 11, 0.4);
       border-radius: 14px;
-      padding: 10px 20px;
+      padding: 12px 24px;
       text-align: center;
       color: #fef08a;
-      font-size: 15px;
+      font-size: 16px;
       font-weight: 700;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      box-shadow: 0 4px 18px rgba(0,0,0,0.5);
     }
 
-    /* مسرح الطفو الفلكي للآيات الكريمة */
+    /* المسرح التفاعلي الرئيسي */
     .cosmic-stage {
       position: relative;
       z-index: 20;
-      width: 86vw;
-      height: 68vh;
-      margin: 0 auto;
+      width: 88vw;
+      min-height: 68vh;
+      max-width: 1100px;
+      margin: 0 auto 30px auto;
       border: 1.5px solid rgba(245, 158, 11, 0.3);
       border-radius: 20px;
-      background: rgba(15, 23, 42, 0.6);
-      backdrop-filter: blur(10px);
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(12px);
       box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
-      overflow: hidden;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
 
-    /* كبسولات الآيات العائمة */
-    .floating-ayah-chip {
-      position: absolute;
-      background: rgba(30, 41, 59, 0.9);
+    /* 1. تصميم لعبة الآيات الطائرة المتباعدة بشبكة ذكية تمنع التداخل */
+    .flying-grid-layout {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-gap: 24px;
+      width: 100%;
+      height: 100%;
+      padding: 10px;
+    }
+    @media (max-width: 800px) {
+      .flying-grid-layout { grid-template-columns: repeat(2, 1fr); }
+    }
+    .flying-slot {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 110px;
+    }
+    .flying-ayah-chip {
+      background: rgba(30, 41, 59, 0.95);
       border: 1.5px solid rgba(255, 255, 255, 0.2);
-      border-radius: 14px;
-      padding: 12px 22px;
+      border-radius: 16px;
+      padding: 16px 22px;
       font-family: 'Amiri Quran', serif;
       font-size: 22px;
       color: #ffffff;
       cursor: pointer;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.6);
-      transition: transform 0.15s, border-color 0.15s, background 0.15s;
-      animation: floatMotion 4s ease-in-out infinite alternate;
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      width: 100%;
+      max-width: 320px;
     }
-    .floating-ayah-chip:hover {
-      transform: scale(1.08);
+    .flying-ayah-chip:hover {
+      transform: scale(1.05);
       border-color: #facc15;
+      background: rgba(15, 23, 42, 0.98);
+      box-shadow: 0 0 25px rgba(250, 204, 21, 0.45);
+    }
+    .flying-ayah-chip.correct-popped {
+      transform: scale(1.2);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.4s ease-out;
+    }
+
+    /* 2. تصميم لعبة اختفاء الكلمات (الكلمات المخفية بالمربع الأصفر) */
+    .hidden-words-verse-container {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      font-family: 'Amiri Quran', serif;
+      font-size: 32px;
+      line-height: 2.4;
+      padding: 24px;
+      direction: rtl;
+    }
+    .word-token {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2px 8px;
+    }
+    .hidden-word-box {
+      background: #facc15;
+      color: #0f172a;
+      width: 58px;
+      height: 52px;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cairo', sans-serif;
+      font-weight: 900;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(250, 204, 21, 0.45);
+      transition: all 0.25s;
+    }
+    .hidden-word-box:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 22px rgba(250, 204, 21, 0.7);
+    }
+    .hidden-word-box.revealed {
+      background: rgba(56, 189, 248, 0.25);
+      border: 1.5px solid #38bdf8;
+      color: #ffffff;
+      width: auto;
+      padding: 4px 16px;
+      font-family: 'Amiri Quran', serif;
+      font-size: 30px;
+      font-weight: normal;
+      box-shadow: 0 0 16px rgba(56, 189, 248, 0.5);
+      animation: popInWord 0.3s ease-out;
+    }
+    @keyframes popInWord {
+      0% { transform: scale(0.6); }
+      100% { transform: scale(1); }
+    }
+
+    /* 3. تصميم لعبة الذاكرة (Memory Game) */
+    .memory-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      width: 100%;
+      max-width: 900px;
+    }
+    .memory-card-item {
+      height: 110px;
+      background: #1e293b;
+      border: 2px solid #38bdf8;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-family: 'Amiri Quran', serif;
+      font-size: 20px;
+      padding: 10px;
+      text-align: center;
+      transition: all 0.3s;
+    }
+    .memory-card-item.flipped {
       background: rgba(15, 23, 42, 0.95);
-      box-shadow: 0 0 20px rgba(250, 204, 21, 0.5);
+      border-color: #facc15;
+      color: #fef08a;
     }
-    .floating-ayah-chip.correct-disappear {
-      animation: popOut 0.4s forwards;
-      background: #059669 !important;
-      border-color: #34d399 !important;
+    .memory-card-item.matched {
+      background: #065f46;
+      border-color: #34d399;
+      color: #fff;
+      pointer-events: none;
+      opacity: 0.8;
     }
-    @keyframes popOut { to { transform: scale(1.3); opacity: 0; } }
-    @keyframes floatMotion {
-      from { transform: translateY(0px); }
-      to { transform: translateY(-10px); }
+
+    /* 4. تصميم لعبة رتّب الآيات وأكمل الفراغ */
+    .choice-selection-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      width: 100%;
+      max-width: 700px;
+      margin-top: 20px;
     }
+    .choice-selection-btn {
+      background: #1e293b;
+      border: 1.5px solid rgba(255,255,255,0.15);
+      color: #fff;
+      padding: 16px;
+      border-radius: 14px;
+      font-family: 'Amiri Quran', serif;
+      font-size: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .choice-selection-btn:hover {
+      background: #0284c7;
+      transform: translateY(-2px);
+    }
+    .choice-selection-btn.correct { background: #16a34a !important; border-color: #4ade80 !important; }
+    .choice-selection-btn.wrong { background: #dc2626 !important; border-color: #f87171 !important; }
+
+    /* أزرار التحكم بالسؤال */
+    .stage-action-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+    .action-btn-cosmic {
+      background: #1e293b;
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      padding: 8px 24px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .action-btn-cosmic:hover { background: #0284c7; color: #fff; }
   </style>
 </head>
 <body>
 
   <div class="sun-planet"></div>
+  <div class="geo-mesh"></div>
 
   <!-- الشريط العلوي -->
   <div class="game-top-bar">
@@ -157,14 +339,14 @@
 
   <!-- توجيه التحدي -->
   <div class="instruction-banner" id="instructionText">
-    👍 صحيح! الآن اضغط على الآية التالية بالترتيب الصحيح
+    جاري تهيئة اللعبة...
   </div>
 
-  <!-- ساحة الآيات العائمة المفرقة -->
+  <!-- مسرح اللعب الفلكي الرئيسي -->
   <div class="cosmic-stage" id="stage"></div>
 
   <script>
-    // نظام الصوت المدمج بدون إنترنت
+    // نظام الصوت البرمجي بدون إنترنت
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     let audioCtx = null;
     function getAudio() {
@@ -174,33 +356,47 @@
     }
     function playClap() {
       const ctx = getAudio();
-      for (let i = 0; i < 18; i++) {
+      for (let i = 0; i < 20; i++) {
         setTimeout(() => {
           const osc = ctx.createOscillator();
           const gain = ctx.createGain();
           osc.type = 'triangle';
           osc.frequency.setValueAtTime(140 + Math.random() * 260, ctx.currentTime);
-          gain.gain.setValueAtTime(0.3, ctx.currentTime);
+          gain.gain.setValueAtTime(0.32, ctx.currentTime);
           gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.08);
           osc.connect(gain); gain.connect(ctx.destination);
           osc.start(); osc.stop(ctx.currentTime + 0.09);
-        }, i * 40 + Math.random() * 15);
+        }, i * 36 + Math.random() * 15);
       }
+    }
+    function playPopSound() {
+      const ctx = getAudio();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(580, ctx.currentTime);
+      gain.gain.setValueAtTime(0.3, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.start(); osc.stop(ctx.currentTime + 0.16);
     }
     function playWrong() {
       const ctx = getAudio();
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(180, ctx.currentTime);
+      osc.frequency.setValueAtTime(190, ctx.currentTime);
       gain.gain.setValueAtTime(0.2, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.25);
       osc.connect(gain); gain.connect(ctx.destination);
-      osc.start(); osc.stop(ctx.currentTime + 0.3);
+      osc.start(); osc.stop(ctx.currentTime + 0.26);
     }
 
     const urlParams = new URLSearchParams(window.location.search);
     const surahId = parseInt(urlParams.get('surah')) || 79;
+    const gameType = urlParams.get('game') || 'flying';
+    const quarter = urlParams.get('q') || 'all';
+
     document.getElementById('exitLink').href = `surah-hub.html?id=${surahId}`;
 
     const stage = document.getElementById('stage');
@@ -208,59 +404,92 @@
     const progressFill = document.getElementById('progressFill');
     const starScore = document.getElementById('starScore');
 
-    let currentExpectedAyah = 1;
-    let totalAyahsInBatch = 5;
+    let allSurahAyahs = [];
     let score = 0;
 
     // جلب آيات السورة
     fetch(`https://api.alquran.cloud/v1/surah/${surahId}/quran-uthmani`)
       .then(r => r.json())
       .then(data => {
-        const ayahs = data.data.ayahs;
-        startFlyingGame(ayahs.slice(0, 8)); // تشغيل مجموعة الآيات
+        allSurahAyahs = data.data.ayahs;
+        filterAndLaunchGame();
       })
       .catch(() => {
-        stage.innerHTML = '<div style="text-align:center; padding:50px; color:#f87171;">يرجى الاتصال بالإنترنت أول مرة لجلب الآيات، أو حفظها أوفلاين.</div>';
+        stage.innerHTML = '<div style="color:#f87171;">يرجى الاتصال بالإنترنت لجلب بيانات السورة للمرة الأولى.</div>';
       });
 
-    function startFlyingGame(batch) {
-      stage.innerHTML = '';
-      currentExpectedAyah = 1;
-      totalAyahsInBatch = batch.length;
-      instructionText.innerText = `🎯 ابدأ بالضغط على الآية رقم (1)`;
+    function filterAndLaunchGame() {
+      let activeAyahs = allSurahAyahs;
+      const total = activeAyahs.length;
 
-      // توزيع الآيات في مواضع عشوائية غير متداخلة على الشاشة
-      batch.forEach(a => {
+      // تصفية النطاق بحسب الربع المختار
+      if (quarter === 'q1') activeAyahs = activeAyahs.slice(0, Math.ceil(total * 0.25));
+      else if (quarter === 'q2') activeAyahs = activeAyahs.slice(Math.ceil(total * 0.25), Math.ceil(total * 0.5));
+      else if (quarter === 'q3') activeAyahs = activeAyahs.slice(Math.ceil(total * 0.5), Math.ceil(total * 0.75));
+      else if (quarter === 'q4') activeAyahs = activeAyahs.slice(Math.ceil(total * 0.75));
+
+      // تشغيل اللعبة المختارة
+      if (gameType === 'hide') {
+        launchHiddenWordsGame(activeAyahs);
+      } else if (gameType === 'memory') {
+        launchMemoryGame(activeAyahs);
+      } else if (gameType === 'blank') {
+        launchFillBlankGame(activeAyahs);
+      } else if (gameType === 'arrange') {
+        launchArrangeVersesGame(activeAyahs);
+      } else {
+        launchFlyingAyahsGame(activeAyahs);
+      }
+    }
+
+    // =========================================================
+    // 1. لعبة الآيات الطائرة: توزيع في شبكة متباعدة تمنع التداخل نهائياً
+    // =========================================================
+    function launchFlyingAyahsGame(ayahs) {
+      stage.innerHTML = '';
+      const batchSize = Math.min(6, ayahs.length);
+      const batch = ayahs.slice(0, batchSize);
+      let expectedAyah = batch[0].numberInSurah;
+      const targetLast = batch[batch.length - 1].numberInSurah;
+
+      instructionText.innerText = `🎯 ابدأ بالضغط على الآية رقم (${expectedAyah})`;
+
+      const gridContainer = document.createElement('div');
+      gridContainer.className = 'flying-grid-layout';
+
+      // خلط أماكن الآيات لتظهر بترتيب مبعثر دون أن تتراكب
+      const shuffledBatch = [...batch].sort(() => 0.5 - Math.random());
+
+      shuffledBatch.forEach(a => {
+        const slot = document.createElement('div');
+        slot.className = 'flying-slot';
+
         const chip = document.createElement('div');
-        chip.className = 'floating-ayah-chip';
+        chip.className = 'flying-ayah-chip';
         chip.innerText = a.text;
         chip.setAttribute('data-num', a.numberInSurah);
 
-        // إحداثيات عشوائية داخل مساحة المسرح
-        const posX = Math.floor(Math.random() * 65) + 5;
-        const posY = Math.floor(Math.random() * 65) + 10;
-        chip.style.left = posX + '%';
-        chip.style.top = posY + '%';
-
-        // تفاعل النقر بالماوس أو التابلت
         chip.onclick = () => {
           const num = parseInt(chip.getAttribute('data-num'));
-          if (num === currentExpectedAyah) {
-            playClap();
-            chip.classList.add('correct-disappear');
+          if (num === expectedAyah) {
+            playPopSound();
+            chip.classList.add('correct-popped');
             score += 10;
             starScore.innerText = score;
-            currentExpectedAyah++;
+            expectedAyah++;
 
-            const progress = (currentExpectedAyah / (totalAyahsInBatch + 1)) * 100;
-            progressFill.style.width = progress + '%';
+            const currentProgress = ((expectedAyah - batch[0].numberInSurah) / batchSize) * 100;
+            progressFill.style.width = currentProgress + '%';
 
-            if (currentExpectedAyah > totalAyahsInBatch) {
-              confetti({ particleCount: 120, spread: 100 });
-              instructionText.innerText = `🎉 رائع جداً! أتممت ترتيب آيات التحدي بنجاح!`;
-              setTimeout(() => { window.location.href = `surah-hub.html?id=${surahId}`; }, 2500);
+            if (expectedAyah > targetLast) {
+              playClap();
+              confetti({ particleCount: 120, spread: 90 });
+              instructionText.innerText = `🎉 ممتاز جداً! أتممت هذا المقطع بنجاح!`;
+              setTimeout(() => {
+                window.location.href = `surah-hub.html?id=${surahId}`;
+              }, 2200);
             } else {
-              instructionText.innerText = `👍 صحيح! الآن اضغط على الآية رقم (${currentExpectedAyah})`;
+              instructionText.innerText = `👍 صحيح! الآن اضغط على الآية رقم (${expectedAyah})`;
             }
           } else {
             playWrong();
@@ -269,8 +498,295 @@
           }
         };
 
-        stage.appendChild(chip);
+        slot.appendChild(chip);
+        gridContainer.appendChild(slot);
       });
+
+      stage.appendChild(gridContainer);
+    }
+
+    // =========================================================
+    // 2. لعبة اختفاء الكلمات (المطابقة للصورة المرفقة)
+    // =========================================================
+    function launchHiddenWordsGame(ayahs) {
+      stage.innerHTML = '';
+      let currentAyahIndex = 0;
+
+      function renderCurrentHiddenVerse() {
+        if (currentAyahIndex >= ayahs.length) {
+          playClap();
+          confetti({ particleCount: 130, spread: 100 });
+          instructionText.innerText = `🏆 ما شاء الله! أنهيت تسميع واكتشاف كلمات السورة بنجاح!`;
+          stage.innerHTML = `<div style="text-align:center; color:#facc15; font-size:24px;">تهانينا! اكتمل التحدي.</div>`;
+          setTimeout(() => { window.location.href = `surah-hub.html?id=${surahId}`; }, 2500);
+          return;
+        }
+
+        const ayah = ayahs[currentAyahIndex];
+        const words = ayah.text.split(' ');
+        let totalHiddenCount = 0;
+        let revealedCount = 0;
+
+        instructionText.innerText = `اضغط على المربعات الذهبية لتكشف الكلمات المخفية (الآية ${ayah.numberInSurah})`;
+
+        const container = document.createElement('div');
+        container.className = 'hidden-words-verse-container';
+
+        words.forEach((word, idx) => {
+          const token = document.createElement('span');
+          token.className = 'word-token';
+
+          // إخفاء بعض الكلمات عشوائياً (كلمة وكلمة تقريباً)
+          const shouldHide = (idx % 2 === 1 || words.length <= 3) && idx > 0;
+
+          if (shouldHide) {
+            totalHiddenCount++;
+            const box = document.createElement('span');
+            box.className = 'hidden-word-box';
+            box.innerText = '؟';
+
+            box.onclick = () => {
+              if (!box.classList.contains('revealed')) {
+                playPopSound();
+                box.innerText = word;
+                box.classList.add('revealed');
+                revealedCount++;
+                score += 5;
+                starScore.innerText = score;
+
+                if (revealedCount === totalHiddenCount) {
+                  score += 10;
+                  starScore.innerText = score;
+                  setTimeout(() => {
+                    currentAyahIndex++;
+                    const percent = (currentAyahIndex / ayahs.length) * 100;
+                    progressFill.style.width = percent + '%';
+                    renderCurrentHiddenVerse();
+                  }, 900);
+                }
+              }
+            };
+            token.appendChild(box);
+          } else {
+            token.innerText = word;
+          }
+          container.appendChild(token);
+        });
+
+        // إذا كانت الآية لا تحتوي على كلمات مخفية، ننتقل للتي تليها
+        if (totalHiddenCount === 0) {
+          currentAyahIndex++;
+          renderCurrentHiddenVerse();
+          return;
+        }
+
+        stage.innerHTML = '';
+        stage.appendChild(container);
+      }
+
+      renderCurrentHiddenVerse();
+    }
+
+    // =========================================================
+    // 3. لعبة الذاكرة ومطابقة بدايات ونهايات الآيات
+    // =========================================================
+    function launchMemoryGame(ayahs) {
+      stage.innerHTML = '';
+      instructionText.innerText = `🧠 لعبة الذاكرة: اعثر على الكارتين المتطابقين`;
+      
+      const sample = ayahs.slice(0, 4);
+      let cardsData = [];
+      sample.forEach(a => {
+        const words = a.text.split(' ');
+        const firstHalf = words.slice(0, Math.ceil(words.length / 2)).join(' ');
+        const secondHalf = words.slice(Math.ceil(words.length / 2)).join(' ');
+        cardsData.push({ id: a.numberInSurah, text: firstHalf, type: 'start' });
+        cardsData.push({ id: a.numberInSurah, text: secondHalf, type: 'end' });
+      });
+
+      cardsData.sort(() => 0.5 - Math.random());
+
+      const grid = document.createElement('div');
+      grid.className = 'memory-cards-grid';
+
+      let firstSelected = null;
+      let matchedPairs = 0;
+
+      cardsData.forEach(card => {
+        const cardEl = document.createElement('div');
+        cardEl.className = 'memory-card-item';
+        cardEl.innerText = '❓';
+
+        cardEl.onclick = () => {
+          if (cardEl.classList.contains('flipped') || cardEl.classList.contains('matched')) return;
+
+          playPopSound();
+          cardEl.classList.add('flipped');
+          cardEl.innerText = card.text;
+
+          if (!firstSelected) {
+            firstSelected = { el: cardEl, data: card };
+          } else {
+            if (firstSelected.data.id === card.id && firstSelected.data.type !== card.type) {
+              // تطابق صحيح
+              firstSelected.el.classList.add('matched');
+              cardEl.classList.add('matched');
+              firstSelected = null;
+              matchedPairs++;
+              score += 20;
+              starScore.innerText = score;
+
+              if (matchedPairs === sample.length) {
+                playClap();
+                confetti({ particleCount: 100 });
+                instructionText.innerText = `🎉 أحسنت صنعاً! أتممت مطابقة الآيات كلها!`;
+                setTimeout(() => { window.location.href = `surah-hub.html?id=${surahId}`; }, 2500);
+              }
+            } else {
+              // عدم تطابق
+              playWrong();
+              const prev = firstSelected.el;
+              firstSelected = null;
+              setTimeout(() => {
+                prev.classList.remove('flipped');
+                prev.innerText = '❓';
+                cardEl.classList.remove('flipped');
+                cardEl.innerText = '❓';
+              }, 700);
+            }
+          }
+        };
+
+        grid.appendChild(cardEl);
+      });
+
+      stage.appendChild(grid);
+    }
+
+    // =========================================================
+    // 4. لعبة أكمل الفراغ (اختر الكلمة القرآنية المفقودة)
+    // =========================================================
+    function launchFillBlankGame(ayahs) {
+      let qIndex = 0;
+
+      function renderBlankQuestion() {
+        stage.innerHTML = '';
+        if (qIndex >= Math.min(8, ayahs.length)) {
+          playClap();
+          confetti({ particleCount: 120 });
+          instructionText.innerText = `🏆 رائع! أنهيت اختبار أكمل الفراغ بنجاح!`;
+          setTimeout(() => { window.location.href = `surah-hub.html?id=${surahId}`; }, 2300);
+          return;
+        }
+
+        const ayah = ayahs[qIndex];
+        const words = ayah.text.split(' ');
+        const missingIdx = Math.floor(Math.random() * words.length);
+        const correctWord = words[missingIdx];
+
+        const promptWords = [...words];
+        promptWords[missingIdx] = ' ( ...... ) ';
+
+        instructionText.innerText = `✏️ اختر الكلمة الصحيحة لملء الفراغ (الآية ${ayah.numberInSurah}):`;
+
+        const qVerse = document.createElement('div');
+        qVerse.style.fontFamily = 'Amiri Quran';
+        qVerse.style.fontSize = '26px';
+        qVerse.style.color = '#fef08a';
+        qVerse.style.margin = '20px 0';
+        qVerse.innerText = promptWords.join(' ');
+        stage.appendChild(qVerse);
+
+        // خيارات مشتتة من نفس السورة
+        let allWords = [];
+        ayahs.forEach(a => allWords.push(...a.text.split(' ')));
+        let wrongWords = allWords.filter(w => w !== correctWord).sort(() => 0.5 - Math.random()).slice(0, 3);
+        const choices = [correctWord, ...wrongWords].sort(() => 0.5 - Math.random());
+
+        const grid = document.createElement('div');
+        grid.className = 'choice-selection-grid';
+
+        choices.forEach(c => {
+          const btn = document.createElement('button');
+          btn.className = 'choice-selection-btn';
+          btn.innerText = c;
+
+          btn.onclick = () => {
+            if (c === correctWord) {
+              playClap();
+              btn.classList.add('correct');
+              score += 10;
+              starScore.innerText = score;
+              setTimeout(() => {
+                qIndex++;
+                progressFill.style.width = (qIndex / 8) * 100 + '%';
+                renderBlankQuestion();
+              }, 1000);
+            } else {
+              playWrong();
+              btn.classList.add('wrong');
+            }
+          };
+          grid.appendChild(btn);
+        });
+
+        stage.appendChild(grid);
+      }
+
+      renderBlankQuestion();
+    }
+
+    // =========================================================
+    // 5. لعبة رتّب الآيات بالتسلسل الصحيح
+    // =========================================================
+    function launchArrangeVersesGame(ayahs) {
+      stage.innerHTML = '';
+      const sample = ayahs.slice(0, 4);
+      let expectedNum = sample[0].numberInSurah;
+      const lastNum = sample[sample.length - 1].numberInSurah;
+
+      instructionText.innerText = `🔢 اضغط على الآيات بالتسلسل القرآني الصحيح:`;
+
+      const grid = document.createElement('div');
+      grid.style.display = 'flex';
+      grid.style.flexDirection = 'column';
+      grid.style.gap = '14px';
+      grid.style.width = '100%';
+      grid.style.maxWidth = '650px';
+
+      const shuffled = [...sample].sort(() => 0.5 - Math.random());
+
+      shuffled.forEach(a => {
+        const item = document.createElement('div');
+        item.className = 'choice-selection-btn';
+        item.innerText = a.text;
+
+        item.onclick = () => {
+          if (a.numberInSurah === expectedNum) {
+            playPopSound();
+            item.classList.add('correct');
+            item.style.pointerEvents = 'none';
+            expectedNum++;
+            score += 15;
+            starScore.innerText = score;
+
+            if (expectedNum > lastNum) {
+              playClap();
+              confetti({ particleCount: 110 });
+              instructionText.innerText = `🎉 أحسنت! رتّبت الآيات بالترتيب السليم!`;
+              setTimeout(() => { window.location.href = `surah-hub.html?id=${surahId}`; }, 2400);
+            }
+          } else {
+            playWrong();
+            item.classList.add('wrong');
+            setTimeout(() => { item.classList.remove('wrong'); }, 500);
+          }
+        };
+
+        grid.appendChild(item);
+      });
+
+      stage.appendChild(grid);
     }
   </script>
 </body>
