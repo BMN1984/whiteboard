@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>بنك ألعاب واختبارات جزء عم | أكاديمية الفتح</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&family=Amiri+Quran&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Cairo', sans-serif;
+    }
+    body {
+      background: radial-gradient(circle at top, #0f172a, #064e3b);
+      color: #f8fafc;
+      min-height: 100vh;
+      padding-bottom: 50px;
+    }
+
+    /* الشريط العلوي ورابط الرجوع للسبورة */
+    header {
+      background: rgba(15, 23, 42, 0.95);
+      border-bottom: 2px solid #facc15;
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+    .brand-title {
+      font-size: 18px;
+      font-weight: 900;
+      color: #facc15;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .back-btn {
+      background: #1e293b;
+      color: #38bdf8;
+      border: 1.5px solid #0284c7;
+      padding: 6px 14px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+    .back-btn:hover {
+      background: #0284c7;
+      color: #fff;
+      transform: scale(1.03);
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 24px auto;
+      padding: 0 16px;
+    }
+
+    /* قسم بطاقة السور */
+    .surah-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .surah-card {
+      background: rgba(30, 41, 59, 0.85);
+      border: 1.5px solid rgba(255, 255, 255, 0.1);
+      border-radius: 14px;
+      padding: 12px 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .surah-card:hover {
+      background: #065f46;
+      border-color: #34d399;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(52, 211, 153, 0.3);
+    }
+    .surah-card.active {
+      background: #047857;
+      border-color: #facc15;
+      box-shadow: 0 0 16px rgba(250, 204, 21, 0.5);
+    }
+    .surah-number {
+      font-size: 11px;
+      color: #94a3b8;
+    }
+    .surah-name {
+      font-size: 16px;
+      font-weight: 800;
+      color: #fef08a;
+      margin-top: 4px;
+    }
+
+    /* شاشات أنماط الألعاب */
+    .game-section {
+      background: rgba(15, 23, 42, 0.95);
+      border: 2px solid #0284c7;
+      border-radius: 20px;
+      padding: 24px;
+      margin-top: 24px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+      display: none;
+    }
+    .game-section.show { display: block; }
+
+    .game-modes-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 14px;
+    }
+    .mode-tab {
+      background: #1e293b;
+      color: #cbd5e1;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 8px 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: bold;
+      transition: all 0.2s;
+    }
+    .mode-tab.active {
+      background: #0284c7;
+      color: #fff;
+      border-color: #38bdf8;
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+    }
+
+    /* أسئلة إكمال الآيات */
+    .quiz-box {
+      text-align: center;
+      margin: 20px 0;
+    }
+    .ayah-prompt {
+      font-family: 'Amiri Quran', serif;
+      font-size: 26px;
+      line-height: 2.2;
+      color: #fde047;
+      margin-bottom: 20px;
+      background: rgba(2, 132, 199, 0.1);
+      padding: 16px;
+      border-radius: 16px;
+      border: 1px dashed rgba(56, 189, 248, 0.4);
+    }
+    .choices-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .choice-btn {
+      background: #1e293b;
+      border: 1.5px solid rgba(255,255,255,0.15);
+      color: #fff;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Amiri Quran', 'Cairo', serif;
+    }
+    .choice-btn:hover { background: #334155; }
+    .choice-btn.correct { background: #16a34a !important; border-color: #4ade80 !important; }
+    .choice-btn.wrong { background: #dc2626 !important; border-color: #f87171 !important; }
+
+    /* لعبة ترتيب الكلمات (Word Arrangement) */
+    .word-pool, .arranged-pool {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      min-height: 60px;
+      padding: 12px;
+      background: rgba(30, 41, 59, 0.6);
+      border-radius: 12px;
+      margin-bottom: 16px;
+    }
+    .word-chip {
+      background: #0284c7;
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 18px;
+      font-family: 'Amiri Quran', serif;
+      cursor: pointer;
+      font-weight: bold;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+      transition: transform 0.15s;
+    }
+    .word-chip:hover { transform: scale(1.08); }
+
+    .score-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #facc15;
+      color: #0f172a;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-weight: 800;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand-title">
+      <span>🌟</span>
+      <span>أكاديمية الفتح — بنك ألعاب واختبارات جزء عم</span>
+    </div>
+    <!-- رابط العودة إلى السبورة التفاعلية الأصلية -->
+    <a href="index.html" class="back-btn">⬅ العودة إلى السبورة التفاعلية</a>
+  </header>
+
+  <div class="container">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+      <h2 style="font-size:16px; color:#93c5fd;">اختر السورة لبدء التحدي والاختبار:</h2>
+      <div class="score-badge">🏆 النقاط: <span id="userScore">0</span></div>
+    </div>
+
+    <!-- شبكة سور جزء عم (من النبأ إلى الناس) -->
+    <div class="surah-grid" id="surahsList"></div>
+
+    <!-- قسم الألعاب والاختبارات التفاعلية -->
+    <div class="game-section" id="gameArea">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+        <h3 id="selectedSurahTitle" style="color:#fef08a; font-size:20px;">سورة النبأ</h3>
+        <span id="gameStatus" style="font-size:12px; color:#38bdf8;">اختر نوع الاختبار أدناه</span>
+      </div>
+
+      <!-- أنماط الاختبارات التفاعلية -->
+      <div class="game-modes-nav">
+        <button class="mode-tab active" data-mode="next-ayah">🎯 اختر الآية التالية</button>
+        <button class="mode-tab" data-mode="arrange">🧩 ترتيب كلمات الآية</button>
+        <button class="mode-tab" data-mode="who-surah">🔍 ما اسم السورة؟</button>
+      </div>
+
+      <!-- مساحة الاختبار التفاعلي النشط -->
+      <div id="quizContent">
+        <!-- يتم توليد الأسئلة ديناميكياً هنا -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // قائمة سور جزء عم كاملة (من النبأ 78 إلى الناس 114)
+    const juzAmmaSurahs = [
+      { id: 78, name: "النبأ", count: 40 },
+      { id: 79, name: "النازعات", count: 46 },
+      { id: 80, name: "عبس", count: 42 },
+      { id: 81, name: "التكوير", count: 29 },
+      { id: 82, name: "الانفطار", count: 19 },
+      { id: 83, name: "المطففين", count: 36 },
+      { id: 84, name: "الانشقاق", count: 25 },
+      { id: 85, name: "البروج", count: 22 },
+      { id: 86, name: "الطارق", count: 17 },
+      { id: 87, name: "الأعلى", count: 19 },
+      { id: 88, name: "الغاشية", count: 26 },
+      { id: 89, name: "الفجر", count: 30 },
+      { id: 90, name: "البلد", count: 20 },
+      { id: 91, name: "الشمس", count: 15 },
+      { id: 92, name: "الليل", count: 21 },
+      { id: 93, name: "الضحى", count: 11 },
+      { id: 94, name: "الشرح", count: 8 },
+      { id: 95, name: "التين", count: 8 },
+      { id: 96, name: "العلق", count: 19 },
+      { id: 97, name: "القدر", count: 5 },
+      { id: 98, name: "البينة", count: 8 },
+      { id: 99, name: "الزلزلة", count: 8 },
+      { id: 100, name: "العاديات", count: 11 },
+      { id: 101, name: "القارعة", count: 11 },
+      { id: 102, name: "التكاثر", count: 8 },
+      { id: 103, name: "العصر", count: 3 },
+      { id: 104, name: "الهمزة", count: 9 },
+      { id: 105, name: "الفيل", count: 5 },
+      { id: 106, name: "قريش", count: 4 },
+      { id: 107, name: "الماعون", count: 7 },
+      { id: 108, name: "الكوثر", count: 3 },
+      { id: 109, name: "الكافرون", count: 6 },
+      { id: 110, name: "النصر", count: 3 },
+      { id: 111, name: "المسد", count: 5 },
+      { id: 112, name: "الإخلاص", count: 4 },
+      { id: 113, name: "الفلق", count: 5 },
+      { id: 114, name: "الناس", count: 6 }
+    ];
+
+    let currentSurah = juzAmmaSurahs[0];
+    let currentMode = 'next-ayah';
+    let userScore = 0;
+    let surahAyahsCache = {};
+
+    const surahsList = document.getElementById('surahsList');
+    const gameArea = document.getElementById('gameArea');
+    const selectedSurahTitle = document.getElementById('selectedSurahTitle');
+    const quizContent = document.getElementById('quizContent');
+    const userScoreEl = document.getElementById('userScore');
+
+    // رسم بطاقات السور
+    juzAmmaSurahs.forEach((surah, idx) => {
+      const card = document.createElement('div');
+      card.className = `surah-card ${idx === 0 ? 'active' : ''}`;
+      card.innerHTML = `
+        <div class="surah-number">${surah.id}</div>
+        <div class="surah-name">سورة ${surah.name}</div>
+      `;
+      card.onclick = () => {
+        document.querySelectorAll('.surah-card').forEach(c => c.classList.remove('active'));
+        card.classList.add('active');
+        selectSurah(surah);
+      };
+      surahsList.appendChild(card);
+    });
+
+    // اختيار نمط اللعبة
+    document.querySelectorAll('.mode-tab').forEach(tab => {
+      tab.onclick = () => {
+        document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentMode = tab.getAttribute('data-mode');
+        loadQuizForSurah();
+      };
+    });
+
+    function selectSurah(surah) {
+      currentSurah = surah;
+      selectedSurahTitle.innerText = `سورة ${surah.name}`;
+      gameArea.classList.add('show');
+      loadQuizForSurah();
+    }
+
+    // جلب آيات السورة وبناء الاختبار
+    async function loadQuizForSurah() {
+      quizContent.innerHTML = '<div style="text-align:center; padding:30px; color:#38bdf8;">⏳ جاري تجهيز الاختبار التفاعلي...</div>';
+
+      try {
+        let ayahs = surahAyahsCache[currentSurah.id];
+        if (!ayahs) {
+          const res = await fetch(`https://api.alquran.cloud/v1/surah/${currentSurah.id}/quran-uthmani`);
+          const data = await res.json();
+          ayahs = data.data.ayahs;
+          surahAyahsCache[currentSurah.id] = ayahs;
+        }
+
+        if (currentMode === 'next-ayah') {
+          renderNextAyahQuiz(ayahs);
+        } else if (currentMode === 'arrange') {
+          renderArrangeQuiz(ayahs);
+        } else if (currentMode === 'who-surah') {
+          renderWhoSurahQuiz(ayahs);
+        }
+      } catch (e) {
+        quizContent.innerHTML = '<div style="text-align:center; color:#f87171;">يرجى التأكد من اتصال الإنترنت لجلب الآيات.</div>';
+      }
+    }
+
+    // النمط 1: اختر الآية التالية
+    function renderNextAyahQuiz(ayahs) {
+      if (ayahs.length < 2) {
+        quizContent.innerHTML = '<div style="text-align:center;">السورة قصيرة جداً لهذا النمط. اختر سورة أخرى أو نمطاً آخر.</div>';
+        return;
+      }
+
+      // اختيار آية عشوائية ليست الأخيرة
+      const randIdx = Math.floor(Math.random() * (ayahs.length - 1));
+      const promptAyah = ayahs[randIdx];
+      const correctNextAyah = ayahs[randIdx + 1];
+
+      // خيارات مشتتة عشوائية
+      let wrongChoices = ayahs.filter((_, i) => i !== (randIdx + 1));
+      wrongChoices = wrongChoices.sort(() => 0.5 - Math.random()).slice(0, 3);
+      
+      const choices = [correctNextAyah, ...wrongChoices].sort(() => 0.5 - Math.random());
+
+      quizContent.innerHTML = `
+        <div class="quiz-box">
+          <div style="font-size:14px; color:#94a3b8; margin-bottom:8px;">ما هي الآية التالية لقوله تعالى:</div>
+          <div class="ayah-prompt">« ${promptAyah.text} » ﴿${promptAyah.numberInSurah}﴾</div>
+          <div class="choices-grid">
+            ${choices.map(c => `
+              <button class="choice-btn" data-correct="${c.numberInSurah === correctNextAyah.numberInSurah}">
+                ${c.text} ﴿${c.numberInSurah}﴾
+              </button>
+            `).join('')}
+          </div>
+        </div>
+      `;
+
+      bindChoiceEvents();
+    }
+
+    // النمط 2: ترتيب كلمات الآية
+    function renderArrangeQuiz(ayahs) {
+      const randAyah = ayahs[Math.floor(Math.random() * ayahs.length)];
+      const originalWords = randAyah.text.split(' ');
+      const shuffledWords = [...originalWords].sort(() => 0.5 - Math.random());
+      let userWords = [];
+
+      quizContent.innerHTML = `
+        <div class="quiz-box">
+          <div style="font-size:14px; color:#94a3b8; margin-bottom:8px;">رتّب كلمات الآية الكريمة ﴿${randAyah.numberInSurah}﴾:</div>
+          
+          <div class="arranged-pool" id="arrangedPool">
+            <span style="color:#64748b; font-size:13px;" id="arrangeHint">انقر على الكلمات بالترتيب الصحيح هنا</span>
+          </div>
+
+          <div class="word-pool" id="sourcePool">
+            ${shuffledWords.map((w, idx) => `<span class="word-chip" data-idx="${idx}">${w}</span>`).join('')}
+          </div>
+
+          <button id="btnResetArrange" style="background:#334155; color:#fff; border:none; padding:6px 14px; border-radius:8px; cursor:pointer; font-size:12px;">🔄 إعادة المحاولة</button>
+        </div>
+      `;
+
+      const sourcePool = document.getElementById('sourcePool');
+      const arrangedPool = document.getElementById('arrangedPool');
+      const hint = document.getElementById('arrangeHint');
+
+      sourcePool.querySelectorAll('.word-chip').forEach(chip => {
+        chip.onclick = () => {
+          if (hint) hint.style.display = 'none';
+          userWords.push(chip.innerText);
+          arrangedPool.appendChild(chip);
+
+          if (userWords.length === originalWords.length) {
+            if (userWords.join(' ') === originalWords.join(' ')) {
+              confetti({ particleCount: 80, spread: 70 });
+              userScore += 10;
+              userScoreEl.innerText = userScore;
+              setTimeout(() => {
+                alert('🎉 أحسنت ممتاز! إجابة صحيحة.');
+                renderArrangeQuiz(ayahs);
+              }, 400);
+            } else {
+              alert('❌ الترتيب غير صحيح، حاول مرة أخرى.');
+            }
+          }
+        };
+      });
+
+      document.getElementById('btnResetArrange').onclick = () => renderArrangeQuiz(ayahs);
+    }
+
+    // النمط 3: ما اسم السورة
+    function renderWhoSurahQuiz(ayahs) {
+      const randAyah = ayahs[Math.floor(Math.random() * ayahs.length)];
+      
+      let otherSurahs = juzAmmaSurahs.filter(s => s.id !== currentSurah.id);
+      otherSurahs = otherSurahs.sort(() => 0.5 - Math.random()).slice(0, 3);
+      const choices = [currentSurah, ...otherSurahs].sort(() => 0.5 - Math.random());
+
+      quizContent.innerHTML = `
+        <div class="quiz-box">
+          <div style="font-size:14px; color:#94a3b8; margin-bottom:8px;">في أي سورة وردت هذه الآية الكريمة:</div>
+          <div class="ayah-prompt">« ${randAyah.text} »</div>
+          <div class="choices-grid">
+            ${choices.map(c => `
+              <button class="choice-btn" data-correct="${c.id === currentSurah.id}">
+                سورة ${c.name}
+              </button>
+            `).join('')}
+          </div>
+        </div>
+      `;
+
+      bindChoiceEvents();
+    }
+
+    function bindChoiceEvents() {
+      document.querySelectorAll('.choice-btn').forEach(btn => {
+        btn.onclick = () => {
+          const isCorrect = btn.getAttribute('data-correct') === 'true';
+          if (isCorrect) {
+            btn.classList.add('correct');
+            confetti({ particleCount: 70, spread: 70 });
+            userScore += 10;
+            userScoreEl.innerText = userScore;
+            setTimeout(() => loadQuizForSurah(), 1000);
+          } else {
+            btn.classList.add('wrong');
+            document.querySelectorAll('.choice-btn[data-correct="true"]').forEach(c => c.classList.add('correct'));
+            setTimeout(() => loadQuizForSurah(), 1500);
+          }
+        };
+      });
+    }
+
+    // فتح السورة الأولى تلقائياً عند الدخول
+    selectSurah(juzAmmaSurahs[0]);
+  </script>
+</body>
+</html>
