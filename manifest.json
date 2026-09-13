@@ -1,0 +1,17 @@
+{
+  "name": "سبورة أكاديمية الفتح لعلوم القرآن",
+  "short_name": "سبورة الفتح",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#064e3b",
+  "theme_color": "#0f172a",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3258/3258444.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
