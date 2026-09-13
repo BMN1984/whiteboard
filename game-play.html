@@ -129,45 +129,26 @@
       justify-content: center;
     }
 
-    /* 1. تصميم لعبة اسمع واختر */
-    .listen-control-card {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 24px;
+    /* تصميم شريط ومؤقت تحدي السرعة */
+    .speed-timer-container {
+      width: 100%;
+      max-width: 520px;
+      height: 12px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 20px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255,255,255,0.15);
     }
-    .listen-play-btn {
-      background: linear-gradient(135deg, #0284c7, #0369a1);
-      border: 2px solid #38bdf8;
-      color: #fff;
-      padding: 14px 28px;
-      border-radius: 30px;
-      font-size: 18px;
-      font-weight: 800;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
-      transition: all 0.2s;
-    }
-    .listen-play-btn:hover {
-      transform: scale(1.06);
-      background: #0284c7;
-      box-shadow: 0 0 30px rgba(56, 189, 248, 0.7);
-    }
-    .listen-play-btn.playing {
-      background: #059669;
-      border-color: #34d399;
-      animation: pulsePlay 1.2s infinite alternate;
-    }
-    @keyframes pulsePlay {
-      from { box-shadow: 0 0 10px #34d399; }
-      to { box-shadow: 0 0 25px #34d399; }
+    .speed-timer-fill {
+      height: 100%;
+      width: 100%;
+      background: #10b981;
+      transition: width 0.1s linear, background-color 0.3s;
     }
 
-    .listen-options-grid {
+    /* شبكة خيارات التحديات العامة والسرعة */
+    .selection-grid-cosmic {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 16px;
@@ -175,9 +156,9 @@
       max-width: 820px;
     }
     @media (max-width: 768px) {
-      .listen-options-grid { grid-template-columns: 1fr; }
+      .selection-grid-cosmic { grid-template-columns: 1fr; }
     }
-    .listen-option-card {
+    .selection-card-cosmic {
       background: rgba(30, 41, 59, 0.95);
       border: 1.5px solid rgba(255, 255, 255, 0.15);
       border-radius: 16px;
@@ -190,18 +171,18 @@
       transition: all 0.2s;
       box-shadow: 0 6px 16px rgba(0,0,0,0.5);
     }
-    .listen-option-card:hover {
+    .selection-card-cosmic:hover {
       background: #1e293b;
       border-color: #facc15;
       transform: translateY(-3px);
       box-shadow: 0 0 20px rgba(250, 204, 21, 0.4);
     }
-    .listen-option-card.correct {
+    .selection-card-cosmic.correct {
       background: #059669 !important;
       border-color: #34d399 !important;
       color: #fff;
     }
-    .listen-option-card.wrong {
+    .selection-card-cosmic.wrong {
       background: #dc2626 !important;
       border-color: #f87171 !important;
       animation: shakeCard 0.4s;
@@ -212,7 +193,7 @@
       75% { transform: translateX(6px); }
     }
 
-    /* 2. لعبة الآيات الطائرة المتباعدة بشبكة ذكية */
+    /* تصميم لعبة الآيات الطائرة */
     .flying-grid-layout {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -258,7 +239,7 @@
       transition: all 0.4s ease-out;
     }
 
-    /* 3. لعبة اختفاء الكلمات */
+    /* تصميم لعبة اختفاء الكلمات */
     .hidden-words-verse-container {
       display: flex;
       flex-wrap: wrap;
@@ -313,7 +294,7 @@
       100% { transform: scale(1); }
     }
 
-    /* 4. لعبة الذاكرة */
+    /* تصميم لعبة الذاكرة */
     .memory-cards-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -349,32 +330,27 @@
       opacity: 0.8;
     }
 
-    /* 5. لعبة رتّب الآيات وأكمل الفراغ */
-    .choice-selection-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
+    /* أزرار إعادة المحاولة عند انتهاء وقت السرعة */
+    .speed-timeout-box {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       gap: 16px;
-      width: 100%;
-      max-width: 700px;
-      margin-top: 20px;
     }
-    .choice-selection-btn {
-      background: #1e293b;
-      border: 1.5px solid rgba(255,255,255,0.15);
+    .btn-speed-retry {
+      background: #0284c7;
       color: #fff;
-      padding: 16px;
-      border-radius: 14px;
-      font-family: 'Amiri Quran', serif;
-      font-size: 20px;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 25px;
+      font-size: 15px;
+      font-weight: bold;
       cursor: pointer;
+      box-shadow: 0 4px 15px rgba(2, 132, 199, 0.4);
       transition: all 0.2s;
     }
-    .choice-selection-btn:hover {
-      background: #0284c7;
-      transform: translateY(-2px);
-    }
-    .choice-selection-btn.correct { background: #16a34a !important; border-color: #4ade80 !important; }
-    .choice-selection-btn.wrong { background: #dc2626 !important; border-color: #f87171 !important; }
+    .btn-speed-retry:hover { background: #0369a1; transform: scale(1.05); }
   </style>
 </head>
 <body>
@@ -462,6 +438,7 @@
     let allSurahAyahs = [];
     let score = 0;
     let audioPlayer = new Audio();
+    let speedTimerInterval = null;
 
     fetch(`https://api.alquran.cloud/v1/surah/${surahId}/quran-uthmani`)
       .then(r => r.json())
@@ -482,7 +459,10 @@
       else if (quarter === 'q3') activeAyahs = activeAyahs.slice(Math.ceil(total * 0.5), Math.ceil(total * 0.75));
       else if (quarter === 'q4') activeAyahs = activeAyahs.slice(Math.ceil(total * 0.75));
 
-      if (gameType === 'listen') {
+      // التوجيه الصحيح والمخصص لكل لعبة
+      if (gameType === 'speed') {
+        launchSpeedChallengeGame(activeAyahs);
+      } else if (gameType === 'listen') {
         launchListenChooseGame(activeAyahs);
       } else if (gameType === 'hide') {
         launchHiddenWordsGame(activeAyahs);
@@ -498,7 +478,119 @@
     }
 
     // =========================================================
-    // 1. محرك لعبة: اسمع واختر (Listen & Choose)
+    // محرك لعبة: تحدي السرعة (Speed Challenge) المخصص مع المؤقت التنازلي
+    // =========================================================
+    function launchSpeedChallengeGame(ayahs) {
+      let roundIndex = 0;
+      const maxRounds = Math.min(8, ayahs.length);
+
+      function renderSpeedRound() {
+        if (speedTimerInterval) clearInterval(speedTimerInterval);
+        stage.innerHTML = '';
+
+        if (roundIndex >= maxRounds) {
+          playClap();
+          confetti({ particleCount: 130, spread: 100 });
+          instructionText.innerText = `⚡ بطل السرعة! اجتزت تحدي السرعة بنجاح فائق!`;
+          stage.innerHTML = `<div style="text-align:center; color:#facc15; font-size:26px; font-weight:bold;">تهانينا! حققت نتيجة رائعة في السرعة.</div>`;
+          setTimeout(() => { window.location.href = `surah-hub.html?id=${surahId}`; }, 2500);
+          return;
+        }
+
+        const targetAyah = ayahs[roundIndex];
+        instructionText.innerText = `⚡ تحدي السرعة: اعثر على الآية رقم (${targetAyah.numberInSurah}) قبل نفاد الوقت!`;
+
+        // إنشاء شريط المؤقت التنازلي
+        const timerContainer = document.createElement('div');
+        timerContainer.className = 'speed-timer-container';
+        const timerFill = document.createElement('div');
+        timerFill.className = 'speed-timer-fill';
+        timerContainer.appendChild(timerFill);
+        stage.appendChild(timerContainer);
+
+        // تجهيز الخيارات (الآية الصحيحة مع 3 آيات أخرى)
+        let wrongPool = ayahs.filter(a => a.numberInSurah !== targetAyah.numberInSurah);
+        wrongPool = wrongPool.sort(() => 0.5 - Math.random()).slice(0, 3);
+        const choices = [targetAyah, ...wrongPool].sort(() => 0.5 - Math.random());
+
+        const grid = document.createElement('div');
+        grid.className = 'selection-grid-cosmic';
+
+        let roundAnswered = false;
+
+        choices.forEach(c => {
+          const card = document.createElement('div');
+          card.className = 'selection-card-cosmic';
+          card.innerText = c.text;
+
+          card.onclick = () => {
+            if (roundAnswered) return;
+            roundAnswered = true;
+            if (speedTimerInterval) clearInterval(speedTimerInterval);
+
+            if (c.numberInSurah === targetAyah.numberInSurah) {
+              playClap();
+              card.classList.add('correct');
+              score += 20; // نقاط مضاعفة للسرعة
+              starScore.innerText = score;
+              roundIndex++;
+              progressFill.style.width = (roundIndex / maxRounds) * 100 + '%';
+              setTimeout(() => renderSpeedRound(), 1200);
+            } else {
+              playWrong();
+              card.classList.add('wrong');
+              setTimeout(() => {
+                card.classList.remove('wrong');
+                roundAnswered = false;
+                startTimer();
+              }, 600);
+            }
+          };
+          grid.appendChild(card);
+        });
+
+        stage.appendChild(grid);
+
+        // تشغيل المؤقت التنازلي (8 ثوانٍ لكل سؤال)
+        const totalSeconds = 8;
+        let elapsed = 0;
+        function startTimer() {
+          timerFill.style.width = '100%';
+          timerFill.style.backgroundColor = '#10b981';
+          speedTimerInterval = setInterval(() => {
+            elapsed += 0.1;
+            const remainingPercent = Math.max(0, 100 - (elapsed / totalSeconds) * 100);
+            timerFill.style.width = remainingPercent + '%';
+
+            if (remainingPercent < 35) {
+              timerFill.style.backgroundColor = '#ef4444';
+            } else if (remainingPercent < 60) {
+              timerFill.style.backgroundColor = '#f59e0b';
+            }
+
+            if (elapsed >= totalSeconds) {
+              clearInterval(speedTimerInterval);
+              roundAnswered = true;
+              playWrong();
+              instructionText.innerText = `⏳ انتهى الوقت! لم تتمكن من تحديد الآية قبل نفاد المؤقت`;
+              stage.innerHTML = `
+                <div class="speed-timeout-box">
+                  <div style="font-size:42px;">⏰</div>
+                  <div style="font-size:20px; color:#f87171; font-weight:bold;">نفد الوقت يا بطل!</div>
+                  <button class="btn-speed-retry" onclick="location.reload()">🔄 إعادة المحاولة</button>
+                </div>
+              `;
+            }
+          }, 100);
+        }
+        startTimer();
+      }
+
+      renderSpeedRound();
+    }
+
+    // =========================================================
+    // محرك لعبة: اسمع واختر (Listen & Choose)
     // =========================================================
     function launchListenChooseGame(ayahs) {
       let currentRound = 0;
@@ -520,23 +612,33 @@
 
         const sPad = String(surahId).padStart(3, '0');
         const vPad = String(targetAyah.numberInSurah).padStart(3, '0');
-        // السيرفر المباشر لتلاوة الآية
         const audioUrl = `https://everyayah.com/data/Husary_64kbps/${sPad}${vPad}.mp3`;
 
         const controlCard = document.createElement('div');
-        controlCard.className = 'listen-control-card';
+        controlCard.style.marginBottom = '24px';
 
         const playBtn = document.createElement('button');
-        playBtn.className = 'listen-play-btn';
+        playBtn.style.cssText = `
+          background: linear-gradient(135deg, #0284c7, #0369a1);
+          border: 2px solid #38bdf8;
+          color: #fff;
+          padding: 14px 28px;
+          border-radius: 30px;
+          font-size: 18px;
+          font-weight: 800;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+        `;
         playBtn.innerHTML = `<span>🔊</span> <span>تشغيل تلاوة الآية</span>`;
 
         function playCurrentAudio() {
           audioPlayer.src = audioUrl;
-          playBtn.classList.add('playing');
           playBtn.innerHTML = `<span>⏳</span> <span>جاري الاستماع...</span>`;
           audioPlayer.play().catch(() => {});
           audioPlayer.onended = () => {
-            playBtn.classList.remove('playing');
             playBtn.innerHTML = `<span>🔁</span> <span>إعادة الاستماع</span>`;
           };
         }
@@ -552,13 +654,13 @@
         const roundChoices = [targetAyah, ...wrongPool].sort(() => 0.5 - Math.random());
 
         const optionsGrid = document.createElement('div');
-        optionsGrid.className = 'listen-options-grid';
+        optionsGrid.className = 'selection-grid-cosmic';
 
         let isAnswered = false;
 
         roundChoices.forEach(choice => {
           const card = document.createElement('div');
-          card.className = 'listen-option-card';
+          card.className = 'selection-card-cosmic';
           card.innerText = choice.text;
 
           card.onclick = () => {
@@ -593,7 +695,7 @@
     }
 
     // =========================================================
-    // 2. لعبة الآيات الطائرة: توزيع في شبكة متباعدة
+    // محرك لعبة: الآيات الطائرة
     // =========================================================
     function launchFlyingAyahsGame(ayahs) {
       stage.innerHTML = '';
@@ -655,7 +757,7 @@
     }
 
     // =========================================================
-    // 3. لعبة اختفاء الكلمات
+    // محرك لعبة: اختفاء الكلمات
     // =========================================================
     function launchHiddenWordsGame(ayahs) {
       stage.innerHTML = '';
@@ -735,7 +837,7 @@
     }
 
     // =========================================================
-    // 4. لعبة الذاكرة
+    // محرك لعبة: الذاكرة
     // =========================================================
     function launchMemoryGame(ayahs) {
       stage.innerHTML = '';
@@ -809,7 +911,7 @@
     }
 
     // =========================================================
-    // 5. لعبة أكمل الفراغ
+    // محرك لعبة: أكمل الفراغ
     // =========================================================
     function launchFillBlankGame(ayahs) {
       let qIndex = 0;
@@ -848,11 +950,11 @@
         const choices = [correctWord, ...wrongWords].sort(() => 0.5 - Math.random());
 
         const grid = document.createElement('div');
-        grid.className = 'choice-selection-grid';
+        grid.className = 'selection-grid-cosmic';
 
         choices.forEach(c => {
-          const btn = document.createElement('button');
-          btn.className = 'choice-selection-btn';
+          const btn = document.createElement('div');
+          btn.className = 'selection-card-cosmic';
           btn.innerText = c;
 
           btn.onclick = () => {
@@ -881,7 +983,7 @@
     }
 
     // =========================================================
-    // 6. لعبة رتّب الآيات بالتسلسل الصحيح
+    // محرك لعبة: رتّب الآيات بالتسلسل الصحيح
     // =========================================================
     function launchArrangeVersesGame(ayahs) {
       stage.innerHTML = '';
@@ -902,7 +1004,7 @@
 
       shuffled.forEach(a => {
         const item = document.createElement('div');
-        item.className = 'choice-selection-btn';
+        item.className = 'selection-card-cosmic';
         item.innerText = a.text;
 
         item.onclick = () => {
