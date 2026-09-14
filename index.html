@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>سبورة أكاديمية الفتح لعلوم القرآن حفظ وتجويد وتفسير</title>
   <link rel="manifest" href="manifest.json">
   
@@ -19,14 +19,20 @@
       margin: 0;
       padding: 0;
       user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
     }
-    body {
+    html, body {
+      width: 100vw;
+      height: 100vh;
       overflow: hidden;
       background-color: #064e3b;
       font-family: 'Cairo', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       color: #d1d5db;
+      touch-action: none;
     }
 
+    /* الشريط الإعلاني العلوي المتحرك مع زر الإغلاق */
     .academy-marquee-banner {
       position: fixed;
       top: 0;
@@ -36,12 +42,19 @@
       background-size: 300% 300%;
       animation: bannerGradient 12s ease infinite;
       border-bottom: 2.5px solid #facc15;
-      padding: 6px 0;
+      padding: 5px 0;
       z-index: 1100;
       display: flex;
       align-items: center;
+      justify-content: space-between;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
-      overflow: hidden;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      pointer-events: auto;
+    }
+    .academy-marquee-banner.hidden-bar {
+      transform: translateY(-100%);
+      opacity: 0;
+      pointer-events: none !important;
     }
     @keyframes bannerGradient {
       0% { background-position: 0% 50%; }
@@ -53,10 +66,11 @@
       white-space: nowrap;
       animation: marqueeScroll 30s linear infinite;
       font-family: 'Cairo', sans-serif;
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 700;
       color: #fef08a;
       text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+      flex: 1;
     }
     .marquee-track:hover { animation-play-state: paused; }
     @keyframes marqueeScroll {
@@ -69,7 +83,7 @@
       padding: 2px 10px;
       border-radius: 12px;
       margin: 0 8px;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 800;
     }
     .whatsapp-marquee-link {
@@ -77,7 +91,7 @@
       text-decoration: none;
       background: rgba(34, 197, 94, 0.2);
       border: 1.5px solid #22c55e;
-      padding: 3px 12px;
+      padding: 2px 12px;
       border-radius: 20px;
       margin: 0 8px;
       display: inline-flex;
@@ -93,12 +107,23 @@
       box-shadow: 0 0 12px rgba(34, 197, 94, 0.8);
       transform: scale(1.05);
     }
+    .banner-close-btn {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: #fff;
+      font-weight: 900;
+      padding: 3px 10px;
+      margin-left: 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+    }
 
     #celebrationOverlay {
       position: fixed;
       top: 0; left: 0;
       width: 100vw; height: 100vh;
-      pointer-events: none;
+      pointer-events: none !important;
       z-index: 1500;
       overflow: hidden;
     }
@@ -106,6 +131,7 @@
       position: absolute;
       font-size: 34px;
       animation: floatUp 2.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+      pointer-events: none !important;
     }
     @keyframes floatUp {
       0% { transform: translateY(100vh) scale(0.6) rotate(0deg); opacity: 0; }
@@ -114,20 +140,46 @@
       100% { transform: translateY(-15vh) scale(1.4) rotate(360deg); opacity: 0; }
     }
 
+    /* مسرح التحجيم الكلي للسبورة والبروجيكتور */
     #boardStage {
       position: absolute;
       top: 0; left: 0;
       width: 100vw; height: 100vh;
       transform-origin: 50% 50%;
       transition: transform 0.15s ease-out;
+      pointer-events: none;
     }
 
-    /* صناديق النصوص الحرة */
+    /* طبقات الكانفاس */
+    #gridCanvas { position: absolute; top: 0; left: 0; pointer-events: none !important; z-index: 1; }
+    #pdfCanvas { position: absolute; top: 0; left: 0; pointer-events: none !important; z-index: 2; }
+    #paintCanvas { 
+      position: absolute; 
+      top: 0; left: 0; 
+      width: 100vw; 
+      height: 100vh; 
+      cursor: crosshair; 
+      touch-action: none; 
+      pointer-events: auto !important; 
+      z-index: 3; 
+    }
+    #overlayCanvas { position: absolute; top: 0; left: 0; pointer-events: none !important; z-index: 4; }
+
+    /* حاوية الصناديق الحرة */
+    #textWidgetsContainer {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      pointer-events: none !important;
+      z-index: 150;
+    }
+
+    /* الصناديق النصية الحرة والتحكم المستقل بأبعادها */
     .custom-textbox-widget {
       position: absolute;
-      z-index: 150;
-      min-width: 260px;
-      min-height: 160px;
+      pointer-events: auto !important;
+      min-width: 250px;
+      min-height: 150px;
       width: 380px;
       height: 220px;
       background: rgba(15, 23, 42, 0.96);
@@ -137,7 +189,6 @@
       direction: rtl;
       display: flex;
       flex-direction: column;
-      resize: both;
       overflow: hidden;
     }
     .widget-drag-bar {
@@ -149,6 +200,7 @@
       cursor: grab;
       border-bottom: 1px solid rgba(255,255,255,0.1);
       flex-shrink: 0;
+      touch-action: none;
     }
     .widget-drag-bar:active { cursor: grabbing; }
     .widget-drag-label {
@@ -163,7 +215,7 @@
       display: flex;
       align-items: center;
       flex-wrap: wrap;
-      gap: 5px;
+      gap: 4px;
       padding: 6px 10px;
       background: rgba(30, 41, 59, 0.9);
       border-bottom: 1px solid rgba(255,255,255,0.08);
@@ -205,6 +257,7 @@
       font-family: 'Traditional Arabic', 'Scheherazade New', 'Amiri', serif;
       direction: rtl;
       user-select: text;
+      -webkit-user-select: text;
       resize: none;
     }
     .w-del-btn {
@@ -216,40 +269,58 @@
       padding: 0 4px;
     }
     .w-del-btn:hover { color: #ef4444; }
+
+    /* مقابض التحجيم الحرة للمربعات النصية (عرض، طول، زاوية) */
+    .resizer-w {
+      position: absolute;
+      top: 0; left: 0;
+      width: 8px; height: 100%;
+      cursor: w-resize;
+      background: transparent;
+      touch-action: none;
+      z-index: 5;
+    }
+    .resizer-h {
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 100%; height: 8px;
+      cursor: s-resize;
+      background: transparent;
+      touch-action: none;
+      z-index: 5;
+    }
     .resize-handle-corner {
       position: absolute;
-      bottom: 2px;
-      left: 2px;
-      width: 16px;
-      height: 16px;
+      bottom: 0; left: 0;
+      width: 18px; height: 18px;
       cursor: sw-resize;
       background: linear-gradient(135deg, transparent 50%, #38bdf8 50%);
       border-bottom-left-radius: 8px;
-      pointer-events: auto;
+      touch-action: none;
+      z-index: 6;
     }
 
-    /* صندوق المصحف التفاعلي المطور */
+    /* صندوق المصحف المطور والقابل للتحكم الحر في العرض والطول */
     #quranTextContainer {
       position: absolute;
-      top: 16%;
-      left: 18%;
-      z-index: 150;
+      top: 15%;
+      left: 16%;
+      z-index: 160;
       display: none;
-      min-width: 480px;
-      min-height: 280px;
+      pointer-events: auto !important;
+      min-width: 320px;
+      min-height: 220px;
       width: 68vw;
-      max-width: 1020px;
-      height: 74vh;
+      max-width: 1040px;
+      height: 72vh;
       background: rgba(15, 23, 42, 0.98);
       backdrop-filter: blur(14px);
       border: 2px solid #d97706;
       border-radius: 18px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.85), 0 0 25px rgba(217, 119, 6, 0.3);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.85);
       direction: rtl;
-      cursor: default;
-      resize: both;
-      overflow: hidden;
       flex-direction: column;
+      overflow: hidden;
     }
     .drag-header {
       background: linear-gradient(90deg, #1e293b, #0f172a);
@@ -261,6 +332,7 @@
       align-items: center;
       justify-content: space-between;
       cursor: grab;
+      touch-action: none;
       flex-shrink: 0;
     }
     .drag-header:active { cursor: grabbing; }
@@ -284,14 +356,13 @@
     }
     .card-close-btn:hover { background: #dc2626; color: #fff; }
 
-    /* الهيكل التفاعلي المقسم إلى شريط جانبي ومنطقة قراءة */
     .quran-interactive-layout {
       flex: 1;
       display: flex;
       overflow: hidden;
     }
     .ayah-sidebar-nav {
-      width: 220px;
+      width: 210px;
       background: rgba(15, 23, 42, 0.94);
       border-left: 1.5px solid rgba(255, 255, 255, 0.1);
       display: flex;
@@ -357,16 +428,35 @@
       overflow-y: auto;
       text-align: center;
     }
+
+    /* مقابض التحجيم الحرة لصندوق المصحف الشريف (عرضاً وطولاً) */
+    .quran-resize-edge-w {
+      position: absolute;
+      top: 0; left: 0;
+      width: 10px; height: 100%;
+      cursor: w-resize;
+      background: transparent;
+      touch-action: none;
+      z-index: 10;
+    }
+    .quran-resize-edge-h {
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 100%; height: 10px;
+      cursor: s-resize;
+      background: transparent;
+      touch-action: none;
+      z-index: 10;
+    }
     .quran-resize-corner {
       position: absolute;
-      bottom: 2px;
-      left: 2px;
-      width: 18px;
-      height: 18px;
+      bottom: 0; left: 0;
+      width: 22px; height: 22px;
       cursor: sw-resize;
       background: linear-gradient(135deg, transparent 50%, #f59e0b 50%);
       border-bottom-left-radius: 12px;
-      pointer-events: auto;
+      touch-action: none;
+      z-index: 11;
     }
 
     .audio-toolbar {
@@ -376,41 +466,39 @@
       background: rgba(30, 41, 59, 0.95);
       border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 14px;
-      padding: 10px 14px;
-      margin-bottom: 14px;
+      padding: 8px 12px;
+      margin-bottom: 12px;
     }
     .toolbar-row {
       display: flex;
       align-items: center;
       justify-content: center;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 6px;
     }
     .audio-btn {
       background: #0284c7;
       border: 1px solid #38bdf8;
       color: #fff;
-      padding: 5px 12px;
+      padding: 4px 10px;
       border-radius: 8px;
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: bold;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
       transition: background 0.15s;
     }
     .audio-btn:hover { background: #0369a1; }
     .audio-btn.download-btn { background: #059669; border-color: #34d399; }
-    .audio-btn.download-btn:hover { background: #047857; }
     .audio-btn.sec-btn { background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.15); }
-    .audio-btn.sec-btn:hover { background: rgba(255, 255, 255, 0.18); }
 
     .audio-select {
       background: #0b111e;
       border: 1px solid rgba(255,255,255,0.2);
       color: #e2e8f0;
-      padding: 5px 8px;
+      padding: 4px 6px;
       border-radius: 6px;
       font-size: 11px;
       outline: none;
@@ -419,16 +507,16 @@
     .interval-box {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       background: rgba(15, 23, 42, 0.6);
       border: 1px solid rgba(245, 158, 11, 0.3);
-      padding: 4px 12px;
-      border-radius: 20px;
+      padding: 3px 10px;
+      border-radius: 16px;
       font-size: 11px;
       color: #fbbf24;
     }
     .interval-slider {
-      width: 85px;
+      width: 75px;
       accent-color: #f59e0b;
       cursor: pointer;
       height: 4px;
@@ -440,7 +528,6 @@
       border-radius: 4px;
       overflow: hidden;
       display: none;
-      margin-top: 4px;
     }
     .countdown-bar-fill {
       height: 100%;
@@ -453,12 +540,11 @@
       display: inline-block;
       background: linear-gradient(135deg, #d97706, #78350f);
       color: #ffffff;
-      font-size: 15px;
+      font-size: 14px;
       font-weight: bold;
-      padding: 5px 22px;
-      border-radius: 30px;
-      margin-bottom: 14px;
-      border: 1px solid #fef3c7;
+      padding: 4px 20px;
+      border-radius: 24px;
+      margin-bottom: 12px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     }
     #quranTextContent {
@@ -467,36 +553,32 @@
       letter-spacing: 0.6px;
       transition: filter 0.3s ease;
       user-select: text;
+      -webkit-user-select: text;
     }
     #quranTextContent.blurred-text {
       filter: blur(8px);
       user-select: none;
     }
-
-    /* تمييز الآية النشطة وتفعيل تفاعلها عند النقر واللمس */
     .ayah-span {
       display: inline;
-      padding: 3px 8px;
-      border-radius: 8px;
+      padding: 2px 6px;
+      border-radius: 6px;
       cursor: pointer;
       transition: all 0.2s ease;
     }
     .ayah-span:hover {
       background: rgba(56, 189, 248, 0.18);
-      box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
     }
     .ayah-span.active-highlight {
       background: rgba(250, 204, 21, 0.25);
-      box-shadow: 0 0 18px rgba(250, 204, 21, 0.55);
+      box-shadow: 0 0 16px rgba(250, 204, 21, 0.5);
       border-bottom: 2.5px solid #facc15;
       color: #ffffff !important;
-      text-shadow: 0 0 8px rgba(250, 204, 21, 0.8);
     }
 
     #mushafContainer {
       position: absolute;
-      top: 50%;
-      left: 50%;
+      top: 50%; left: 50%;
       transform: translate(-50%, -50%);
       z-index: 2;
       display: none;
@@ -505,21 +587,16 @@
       overflow: hidden;
       background: #ffffff;
       border: 2px solid #b45309;
+      pointer-events: none;
     }
     #mushafImg {
       display: block;
       max-height: 88vh;
       max-width: 52vw;
       object-fit: contain;
-      pointer-events: none;
     }
 
-    /* طبقات الكانفاس */
-    #gridCanvas { position: absolute; top: 0; left: 0; pointer-events: none; z-index: 1; }
-    #pdfCanvas { position: absolute; top: 0; left: 0; pointer-events: none; z-index: 2; }
-    #paintCanvas { position: absolute; top: 0; left: 0; cursor: crosshair; touch-action: none; z-index: 3; }
-    #overlayCanvas { position: absolute; top: 0; left: 0; pointer-events: none; z-index: 4; }
-
+    /* اللوحات العائمة */
     .panel {
       position: fixed;
       background: rgba(18, 24, 38, 0.94);
@@ -530,142 +607,141 @@
       box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
       z-index: 1000;
       transition: transform 0.3s ease, opacity 0.3s ease;
+      pointer-events: auto !important;
     }
-   .top-bar {
-  top: 42px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 6px 12px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  max-width: 98vw;
-  overflow-x: auto;
-}
+
+    /* الشريط العلوي المنظم الخالي من التكرار */
+    .top-bar {
+      top: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 5px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      max-width: 96vw;
+    }
+    .top-bar.hidden-bar {
+      transform: translate(-50%, -130%);
+      opacity: 0;
+      pointer-events: none !important;
+    }
+
+    /* زر وضع السبورة الخالصة للشرح */
+    .btn-focus-mode {
+      background: linear-gradient(135deg, #e11d48, #be123c);
+      color: #fff;
+      border: 1.5px solid #fb7185;
+      border-radius: 8px;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 900;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      box-shadow: 0 0 10px rgba(225, 29, 72, 0.4);
+    }
+    .btn-focus-mode:hover { background: #f43f5e; transform: scale(1.04); }
+
     .btn-applause-main {
       background: linear-gradient(135deg, #16a34a, #15803d);
       color: #ffffff;
       border: 1.5px solid #4ade80;
-      border-radius: 10px;
-      padding: 6px 14px;
-      font-size: 13px;
+      border-radius: 8px;
+      padding: 5px 12px;
+      font-size: 12px;
       font-weight: 800;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 6px;
-      box-shadow: 0 0 14px rgba(34, 197, 94, 0.4);
-      transition: all 0.2s;
+      gap: 5px;
+      box-shadow: 0 0 12px rgba(34, 197, 94, 0.4);
     }
-    .btn-applause-main:hover {
-      background: #22c55e;
-      transform: scale(1.05);
-      box-shadow: 0 0 20px rgba(34, 197, 94, 0.7);
-    }
-    .btn-applause-main:active { transform: scale(0.95); }
+    .btn-applause-main:hover { background: #22c55e; transform: scale(1.04); }
 
     .scale-control-box {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
       background: #0f172a;
       border: 1.5px solid #0284c7;
-      border-radius: 10px;
-      padding: 3px 8px;
-      box-shadow: 0 0 12px rgba(2, 132, 199, 0.3);
+      border-radius: 8px;
+      padding: 2px 6px;
     }
     .scale-btn {
       background: #1e293b;
       border: 1px solid #38bdf8;
       color: #fff;
       font-weight: 900;
-      width: 26px;
-      height: 26px;
+      width: 24px; height: 24px;
       border-radius: 6px;
       cursor: pointer;
-      font-size: 15px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.15s;
+      font-size: 14px;
     }
-    .scale-btn:hover { background: #0284c7; }
     .scale-text {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 800;
       color: #38bdf8;
-      min-width: 48px;
+      min-width: 42px;
       text-align: center;
-      cursor: pointer;
-      padding: 2px 4px;
-      border-radius: 4px;
     }
-    .scale-text:hover { background: rgba(56, 189, 248, 0.15); }
-
     .praise-dock {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 3px;
       background: rgba(255, 255, 255, 0.06);
-      padding: 3px 6px;
-      border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 2px 5px;
+      border-radius: 8px;
     }
     .praise-btn {
       background: transparent;
       border: none;
-      font-size: 18px;
+      font-size: 16px;
       cursor: pointer;
-      padding: 3px 6px;
+      padding: 2px 4px;
       border-radius: 6px;
-      transition: transform 0.15s, background 0.15s;
     }
-    .praise-btn:hover {
-      transform: scale(1.25);
-      background: rgba(255, 255, 255, 0.15);
-    }
-
     .btn-meet {
       background: #1a73e8;
       color: #fff;
       border: 1px solid #4285f4;
       border-radius: 8px;
-      padding: 6px 12px;
-      font-size: 12px;
+      padding: 5px 10px;
+      font-size: 11.5px;
       font-weight: bold;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 6px;
-      transition: background 0.2s;
+      gap: 5px;
     }
-    .btn-meet:hover { background: #1557b0; }
 
+    /* اللوحات الجانبية */
     .side-left {
-      top: 42px;
-      left: 14px;
-      width: 240px;
-      max-height: 92vh;
+      top: 40px;
+      left: 10px;
+      width: 230px;
+      max-height: 90vh;
       overflow-y: auto;
-      padding: 14px;
+      padding: 12px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
     }
     .side-right {
-      top: 42px;
-      right: 14px;
+      top: 40px;
+      right: 10px;
       width: 220px;
-      max-height: 92vh;
+      max-height: 90vh;
       overflow-y: auto;
-      padding: 14px;
+      padding: 12px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
     }
-    .panel.closed-left { transform: translateX(-280px); opacity: 0; pointer-events: none; }
-    .panel.closed-right { transform: translateX(260px); opacity: 0; pointer-events: none; }
+    .panel.closed-left { transform: translateX(-270px); opacity: 0; pointer-events: none !important; }
+    .panel.closed-right { transform: translateX(250px); opacity: 0; pointer-events: none !important; }
 
     .academy-badge-sub {
       font-size: 11px;
@@ -683,47 +759,40 @@
       align-items: center;
       justify-content: space-between;
       border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-      padding-bottom: 8px;
+      padding-bottom: 6px;
       font-size: 12px;
       font-weight: 700;
       color: #93c5fd;
-      line-height: 1.4;
     }
     .close-btn {
       background: transparent;
       border: none;
       color: #9ca3af;
       cursor: pointer;
-      font-size: 15px;
+      font-size: 14px;
       padding: 2px 6px;
       border-radius: 4px;
     }
-    .close-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
-
     .section-label {
       font-size: 11px;
       font-weight: 600;
       color: #9ca3af;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
     .color-palette {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      gap: 6px;
+      gap: 5px;
     }
     .palette-dot {
-      width: 28px;
-      height: 28px;
+      width: 26px; height: 26px;
       border-radius: 50%;
       border: 2px solid transparent;
       cursor: pointer;
-      transition: transform 0.15s, border-color 0.15s;
     }
-    .palette-dot:hover { transform: scale(1.15); }
-    .palette-dot.active { border-color: #fff; transform: scale(1.15); }
-
-    .btn-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    .palette-dot.active { border-color: #fff; transform: scale(1.1); }
     .btn-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+    .btn-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
 
     .side-btn {
       background: rgba(255, 255, 255, 0.05);
@@ -734,66 +803,97 @@
       font-size: 11px;
       cursor: pointer;
       text-align: center;
-      transition: all 0.2s;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 5px;
     }
-    .side-btn:hover { background: rgba(255, 255, 255, 0.12); }
     .side-btn.active { background: #2563eb; border-color: #3b82f6; color: #fff; }
-    .btn-green-spec { background: #059669; border-color: #10b981; color: #fff; font-weight: 600; }
+    .btn-green-spec { background: #059669; border-color: #10b981; color: #fff; font-weight: bold; }
 
     .slider-group { display: flex; flex-direction: column; gap: 2px; }
     .slider-info { display: flex; justify-content: space-between; font-size: 10px; color: #9ca3af; }
     input[type="range"] { width: 100%; accent-color: #38bdf8; cursor: pointer; height: 4px; }
 
+    /* شريط الأدوات السفلي */
     .bottom-dock {
-      bottom: 16px;
+      bottom: 12px;
       left: 50%;
       transform: translateX(-50%);
-      padding: 8px 14px;
+      padding: 6px 12px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 5px;
       z-index: 1000;
     }
-    .dock-row { display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .bottom-dock.hidden-bar {
+      transform: translate(-50%, 160%);
+      opacity: 0;
+      pointer-events: none !important;
+    }
+    .dock-row { display: flex; align-items: center; justify-content: center; gap: 6px; }
     .dock-btn {
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
+      width: 36px; height: 36px;
+      border-radius: 8px;
       background: rgba(255, 255, 255, 0.06);
       border: 1px solid rgba(255, 255, 255, 0.08);
       color: #e5e7eb;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 15px;
+      font-size: 14px;
       cursor: pointer;
-      transition: all 0.15s ease;
     }
-    .dock-btn:hover { background: rgba(255, 255, 255, 0.15); transform: translateY(-2px); }
     .dock-btn.active {
       background: #0284c7;
       border-color: #38bdf8;
       color: #fff;
-      box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
     }
-    .dock-btn.btn-sq-color { border-radius: 8px; }
 
-    /* النافذة المنبثقة */
+    /* أزرار الإظهار عند الطي */
+    .toggle-panel-btn {
+      position: fixed;
+      z-index: 999;
+      background: rgba(18, 24, 38, 0.88);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #fff;
+      padding: 5px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: none;
+      font-size: 11.5px;
+      font-weight: bold;
+    }
+    #toggleLeftBtn { top: 40px; left: 10px; }
+    #toggleRightBtn { top: 40px; right: 10px; }
+    #toggleTopBtn { top: 8px; left: 50%; transform: translateX(-50%); }
+    #restoreAllBtn {
+      position: fixed;
+      bottom: 12px; right: 12px;
+      z-index: 2500;
+      display: none;
+      background: #0284c7;
+      border: 2px solid #38bdf8;
+      color: #fff;
+      font-weight: 900;
+      padding: 8px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+    }
+
+    /* النافذة المنبثقة للقرآن */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0;
       width: 100vw; height: 100vh;
       background: rgba(0, 0, 0, 0.75);
       backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
       display: none;
       align-items: center;
       justify-content: center;
       z-index: 2000;
+      pointer-events: auto !important;
     }
     .modal-overlay.active { display: flex; }
     .quran-modal {
@@ -803,7 +903,6 @@
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 20px;
       padding: 22px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
       display: flex;
       flex-direction: column;
       gap: 14px;
@@ -811,21 +910,6 @@
     }
     .modal-header { display: flex; justify-content: space-between; align-items: center; }
     .modal-title { color: #14b8a6; font-size: 16px; font-weight: bold; display: flex; align-items: center; gap: 8px; }
-    .modal-close {
-      background: #1e293b;
-      border: none;
-      color: #94a3b8;
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 13px;
-    }
-    .modal-close:hover { background: #334155; color: #fff; }
-
     .tabs-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .tab-btn {
       background: #1e293b;
@@ -836,25 +920,13 @@
       font-size: 12px;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s;
     }
     .tab-btn.active {
       background: #0f172a;
       color: #38bdf8;
       border-color: #0284c7;
     }
-
-    .custom-select {
-      width: 100%;
-      background: #0b111e;
-      color: #e2e8f0;
-      border: 1px solid #1e293b;
-      border-radius: 8px;
-      padding: 9px;
-      font-size: 13px;
-      outline: none;
-    }
-    .quran-field {
+    .custom-select, .quran-field {
       width: 100%;
       background: #0b111e;
       border: 1px solid #1e293b;
@@ -863,25 +935,15 @@
       color: #fff;
       font-size: 13px;
       outline: none;
-      text-align: center;
     }
-    .quran-color-picker {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 6px;
-    }
+    .quran-color-picker { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
     .quran-color-dot {
-      width: 26px;
-      height: 26px;
+      width: 26px; height: 26px;
       border-radius: 50%;
       cursor: pointer;
       border: 2px solid transparent;
-      transition: transform 0.15s;
     }
-    .quran-color-dot:hover { transform: scale(1.15); }
-    .quran-color-dot.active { border-color: #fff; transform: scale(1.15); }
-
+    .quran-color-dot.active { border-color: #fff; }
     .modal-footer { display: flex; flex-direction: column; gap: 8px; margin-top: 6px; }
     .modal-footer-btns { display: flex; gap: 10px; }
     .btn-modal-cancel {
@@ -910,8 +972,6 @@
       justify-content: center;
       gap: 6px;
     }
-    .btn-modal-submit:hover { background: #0f766e; }
-
     .btn-offline-sync {
       background: rgba(245, 158, 11, 0.15);
       border: 1px dashed #f59e0b;
@@ -922,49 +982,40 @@
       font-weight: bold;
       cursor: pointer;
       text-align: center;
-      transition: all 0.2s;
     }
-    .btn-offline-sync:hover { background: #f59e0b; color: #1e1b4b; }
-
-    .toggle-panel-btn {
-      position: fixed;
-      top: 42px;
-      z-index: 999;
-      background: rgba(18, 24, 38, 0.85);
-      border: 1px solid rgba(255,255,255,0.1);
-      color: #fff;
-      padding: 6px 10px;
-      border-radius: 8px;
-      cursor: pointer;
-      display: none;
-      font-size: 12px;
-    }
-    #toggleLeftBtn { left: 14px; }
-    #toggleRightBtn { right: 14px; }
   </style>
 </head>
 <body>
 
-  <div class="academy-marquee-banner">
+  <!-- البنر الإعلاني مع زر الإغلاق المباشر -->
+  <div class="academy-marquee-banner" id="topBanner">
     <div class="marquee-track">
-      🌟 مرحباً بكم في سبورة <span style="color:#ffffff; font-weight:900; font-size:16px;">أكاديمية الفتح لعلوم القرآن الكريم</span> 
+      🌟 مرحباً بكم في سبورة <span style="color:#ffffff; font-weight:900; font-size:15px;">أكاديمية الفتح لعلوم القرآن الكريم</span> 
       <span class="badge-sparkle">حفظ وتجويد وتفسير</span> 
-      تحت إشراف <span style="color:#38bdf8;">نخبة متميزة من أكفأ المعلمات المتخصصات </span>    🌸 
+      تحت إشراف <span style="color:#38bdf8;">نخبة متميزة من أكفأ المعلمات المتخصصات </span> 🌸 
       للتسجيل والتواصل المباشر عبر واتساب: 
       <a href="https://wa.me/201116845186" target="_blank" class="whatsapp-marquee-link" title="اضغط للتواصل المباشر عبر واتساب">
-        <span>💬</span>
-        <span>00201116845186</span>
-      </a> 
-      نسأل الله تعالى التوفيق والسداد لجميع أبنائنا وبناتنا الطلاب والطالبات 🌿
+        <span>💬</span><span>00201116845186</span>
+      </a> 🌿
     </div>
+    <button class="banner-close-btn" id="closeBannerBtn" title="إغلاق هذا الشريط">✕ إخفاء</button>
   </div>
 
   <div id="celebrationOverlay"></div>
 
+  <!-- أزرار الإظهار عند طي الأشرطة -->
   <button class="toggle-panel-btn" id="toggleLeftBtn">☰ سبورة الأكاديمية</button>
   <button class="toggle-panel-btn" id="toggleRightBtn">☰ أدوات الرسم</button>
+  <button class="toggle-panel-btn" id="toggleTopBtn">☰ إظهار شريط التحكم العلوي</button>
+  <button id="restoreAllBtn">👁️ استعادة كافة الأشرطة والقوائم</button>
 
-  <div class="panel top-bar">
+  <!-- شريط التحكم العلوي المنظم الخالي من الأزرار المكررة -->
+  <div class="panel top-bar" id="topBarPanel">
+    <button class="btn-focus-mode" id="btnFocusMode" title="إخفاء جميع الواجهات وتحويل الشاشة لسبورة رسم خالصة">
+      <span>🖥️</span>
+      <span>سبورة كاملة للشرح</span>
+    </button>
+
     <button class="btn-applause-main" id="btnApplauseMain" title="تشجيع حار للطلاب بصوت السقفة والمفرقعات">
       <span>👏</span>
       <span>سقفة وتشجيع</span>
@@ -986,39 +1037,31 @@
       <span>📹</span>
       <span>Google Meet</span>
     </button>
-<a href="tajweed.html" target="_blank" style="background: linear-gradient(135deg, #059669, #047857); color: #ffffff; border: 1.5px solid #34d399; border-radius: 8px; padding: 6px 12px; font-size: 12px; font-weight: bold; text-decoration: none; display: flex; align-items: center; gap: 6px; box-shadow: 0 0 10px rgba(5, 150, 105, 0.4);">
-  <span>📜</span>
-  <span>أحكام التجويد وتمارين جزء عم</span>
-</a>
-    <a href="quiz.html" target="_blank" style="background: linear-gradient(135deg, #d97706, #b45309); color: #ffffff; border: 1.5px solid #facc15; border-radius: 8px; padding: 6px 12px; font-size: 12px; font-weight: bold; text-decoration: none; display: flex; align-items: center; gap: 6px; box-shadow: 0 0 10px rgba(217, 119, 6, 0.4);">
-      <span>🎮</span>
-      <span>ألعاب واختبارات جزء عم</span>
-    </a>
     
     <button class="side-btn" id="fullScreenBtn" style="padding:4px 8px;">⛶ ملء الشاشة</button>
+    <button class="close-btn" id="hideTopBarBtn" title="طي هذا الشريط للأعلى">▲</button>
   </div>
 
+  <!-- مسرح السبورة (محمي تماماً من حجب اللمس) -->
   <div id="boardStage">
     <div id="textWidgetsContainer"></div>
 
-    <!-- صندوق المصحف المطور ذو الشريط الجانبي واللمس المباشر -->
+    <!-- صندوق المصحف المطور والقابل للتحكم الحر في العرض والطول باللمس والماوس -->
     <div id="quranTextContainer">
       <div class="drag-header" id="dragHeader">
         <div class="drag-title">
-          <span>✥</span>
-          <span>مصحف الشرح — المس أو انقر على أي آية للانتقال المباشر وتلاوتها</span>
+          <span>📖</span>
+          <span>مصحف الشرح — المس أو انقر على أي آية للانتقال المباشر وتلاوتها (اسحب الأطراف لتغيير المقاس)</span>
         </div>
         <button class="card-close-btn" id="closeQuranCardBtn" title="إغلاق اللوحة">✕</button>
       </div>
 
       <div class="quran-interactive-layout">
-        <!-- شريط الفهرس الجانبي السريع للآيات -->
         <div class="ayah-sidebar-nav">
           <div class="sidebar-header-title">فهرس آيات السورة 📑</div>
           <div class="sidebar-ayah-list" id="sidebarAyahList"></div>
         </div>
 
-        <!-- الساحة الرئيسية لقراءة الآيات والتحكم بالتلاوة -->
         <div class="card-body-main">
           <div class="audio-toolbar">
             <div class="toolbar-row">
@@ -1069,19 +1112,24 @@
         </div>
       </div>
 
-      <div class="quran-resize-corner" id="quranResizeCorner" title="اسحب لتكبير أو تصغير حجم صندوق المصحف"></div>
+      <!-- مقابض التحجيم الحرة لصندوق المصحف: تحكم بالعرض وحده، وبالطول وحده، وبالزاوية معاً -->
+      <div class="quran-resize-edge-w" id="quranResizeW" title="اسحب يميناً ويساراً للتحكم في العرض فقط"></div>
+      <div class="quran-resize-edge-h" id="quranResizeH" title="اسحب لأعلى ولأسفل للتحكم في الطول فقط"></div>
+      <div class="quran-resize-corner" id="quranResizeCorner" title="اسحب لتكبير وتصغير الطول والعرض معاً"></div>
     </div>
 
     <div id="mushafContainer">
       <img id="mushafImg" src="" alt="صفحة المصحف الشريف" crossorigin="anonymous" referrerpolicy="no-referrer">
     </div>
 
+    <!-- طبقات الكانفاس -->
     <canvas id="gridCanvas"></canvas>
     <canvas id="pdfCanvas"></canvas>
     <canvas id="paintCanvas"></canvas>
     <canvas id="overlayCanvas"></canvas>
   </div>
 
+  <!-- اللوحة الجانبية اليسرى -->
   <div class="panel side-left" id="leftPanel">
     <div class="panel-header">
       <span>أكاديمية الفتح لعلوم القرآن</span>
@@ -1123,6 +1171,7 @@
     <button class="side-btn" id="clearBoardBtn" style="color:#f87171;">🗑️ مسح لوحة الشرح</button>
   </div>
 
+  <!-- اللوحة الجانبية اليمنى (تحتوي على روابط التجويد والاختبارات المعتمدة دون أي تكرار) -->
   <div class="panel side-right" id="rightPanel">
     <div class="panel-header">
       <button class="side-btn" id="undoBtn" style="padding:2px 8px;">↩️ التراجع</button>
@@ -1159,22 +1208,23 @@
       <button class="side-btn" id="uploadPdfBtn">📑 شرح PDF</button>
       <button class="side-btn" id="uploadImgBtn">🖼️ إدراج صورة</button>
     </div>
-   
-    <button class="side-btn btn-green-spec" id="openQuranBtn">📖 آيات القرآن</button>
+    
+    <button class="side-btn btn-green-spec" id="openQuranBtn" style="margin-top:4px;">📖 آيات القرآن</button>
+    
+    <!-- النسخة المعتمدة والمفردة لأحكام التجويد وألعاب جزء عم -->
     <a href="tajweed.html" target="_blank" class="side-btn" style="background:#059669; color:#fff; font-weight:bold; text-decoration:none; margin-top:4px;">
       📜 أحكام التجويد وتمارين جزء عم
     </a>
-    <a href="quran-games.html" class="side-btn" target="_blank" style="background:#d97706; color:#fff; font-weight:bold; text-decoration:none; margin-top:6px;">
+    <a href="quiz.html" target="_blank" class="side-btn" style="background:#d97706; color:#fff; font-weight:bold; text-decoration:none; margin-top:4px;">
       🎮 ألعاب واختبارات جزء عم
     </a>
-    <a href="quran-games.html" class="side-btn" target="_blank" style="background:#d97706; color:#fff; font-weight:bold; text-decoration:none; margin-top:6px;">
-      🎮 ألعاب واختبارات جزء عم
-    </a>
+
     <input type="file" id="pdfInput" accept="application/pdf" style="display:none;">
     <input type="file" id="imageInput" accept="image/*" style="display:none;">
   </div>
 
-  <div class="panel bottom-dock">
+  <!-- شريط الأدوات السفلي -->
+  <div class="panel bottom-dock" id="bottomDockPanel">
     <div class="dock-row">
       <button class="dock-btn" id="redoBtn" title="إعادة">↪️</button>
       <button class="dock-btn" data-tool="hand" title="تحريك وسحب السبورة">✋</button>
@@ -1197,6 +1247,7 @@
       <button class="dock-btn btn-sq-color" style="background:#eab308;" data-color="#eab308"></button>
       <button class="dock-btn btn-sq-color" style="background:#ef4444;" data-color="#ef4444"></button>
       <button class="dock-btn" title="حفظ سريع" id="quickSaveBtn">💾</button>
+      <button class="dock-btn" id="hideBottomDockBtn" title="طي شريط الأدوات للأسفل">▼</button>
     </div>
   </div>
 
@@ -1292,7 +1343,6 @@
     const surahBadgeTitle = document.getElementById('surahBadgeTitle');
     const dragHeader = document.getElementById('dragHeader');
     const closeQuranCardBtn = document.getElementById('closeQuranCardBtn');
-    const quranResizeCorner = document.getElementById('quranResizeCorner');
     const textWidgetsContainer = document.getElementById('textWidgetsContainer');
 
     let currentGrid = 'two-lines';
@@ -1331,56 +1381,191 @@
     btnZoomOut.onclick = () => applyBoardScale(currentScale - 0.1);
     scaleIndicator.onclick = () => applyBoardScale(1.0);
 
-    // تحريك وتحجيم صندوق المصحف
-    let isDraggingQuranCard = false;
-    let quranCardOffsetX = 0, quranCardOffsetY = 0;
+    // ========================================================
+    // إدارة الواجهات: طي الأشرطة ووضع "السبورة الكاملة للشرح"
+    // ========================================================
+    const topBanner = document.getElementById('topBanner');
+    const topBarPanel = document.getElementById('topBarPanel');
+    const leftPanel = document.getElementById('leftPanel');
+    const rightPanel = document.getElementById('rightPanel');
+    const bottomDockPanel = document.getElementById('bottomDockPanel');
 
-    dragHeader.addEventListener('mousedown', (e) => {
-      isDraggingQuranCard = true;
+    const toggleLeftBtn = document.getElementById('toggleLeftBtn');
+    const toggleRightBtn = document.getElementById('toggleRightBtn');
+    const toggleTopBtn = document.getElementById('toggleTopBtn');
+    const restoreAllBtn = document.getElementById('restoreAllBtn');
+
+    // إخفاء البنر العلوي
+    document.getElementById('closeBannerBtn').onclick = () => {
+      topBanner.classList.add('hidden-bar');
+      topBarPanel.style.top = '10px';
+    };
+
+    // طي الشريط العلوي
+    document.getElementById('hideTopBarBtn').onclick = () => {
+      topBarPanel.classList.add('hidden-bar');
+      toggleTopBtn.style.display = 'block';
+    };
+    toggleTopBtn.onclick = () => {
+      topBarPanel.classList.remove('hidden-bar');
+      toggleTopBtn.style.display = 'none';
+    };
+
+    // طي اللوحة اليسرى
+    document.getElementById('closeLeftBtn').onclick = () => {
+      leftPanel.classList.add('closed-left');
+      toggleLeftBtn.style.display = 'block';
+    };
+    toggleLeftBtn.onclick = () => {
+      leftPanel.classList.remove('closed-left');
+      toggleLeftBtn.style.display = 'none';
+    };
+
+    // طي اللوحة اليمنى
+    document.getElementById('closeRightBtn').onclick = () => {
+      rightPanel.classList.add('closed-right');
+      toggleRightBtn.style.display = 'block';
+    };
+    toggleRightBtn.onclick = () => {
+      rightPanel.classList.remove('closed-right');
+      toggleRightBtn.style.display = 'none';
+    };
+
+    // طي شريط الأدوات السفلي
+    document.getElementById('hideBottomDockBtn').onclick = () => {
+      bottomDockPanel.classList.add('hidden-bar');
+      restoreAllBtn.style.display = 'block';
+    };
+
+    // زر وضع السبورة الخالصة للشرح (إخفاء كل شيء بضغطة واحدة)
+    document.getElementById('btnFocusMode').onclick = () => {
+      topBanner.classList.add('hidden-bar');
+      topBarPanel.classList.add('hidden-bar');
+      leftPanel.classList.add('closed-left');
+      rightPanel.classList.add('closed-right');
+      bottomDockPanel.classList.add('hidden-bar');
+      toggleLeftBtn.style.display = 'none';
+      toggleRightBtn.style.display = 'none';
+      toggleTopBtn.style.display = 'none';
+      restoreAllBtn.style.display = 'block';
+    };
+
+    // زر استعادة كافة الواجهات
+    restoreAllBtn.onclick = () => {
+      topBanner.classList.remove('hidden-bar');
+      topBarPanel.classList.remove('hidden-bar');
+      topBarPanel.style.top = '36px';
+      leftPanel.classList.remove('closed-left');
+      rightPanel.classList.remove('closed-right');
+      bottomDockPanel.classList.remove('hidden-bar');
+      toggleLeftBtn.style.display = 'none';
+      toggleRightBtn.style.display = 'none';
+      toggleTopBtn.style.display = 'none';
+      restoreAllBtn.style.display = 'none';
+    };
+
+    // ========================================================
+    // تحريك وتحجيم صندوق المصحف (طولاً وعرضاً بحرية تامة)
+    // ========================================================
+    const quranResizeW = document.getElementById('quranResizeW');
+    const quranResizeH = document.getElementById('quranResizeH');
+    const quranResizeCorner = document.getElementById('quranResizeCorner');
+
+    let isDraggingQuran = false;
+    let isResizingQW = false, isResizingQH = false, isResizingQBoth = false;
+    let qStartX = 0, qStartY = 0, qStartW = 0, qStartH = 0, qOffX = 0, qOffY = 0;
+
+    function getEventClient(e) {
+      if (e.touches && e.touches.length > 0) return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      return { x: e.clientX, y: e.clientY };
+    }
+
+    function startDragQuran(e) {
+      isDraggingQuran = true;
+      const pt = getEventClient(e);
       const rect = quranTextContainer.getBoundingClientRect();
-      quranCardOffsetX = (e.clientX - rect.left) / currentScale;
-      quranCardOffsetY = (e.clientY - rect.top) / currentScale;
+      qOffX = pt.x - rect.left;
+      qOffY = pt.y - rect.top;
       e.stopPropagation();
-    });
+    }
+    dragHeader.addEventListener('mousedown', startDragQuran);
+    dragHeader.addEventListener('touchstart', startDragQuran, { passive: true });
 
-    let isResizingQuran = false;
-    let startQW = 0, startQH = 0, startQMouseX = 0, startQMouseY = 0;
+    // تحجيم العرض فقط
+    function startResizeQW(e) {
+      isResizingQW = true;
+      const pt = getEventClient(e);
+      qStartX = pt.x;
+      qStartW = quranTextContainer.offsetWidth;
+      e.stopPropagation(); e.preventDefault();
+    }
+    quranResizeW.addEventListener('mousedown', startResizeQW);
+    quranResizeW.addEventListener('touchstart', startResizeQW, { passive: false });
 
-    quranResizeCorner.addEventListener('mousedown', (e) => {
-      isResizingQuran = true;
-      startQW = quranTextContainer.offsetWidth;
-      startQH = quranTextContainer.offsetHeight;
-      startQMouseX = e.clientX;
-      startQMouseY = e.clientY;
-      e.stopPropagation();
-      e.preventDefault();
-    });
+    // تحجيم الطول والارتفاع فقط
+    function startResizeQH(e) {
+      isResizingQH = true;
+      const pt = getEventClient(e);
+      qStartY = pt.y;
+      qStartH = quranTextContainer.offsetHeight;
+      e.stopPropagation(); e.preventDefault();
+    }
+    quranResizeH.addEventListener('mousedown', startResizeQH);
+    quranResizeH.addEventListener('touchstart', startResizeQH, { passive: false });
 
-    window.addEventListener('mousemove', (e) => {
-      if (isDraggingQuranCard) {
-        const x = (e.clientX / currentScale) - quranCardOffsetX;
-        const y = (e.clientY / currentScale) - quranCardOffsetY;
-        quranTextContainer.style.left = x + 'px';
-        quranTextContainer.style.top = y + 'px';
-      } else if (isResizingQuran) {
-        const deltaX = (startQMouseX - e.clientX) / currentScale;
-        const deltaY = (e.clientY - startQMouseY) / currentScale;
-        quranTextContainer.style.width = Math.max(450, startQW + deltaX) + 'px';
-        quranTextContainer.style.height = Math.max(260, startQH + deltaY) + 'px';
+    // تحجيم الزاوية (طول وعرض معاً)
+    function startResizeQBoth(e) {
+      isResizingQBoth = true;
+      const pt = getEventClient(e);
+      qStartX = pt.x; qStartY = pt.y;
+      qStartW = quranTextContainer.offsetWidth;
+      qStartH = quranTextContainer.offsetHeight;
+      e.stopPropagation(); e.preventDefault();
+    }
+    quranResizeCorner.addEventListener('mousedown', startResizeQBoth);
+    quranResizeCorner.addEventListener('touchstart', startResizeQBoth, { passive: false });
+
+    function handleQuranMove(e) {
+      if (!isDraggingQuran && !isResizingQW && !isResizingQH && !isResizingQBoth) return;
+      const pt = getEventClient(e);
+
+      if (isDraggingQuran) {
+        quranTextContainer.style.left = (pt.x - qOffX) + 'px';
+        quranTextContainer.style.top = (pt.y - qOffY) + 'px';
+      } else if (isResizingQW) {
+        const deltaX = qStartX - pt.x;
+        quranTextContainer.style.width = Math.max(300, qStartW + deltaX) + 'px';
+      } else if (isResizingQH) {
+        const deltaY = pt.y - qStartY;
+        quranTextContainer.style.height = Math.max(180, qStartH + deltaY) + 'px';
+      } else if (isResizingQBoth) {
+        const deltaX = qStartX - pt.x;
+        const deltaY = pt.y - qStartY;
+        quranTextContainer.style.width = Math.max(300, qStartW + deltaX) + 'px';
+        quranTextContainer.style.height = Math.max(180, qStartH + deltaY) + 'px';
       }
-    });
+    }
 
-    window.addEventListener('mouseup', () => {
-      isDraggingQuranCard = false;
-      isResizingQuran = false;
-    });
+    function handleQuranEnd() {
+      isDraggingQuran = false;
+      isResizingQW = false;
+      isResizingQH = false;
+      isResizingQBoth = false;
+    }
+
+    window.addEventListener('mousemove', handleQuranMove);
+    window.addEventListener('touchmove', handleQuranMove, { passive: false });
+    window.addEventListener('mouseup', handleQuranEnd);
+    window.addEventListener('touchend', handleQuranEnd);
 
     closeQuranCardBtn.onclick = () => {
       quranTextContainer.style.display = 'none';
       stopQuranAudio();
     };
 
-    // الصناديق النصية الحرة المستقلة
+    // ========================================================
+    // الصناديق النصية الحرة والتحكم المستقل بأبعادها
+    // ========================================================
     let widgetIdCounter = 0;
     function createCustomTextWidget(x, y) {
       widgetIdCounter++;
@@ -1392,15 +1577,15 @@
 
       widget.innerHTML = `
         <div class="widget-drag-bar">
-          <span class="widget-drag-label">✥ اسحب لتحريك المربع بمفرده</span>
+          <span class="widget-drag-label">✥ اسحب للتحريك</span>
           <button class="w-del-btn" title="حذف هذا المربع">✕</button>
         </div>
         <div class="widget-toolbar">
           <select class="w-select font-family-sel" title="نوع الخط">
-            <option value="'Traditional Arabic', 'Scheherazade New', serif">خط تقليدي (Traditional Arabic)</option>
-            <option value="'Amiri Quran', 'Amiri', serif">خط المصحف (Amiri Quran)</option>
-            <option value="'Cairo', sans-serif">خط كايرو الحديث (Cairo)</option>
-            <option value="Tahoma, Arial, sans-serif">خط نسخ مبسط</option>
+            <option value="'Traditional Arabic', 'Scheherazade New', serif">خط تقليدي</option>
+            <option value="'Amiri Quran', 'Amiri', serif">خط المصحف</option>
+            <option value="'Cairo', sans-serif">خط كايرو</option>
+            <option value="Tahoma, Arial, sans-serif">خط نسخ</option>
           </select>
           <button class="w-btn font-dec-btn" title="تصغير الخط">A-</button>
           <button class="w-btn font-inc-btn" title="تكبير الخط">A+</button>
@@ -1411,7 +1596,9 @@
           <input type="color" class="color-picker-input" value="#ffffff" title="لون النص" style="width:22px; height:22px; border:none; border-radius:4px; cursor:pointer; background:none;">
         </div>
         <textarea class="w-editor-area" placeholder="اكتب الشرح أو القاعدة التجويدية هنا بطلاقة..."></textarea>
-        <div class="resize-handle-corner" title="اسحب لتكبير أو تصغير حجم المربع"></div>
+        <div class="resizer-w" title="اسحب للتحكم في العرض فقط"></div>
+        <div class="resizer-h" title="اسحب للتحكم في الطول فقط"></div>
+        <div class="resize-handle-corner" title="اسحب للتحكم في الطول والعرض معاً"></div>
       `;
 
       textWidgetsContainer.appendChild(widget);
@@ -1426,49 +1613,12 @@
       const italicBtn = widget.querySelector('.italic-btn');
       const alignBtns = widget.querySelectorAll('.align-btn');
       const colorInput = widget.querySelector('.color-picker-input');
+
+      const resW = widget.querySelector('.resizer-w');
+      const resH = widget.querySelector('.resizer-h');
       const resizeCorner = widget.querySelector('.resize-handle-corner');
 
       let currentFontSize = 30;
-      let isDraggingThisWidget = false;
-      let wOffsetX = 0, wOffsetY = 0;
-
-      dragBar.addEventListener('mousedown', (e) => {
-        isDraggingThisWidget = true;
-        const rect = widget.getBoundingClientRect();
-        wOffsetX = (e.clientX - rect.left) / currentScale;
-        wOffsetY = (e.clientY - rect.top) / currentScale;
-        e.stopPropagation();
-      });
-
-      let isResizingWidget = false;
-      let startW = 0, startH = 0, startMouseX = 0, startMouseY = 0;
-
-      resizeCorner.addEventListener('mousedown', (e) => {
-        isResizingWidget = true;
-        startW = widget.offsetWidth;
-        startH = widget.offsetHeight;
-        startMouseX = e.clientX;
-        startMouseY = e.clientY;
-        e.stopPropagation();
-        e.preventDefault();
-      });
-
-      window.addEventListener('mousemove', (e) => {
-        if (isDraggingThisWidget) {
-          widget.style.left = ((e.clientX / currentScale) - wOffsetX) + 'px';
-          widget.style.top = ((e.clientY / currentScale) - wOffsetY) + 'px';
-        } else if (isResizingWidget) {
-          const deltaX = (startMouseX - e.clientX) / currentScale;
-          const deltaY = (e.clientY - startMouseY) / currentScale;
-          widget.style.width = Math.max(260, startW + deltaX) + 'px';
-          widget.style.height = Math.max(160, startH + deltaY) + 'px';
-        }
-      });
-
-      window.addEventListener('mouseup', () => {
-        isDraggingThisWidget = false;
-        isResizingWidget = false;
-      });
 
       fontSel.onchange = () => { textarea.style.fontFamily = fontSel.value; };
       incBtn.onclick = () => { currentFontSize += 4; textarea.style.fontSize = currentFontSize + 'px'; };
@@ -1490,10 +1640,84 @@
 
       colorInput.oninput = () => { textarea.style.color = colorInput.value; };
       delBtn.onclick = () => { widget.remove(); };
+
+      // سحب وتحجيم الصندوق الحر
+      let isDraggingW = false, isResW = false, isResH = false, isResBoth = false;
+      let sWX = 0, sWY = 0, sWW = 0, sWH = 0, wOffX = 0, wOffY = 0;
+
+      function onStartDragW(e) {
+        isDraggingW = true;
+        const pt = getEventClient(e);
+        const rect = widget.getBoundingClientRect();
+        wOffX = pt.x - rect.left;
+        wOffY = pt.y - rect.top;
+        e.stopPropagation();
+      }
+      dragBar.addEventListener('mousedown', onStartDragW);
+      dragBar.addEventListener('touchstart', onStartDragW, { passive: true });
+
+      function onStartResW(e) {
+        isResW = true;
+        const pt = getEventClient(e);
+        sWX = pt.x; sWW = widget.offsetWidth;
+        e.stopPropagation(); e.preventDefault();
+      }
+      resW.addEventListener('mousedown', onStartResW);
+      resW.addEventListener('touchstart', onStartResW, { passive: false });
+
+      function onStartResH(e) {
+        isResH = true;
+        const pt = getEventClient(e);
+        sWY = pt.y; sWH = widget.offsetHeight;
+        e.stopPropagation(); e.preventDefault();
+      }
+      resH.addEventListener('mousedown', onStartResH);
+      resH.addEventListener('touchstart', onStartResH, { passive: false });
+
+      function onStartResBoth(e) {
+        isResBoth = true;
+        const pt = getEventClient(e);
+        sWX = pt.x; sWY = pt.y;
+        sWW = widget.offsetWidth; sWH = widget.offsetHeight;
+        e.stopPropagation(); e.preventDefault();
+      }
+      resizeCorner.addEventListener('mousedown', onStartResBoth);
+      resizeCorner.addEventListener('touchstart', onStartResBoth, { passive: false });
+
+      function onMoveWidget(e) {
+        if (!isDraggingW && !isResW && !isResH && !isResBoth) return;
+        const pt = getEventClient(e);
+        if (isDraggingW) {
+          widget.style.left = (pt.x - wOffX) + 'px';
+          widget.style.top = (pt.y - wOffY) + 'px';
+        } else if (isResW) {
+          widget.style.width = Math.max(220, sWW + (sWX - pt.x)) + 'px';
+        } else if (isResH) {
+          widget.style.height = Math.max(140, sWH + (pt.y - sWY)) + 'px';
+        } else if (isResBoth) {
+          widget.style.width = Math.max(220, sWW + (sWX - pt.x)) + 'px';
+          widget.style.height = Math.max(140, sWH + (pt.y - sWY)) + 'px';
+        }
+      }
+
+      function onEndWidget() {
+        isDraggingW = false;
+        isResW = false;
+        isResH = false;
+        isResBoth = false;
+      }
+
+      window.addEventListener('mousemove', onMoveWidget);
+      window.addEventListener('touchmove', onMoveWidget, { passive: false });
+      window.addEventListener('mouseup', onEndWidget);
+      window.addEventListener('touchend', onEndWidget);
+
       setTimeout(() => textarea.focus(), 60);
     }
 
+    // ========================================================
     // قاعدة بيانات IndexedDB أوفلاين
+    // ========================================================
     let quranDB = null;
     function initIndexedDB() {
       const request = indexedDB.open('AlFatehQuranDB', 1);
@@ -1550,7 +1774,9 @@
       });
     }
 
-    // المؤثرات الصوتية
+    // ========================================================
+    // المؤثرات الصوتية والتشجيعية
+    // ========================================================
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     let audioCtx = null;
     function getAudioContext() {
@@ -1638,9 +1864,9 @@
       }
     };
 
-    // ====================================================================
+    // ========================================================
     // مشغل التلاوة والتنقل المباشر بالنقر واللمس
-    // ====================================================================
+    // ========================================================
     let activeAyahsData = [];
     let currentAudioIndex = 0;
     let isAudioPlaying = false;
@@ -1680,13 +1906,11 @@
       }
     };
 
-    // القفز إلى آية محددة عند النقر أو اللمس باليد
     window.jumpToAyah = function(index) {
       if (index < 0 || index >= activeAyahsData.length) return;
       currentAudioIndex = index;
       const ayah = activeAyahsData[index];
 
-      // 1. تظليل الآية في النص الرئيسي
       document.querySelectorAll('.ayah-span').forEach(el => el.classList.remove('active-highlight'));
       const currentSpan = document.getElementById(`ayah-${ayah.numberInSurah}`);
       if (currentSpan) {
@@ -1694,7 +1918,6 @@
         currentSpan.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
 
-      // 2. تظليل الآية في شريط الفهرس الجانبي
       document.querySelectorAll('.sidebar-ayah-item').forEach(el => el.classList.remove('active-nav-ayah'));
       const sideItem = document.getElementById(`sidebar-ayah-${ayah.numberInSurah}`);
       if (sideItem) {
@@ -1702,7 +1925,6 @@
         sideItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
 
-      // 3. بدء التلاوة فوراً
       isAudioPlaying = true;
       btnPlayAudio.innerText = "⏸️ إيقاف مؤقت";
       btnPlayAudio.style.background = "#dc2626";
@@ -1731,7 +1953,6 @@
       const vPad = String(ayah.numberInSurah).padStart(3, '0');
       const audioUrl = `https://everyayah.com/data/${reciterSelect.value}/${sPad}${vPad}.mp3`;
 
-      // تظليل النص والفهرس
       document.querySelectorAll('.ayah-span').forEach(el => el.classList.remove('active-highlight'));
       const currentSpan = document.getElementById(`ayah-${ayah.numberInSurah}`);
       if (currentSpan) {
@@ -1855,17 +2076,22 @@
       if (isAudioPlaying) window.jumpToAyah(currentAudioIndex);
     };
 
-    // منطق الرسم والكانفاس
+    // ========================================================
+    // منطق الرسم والكانفاس ومعالجة أحداث اللمس والماوس
+    // ========================================================
     function resizeCanvases() {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+
       const tempCanvas = document.createElement('canvas');
-      tempCanvas.width = paintCanvas.width;
-      tempCanvas.height = paintCanvas.height;
+      tempCanvas.width = paintCanvas.width || w;
+      tempCanvas.height = paintCanvas.height || h;
       const tCtx = tempCanvas.getContext('2d');
       tCtx.drawImage(paintCanvas, 0, 0);
 
       [paintCanvas, gridCanvas, pdfCanvas, overlayCanvas].forEach(c => {
-        c.width = window.innerWidth;
-        c.height = window.innerHeight;
+        c.width = w;
+        c.height = h;
       });
 
       pCtx.drawImage(tempCanvas, 0, 0);
@@ -1873,6 +2099,7 @@
       if (currentPdf) renderPdfPage(currentPdfPage);
     }
     window.addEventListener('resize', resizeCanvases);
+    window.addEventListener('orientationchange', () => setTimeout(resizeCanvases, 200));
 
     [paintCanvas, gridCanvas, pdfCanvas, overlayCanvas].forEach(c => {
       c.width = window.innerWidth;
@@ -1890,42 +2117,26 @@
       if (currentGrid === 'ruled' || currentGrid === 'wide-ruled') {
         const space = currentGrid === 'wide-ruled' ? 56 : 42;
         for (let y = space; y < gridCanvas.height; y += space) {
-          gCtx.beginPath();
-          gCtx.moveTo(0, y);
-          gCtx.lineTo(gridCanvas.width, y);
-          gCtx.stroke();
+          gCtx.beginPath(); gCtx.moveTo(0, y); gCtx.lineTo(gridCanvas.width, y); gCtx.stroke();
         }
       } else if (currentGrid === 'two-lines') {
         for (let y = 50; y < gridCanvas.height; y += 70) {
-          gCtx.beginPath();
-          gCtx.moveTo(0, y);
-          gCtx.lineTo(gridCanvas.width, y);
-          gCtx.moveTo(0, y + 24);
-          gCtx.lineTo(gridCanvas.width, y + 24);
-          gCtx.stroke();
+          gCtx.beginPath(); gCtx.moveTo(0, y); gCtx.lineTo(gridCanvas.width, y); gCtx.stroke();
+          gCtx.beginPath(); gCtx.moveTo(0, y + 24); gCtx.lineTo(gridCanvas.width, y + 24); gCtx.stroke();
         }
       } else if (currentGrid === 'four-lines') {
         for (let y = 50; y < gridCanvas.height; y += 90) {
           for (let i = 0; i < 4; i++) {
-            gCtx.beginPath();
-            gCtx.moveTo(0, y + i * 16);
-            gCtx.lineTo(gridCanvas.width, y + i * 16);
-            gCtx.stroke();
+            gCtx.beginPath(); gCtx.moveTo(0, y + i * 16); gCtx.lineTo(gridCanvas.width, y + i * 16); gCtx.stroke();
           }
         }
       } else if (currentGrid === 'graph') {
         const step = 38;
         for (let x = 0; x < gridCanvas.width; x += step) {
-          gCtx.beginPath();
-          gCtx.moveTo(x, 0);
-          gCtx.lineTo(x, gridCanvas.height);
-          gCtx.stroke();
+          gCtx.beginPath(); gCtx.moveTo(x, 0); gCtx.lineTo(x, gridCanvas.height); gCtx.stroke();
         }
         for (let y = 0; y < gridCanvas.height; y += step) {
-          gCtx.beginPath();
-          gCtx.moveTo(0, y);
-          gCtx.lineTo(gridCanvas.width, y);
-          gCtx.stroke();
+          gCtx.beginPath(); gCtx.moveTo(0, y); gCtx.lineTo(gridCanvas.width, y); gCtx.stroke();
         }
       }
     }
@@ -1939,16 +2150,17 @@
     saveState();
 
     function getCoords(e) {
-      const rect = paintCanvas.getBoundingClientRect();
-      let clientX = e.clientX;
-      let clientY = e.clientY;
-      if (e.touches && e.touches[0]) {
+      let clientX, clientY;
+      if (e.touches && e.touches.length > 0) {
         clientX = e.touches[0].clientX;
         clientY = e.touches[0].clientY;
+      } else {
+        clientX = e.clientX;
+        clientY = e.clientY;
       }
       return {
-        x: (clientX - rect.left) / currentScale,
-        y: (clientY - rect.top) / currentScale
+        x: clientX / currentScale,
+        y: clientY / currentScale
       };
     }
 
@@ -1978,6 +2190,7 @@
     let panStartX = 0, panStartY = 0;
 
     function startDraw(e) {
+      if (e.target !== paintCanvas) return;
       const { x, y } = getCoords(e);
       startX = x;
       startY = y;
@@ -2015,9 +2228,8 @@
     }
 
     function draw(e) {
-      const { x, y } = getCoords(e);
-
       if (isPanningCanvas && currentTool === 'hand') {
+        const { x, y } = getCoords(e);
         const dx = x - panStartX;
         const dy = y - panStartY;
         panStartX = x;
@@ -2034,6 +2246,7 @@
       }
 
       if (!isDrawing) return;
+      const { x, y } = getCoords(e);
 
       if (['pen', 'highlighter', 'eraser'].includes(currentTool)) {
         pCtx.lineTo(x, y);
@@ -2049,10 +2262,7 @@
           oCtx.lineWidth = currentSize;
           oCtx.lineCap = 'round';
           if (currentTool === 'line') {
-            oCtx.beginPath();
-            oCtx.moveTo(startX, startY);
-            oCtx.lineTo(x, y);
-            oCtx.stroke();
+            oCtx.beginPath(); oCtx.moveTo(startX, startY); oCtx.lineTo(x, y); oCtx.stroke();
           } else if (currentTool === 'rect') {
             oCtx.strokeRect(startX, startY, x - startX, y - startY);
           } else if (currentTool === 'circle') {
@@ -2091,10 +2301,7 @@
           pCtx.lineWidth = currentSize;
           pCtx.lineCap = 'round';
           if (currentTool === 'line') {
-            pCtx.beginPath();
-            pCtx.moveTo(startX, startY);
-            pCtx.lineTo(x, y);
-            pCtx.stroke();
+            pCtx.beginPath(); pCtx.moveTo(startX, startY); pCtx.lineTo(x, y); pCtx.stroke();
           } else if (currentTool === 'rect') {
             pCtx.strokeRect(startX, startY, x - startX, y - startY);
           } else if (currentTool === 'circle') {
@@ -2217,29 +2424,6 @@
     document.getElementById('fullScreenBtn').onclick = () => {
       if (!document.fullscreenElement) document.documentElement.requestFullscreen();
       else document.exitFullscreen();
-    };
-
-    const leftPanel = document.getElementById('leftPanel');
-    const rightPanel = document.getElementById('rightPanel');
-    const toggleLeftBtn = document.getElementById('toggleLeftBtn');
-    const toggleRightBtn = document.getElementById('toggleRightBtn');
-
-    document.getElementById('closeLeftBtn').onclick = () => {
-      leftPanel.classList.add('closed-left');
-      toggleLeftBtn.style.display = 'block';
-    };
-    toggleLeftBtn.onclick = () => {
-      leftPanel.classList.remove('closed-left');
-      toggleLeftBtn.style.display = 'none';
-    };
-
-    document.getElementById('closeRightBtn').onclick = () => {
-      rightPanel.classList.add('closed-right');
-      toggleRightBtn.style.display = 'block';
-    };
-    toggleRightBtn.onclick = () => {
-      rightPanel.classList.remove('closed-right');
-      toggleRightBtn.style.display = 'none';
     };
 
     // رفع واستعراض PDF
@@ -2480,7 +2664,6 @@
 
           surahBadgeTitle.innerText = `سورة ${surahObj.name} (الآيات ${fromV} - ${toV})`;
 
-          // 1. توليد النص في الساحة الرئيسية وربط كل آية باللمس والنقر المباشر
           quranTextContent.innerHTML = '';
           quranTextContent.style.color = selectedTextColor;
           quranTextContent.style.fontSize = fSize;
@@ -2491,7 +2674,6 @@
             span.id = `ayah-${a.numberInSurah}`;
             span.innerHTML = `${a.text} <span style="color:#f59e0b; font-size:0.88em; pointer-events:none;">﴿${a.numberInSurah}﴾</span> `;
 
-            // تفعيل النقر بالفأرة واللمس بالأصابع على الشاشة
             span.addEventListener('click', (e) => {
               e.stopPropagation();
               window.jumpToAyah(idx);
@@ -2504,7 +2686,6 @@
             quranTextContent.appendChild(span);
           });
 
-          // 2. توليد شريط الفهرس الجانبي السريع للآيات
           sidebarAyahList.innerHTML = '';
           verses.forEach((a, idx) => {
             const sideItem = document.createElement('div');
@@ -2529,8 +2710,8 @@
 
           mushafContainer.style.display = 'none';
           quranTextContainer.style.display = 'flex';
-          quranTextContainer.style.top = '16%';
-          quranTextContainer.style.left = '18%';
+          quranTextContainer.style.top = '15%';
+          quranTextContainer.style.left = '16%';
 
           pCtx.clearRect(0, 0, paintCanvas.width, paintCanvas.height);
           saveState();
