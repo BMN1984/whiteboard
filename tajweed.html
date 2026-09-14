@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>واحة أحكام التجويد والتمارين — أكاديمية الفتح</title>
+  <link rel="manifest" href="manifest.json">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&family=Amiri+Quran&display=swap" rel="stylesheet">
+  
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+    body {
+      background-color: #064e3b;
+      font-family: 'Cairo', sans-serif;
+      color: #f3f4f6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-bottom: 40px;
+    }
+
+    /* الشريط العلوي */
+    .top-header {
+      width: 100%;
+      background: linear-gradient(90deg, #0f172a, #78350f, #064e3b);
+      border-bottom: 2.5px solid #facc15;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+    }
+    .top-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #fef08a;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .back-btn {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      padding: 6px 14px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: bold;
+      transition: all 0.2s;
+    }
+    .back-btn:hover { background: #d97706; }
+
+    /* الحاوية الرئيسية */
+    .main-container {
+      width: 92vw;
+      max-width: 900px;
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    /* أزرار اختيار الباب */
+    .chapters-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+    }
+    .chapter-btn {
+      background: #0f172a;
+      border: 1.5px solid #1e293b;
+      color: #cbd5e1;
+      padding: 12px 10px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+    }
+    .chapter-btn:hover { border-color: #f59e0b; color: #fff; }
+    .chapter-btn.active {
+      background: linear-gradient(135deg, #d97706, #92400e);
+      border-color: #facc15;
+      color: #ffffff;
+      box-shadow: 0 0 16px rgba(245, 158, 11, 0.4);
+    }
+
+    /* بطاقة الشرح والتوضيح */
+    .rule-card {
+      background: rgba(15, 23, 42, 0.95);
+      border: 2px solid #d97706;
+      border-radius: 16px;
+      padding: 18px 22px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .rule-header {
+      font-size: 18px;
+      font-weight: 900;
+      color: #facc15;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .rule-letters {
+      display: inline-block;
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid #f59e0b;
+      padding: 4px 14px;
+      border-radius: 20px;
+      color: #fef08a;
+      font-size: 13px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .rule-desc {
+      font-size: 14px;
+      color: #e2e8f0;
+      line-height: 1.7;
+    }
+
+    /* قسم التمارين التفاعلية من جزء عم */
+    .quiz-section {
+      background: #0f172a;
+      border: 2px solid #0284c7;
+      border-radius: 16px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 12px 35px rgba(0,0,0,0.6);
+      text-align: center;
+    }
+    .quiz-badge {
+      background: #0284c7;
+      color: #fff;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 14px;
+    }
+    .verse-box {
+      font-family: 'Amiri Quran', serif;
+      font-size: 32px;
+      line-height: 2.2;
+      color: #fef08a;
+      background: rgba(2, 132, 199, 0.1);
+      border: 1px dashed #38bdf8;
+      border-radius: 14px;
+      padding: 14px 24px;
+      width: 100%;
+      margin-bottom: 8px;
+    }
+    .verse-source {
+      font-size: 12px;
+      color: #94a3b8;
+      margin-bottom: 20px;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      width: 100%;
+      max-width: 500px;
+    }
+    .option-btn {
+      background: rgba(255,255,255,0.06);
+      border: 1.5px solid rgba(255,255,255,0.12);
+      color: #f3f4f6;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .option-btn:hover { background: rgba(56, 189, 248, 0.2); border-color: #38bdf8; }
+    .option-btn.correct {
+      background: #16a34a !important;
+      border-color: #4ade80 !important;
+      color: #fff !important;
+      transform: scale(1.03);
+    }
+    .option-btn.wrong {
+      background: #dc2626 !important;
+      border-color: #f87171 !important;
+      color: #fff !important;
+    }
+
+    .feedback-msg {
+      margin-top: 14px;
+      font-size: 14px;
+      font-weight: 800;
+      min-height: 24px;
+    }
+    .next-btn {
+      margin-top: 14px;
+      background: #f59e0b;
+      border: none;
+      color: #0f172a;
+      font-size: 13px;
+      font-weight: 900;
+      padding: 8px 22px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: none;
+    }
+    .next-btn:hover { background: #d97706; }
+  </style>
+</head>
+<body>
+
+  <div class="top-header">
+    <div class="top-title">
+      <span>📖</span>
+      <span>أحكام التجويد والتمارين التفاعلية — جزء عم</span>
+    </div>
+    <a href="index.html" class="back-btn">↩️ الرجوع للسبورة</a>
+  </div>
+
+  <div class="main-container">
+    <!-- أزرار الأبواب -->
+    <div class="chapters-nav">
+      <button class="chapter-btn active" data-chapter="noon">النون الساكنة والتنوين</button>
+      <button class="chapter-btn" data-chapter="meem">أحكام الميم الساكنة</button>
+      <button class="chapter-btn" data-chapter="qalqala">أحكام القلقلة</button>
+      <button class="chapter-btn" data-chapter="madd">أحكام المدود</button>
+    </div>
+
+    <!-- بطاقة الشرح الميسر -->
+    <div class="rule-card">
+      <div class="rule-header" id="ruleTitle">أحكام النون الساكنة والتنوين</div>
+      <div class="rule-letters" id="ruleLetters">٤ أحكام: الإظهار، الإدغام، الإقلاب، الإخفاء</div>
+      <div class="rule-desc" id="ruleDesc">
+        للنون الساكنة أو التنوين عند ملاقاة حروف الهجاء أربعة أحكام؛ تُراعى فيها الغنة ومخرج الحرف بدقة لضبط التلاوة.
+      </div>
+    </div>
+
+    <!-- بطاقة التمارين -->
+    <div class="quiz-section">
+      <div class="quiz-badge" id="quizCounter">تمرين 1 من 4</div>
+      <div class="verse-box" id="quizVerse">﴿ مِنْ نُطْفَةٍ ﴾</div>
+      <div class="verse-source" id="quizSource">سورة عبس — الآية 19</div>
+
+      <div class="options-grid" id="optionsGrid"></div>
+      
+      <div class="feedback-msg" id="feedbackMsg"></div>
+      <button class="next-btn" id="nextQuizBtn">التمرين التالي ❯</button>
+    </div>
+  </div>
+
+  <script>
+    // قاعدة بيانات دروس التجويد وتمارين جزء عم
+    const tajweedData = {
+      noon: {
+        title: "أحكام النون الساكنة والتنوين",
+        letters: "الإظهار (ء هـ ع ح غ خ) — الإدغام (يرملون) — الإقلاب (ب) — الإخفاء (15 حرفاً)",
+        desc: "تتغير طريقة نطق النون الساكنة أو التنوين حسب الحرف الذي يليها: تظهر ناصعة مع حروف الحلق، وتدغم بغنة أو بغير غنة مع يرملون، وتقلب ميماً مخفاة مع الباء، وتخفى مع باقي الحروف.",
+        questions: [
+          {
+            verse: "﴿ مِنْ نُطْفَةٍ خَلَقَهُ ﴾",
+            source: "سورة عبس — آية 19",
+            questionText: "ما حكم (نُطْفَةٍ خَلَقَهُ)؟",
+            options: ["إظهار حلقي", "إدغام بغنة", "إخفاء حقيقي", "إقلاب"],
+            correct: 0,
+            note: "إظهار حلقي لوقوع حرف الخاء بعد التنوين."
+          },
+          {
+            verse: "﴿ عَمَّ يَتَسَاءَلُونَ * عَنِ النَّبَإِ الْعَظِيمِ ﴾",
+            source: "سورة النبأ — آية 1-2",
+            questionText: "ما حكم الميم والنون المشددتين في (عَمَّ) و (النَّبَإِ)؟",
+            options: ["غنة مشددة أكمل ما تكون", "إخفاء شفوي", "إظهار حلقي", "قلقلة"],
+            correct: 0,
+            note: "حكمها: حرف غنة مشدد يُغَن بمقدار حركتين."
+          },
+          {
+            verse: "﴿ كَلَّا لَيُنْبَذَنَّ فِي الْحُطَمَةِ ﴾",
+            source: "سورة الهمزة — آية 4",
+            questionText: "ما حكم النون في (لَيُنْبَذَنَّ)؟",
+            options: ["إقلاب", "إدغام بغير غنة", "إظهار", "إخفاء"],
+            correct: 0,
+            note: "إقلاب النون الساكنة ميماً مخفاة بغنة لمجيء حرف الباء."
+          },
+          {
+            verse: "﴿ نَاراً ذَاتَ لَهَبٍ ﴾",
+            source: "سورة المسد — آية 3",
+            questionText: "ما حكم التنوين في (نَاراً ذَاتَ)؟",
+            options: ["إخفاء حقيقي", "إظهار حلقي", "إقلاب", "إدغام بغير غنة"],
+            correct: 0,
+            note: "إخفاء حقيقي لوقوع حرف الذال بعد التنوين."
+          }
+        ]
+      },
+      meem: {
+        title: "أحكام الميم الساكنة",
+        letters: "الإخفاء الشفوي (ب) — إدغام المثلين الصغير (م) — الإظهار الشفوي (باقي الحروف)",
+        desc: "للميم الساكنة ثلاثة أحكام فقط: تخفى مع الباء بغنة، وتدغم في الميم مثلها بغنة، وتظهر مع بقية حروف الهجاء الـ 26 شفوياً.",
+        questions: [
+          {
+            verse: "﴿ تَرْمِيهِمْ بِحِجَارَةٍ ﴾",
+            source: "سورة الفيل — آية 4",
+            questionText: "ما حكم الميم الساكنة في (تَرْمِيهِمْ بِحِجَارَةٍ)؟",
+            options: ["إخفاء شفوي", "إظهار شفوي", "إدغام مثلين", "إقلاب"],
+            correct: 0,
+            note: "إخفاء شفوي بغنة لوقوع حرف الباء بعد الميم الساكنة."
+          },
+          {
+            verse: "﴿ الَّذِي أَطْعَمَهُمْ مِنْ جُوعٍ ﴾",
+            source: "سورة قريش — آية 4",
+            questionText: "ما حكم الميم في (أَطْعَمَهُمْ مِنْ)؟",
+            options: ["إدغام مثلين صغير", "إظهار شفوي", "إخفاء حقيقي", "إظهار حلقي"],
+            correct: 0,
+            note: "إدغام مثلين صغير بغنة لوقوع ميم متحركة بعد ميم ساكنة."
+          },
+          {
+            verse: "﴿ أَلَمْ يَجْعَلْ كَيْدَهُمْ فِي تَضْلِيلٍ ﴾",
+            source: "سورة الفيل — آية 2",
+            questionText: "ما حكم الميم الساكنة في (أَلَمْ يَجْعَلْ)؟",
+            options: ["إظهار شفوي", "إخفاء شفوي", "إدغام", "قلقلة"],
+            correct: 0,
+            note: "إظهار شفوي لوقوع حرف الياء بعد الميم الساكنة."
+          }
+        ]
+      },
+      qalqala: {
+        title: "أحكام القلقلة ومراتبها",
+        letters: "حروف القلقلة: (ق ، ط ، ب ، ج ، د) مجموعة في كلمة: قُطْبُ جَدّ",
+        desc: "اضطراب المخرج عند النطق بالحرف الساكن حتى يُسمع له نبرة قوية. مراتبها: كبرى عند الوقف على الحرف المشدد أو المخفف، وصغرى إذا كان الحرف ساكناً في وسط الكلمة.",
+        questions: [
+          {
+            verse: "﴿ تَبَّتْ يَدَا أَبِي لَهَبٍ وَتَبَّ ﴾",
+            source: "سورة المسد — آية 1",
+            questionText: "ما مرتبة القلقلة عند الوقف على كلمة (وَتَبَّ)؟",
+            options: ["قلقلة كبرى (شديدة لأنها مشددة)", "قلقلة صغرى", "إخفاء", "مد لازم"],
+            correct: 0,
+            note: "قلقلة كبرى لوقوع الباء المشددة موقوفاً عليها."
+          },
+          {
+            verse: "﴿ قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ ﴾",
+            source: "سورة الفلق — آية 1",
+            questionText: "ما نوع القلقلة عند الوقف على (الْفَلَقِ)؟",
+            options: ["قلقلة كبرى (موقوف عليها)", "قلقلة صغرى", "إظهار", "همس"],
+            correct: 0,
+            note: "قلقلة كبرى عارضة لسكون الوقف على القاف."
+          },
+          {
+            verse: "﴿ أَلَمْ نَشْرَحْ لَكَ صَدْرَكَ ﴾",
+            source: "سورة الشرح — آية 1",
+            questionText: "ما نوع القلقلة في حرف الدال بكلمة (صَدْرَكَ)؟",
+            options: ["قلقلة صغرى", "قلقلة كبرى", "إدغام", "رخاوة"],
+            correct: 0,
+            note: "قلقلة صغرى لأن حرف الدال ساكن في وسط الكلمة."
+          }
+        ]
+      },
+      madd: {
+        title: "أحكام المدود الفرعية",
+        letters: "المد المتصل والمنفصل والعارض للسكون واللازم",
+        desc: "يطول صوت الحرف بأحد حروف المد الثلاثة (الألف، الواو، الياء) بسبب الهمز أو السكون بمقادير تتراوح بين حركتين إلى 6 حركات.",
+        questions: [
+          {
+            verse: "﴿ إِذَا جَاءَ نَصْرُ اللَّهِ وَالْفَتْحُ ﴾",
+            source: "سورة النصر — آية 1",
+            questionText: "ما نوع المد في كلمة (جَاءَ)؟",
+            options: ["مد واجب متصل (4-5 حركات)", "مد جائز منفصل", "مد بدل", "مد لازم"],
+            correct: 0,
+            note: "مد واجب متصل لاجتماع حرف المد والهمزة في كلمة واحدة."
+          },
+          {
+            verse: "﴿ إِنَّا أَعْطَيْنَاكَ الْكَوْثَرَ ﴾",
+            source: "سورة الكوثر — آية 1",
+            questionText: "ما نوع المد بين (إِنَّا) و (أَعْطَيْنَاكَ)؟",
+            options: ["مد جائز منفصل (2 أو 4 أو 5 حركات)", "مد واجب متصل", "مد لازم", "مد عوض"],
+            correct: 0,
+            note: "مد جائز منفصل لوجود حرف المد في نهاية الكلمة الأولى والهمزة في بداية الثانية."
+          },
+          {
+            verse: "﴿ فَإِذَا جَاءَتِ الصَّاخَّةُ ﴾",
+            source: "سورة عبس — آية 33",
+            questionText: "ما نوع المد في كلمة (الصَّاخَّةُ) وكم مقدار مده؟",
+            options: ["مد لازم كلمي مثقل (6 حركات لزوماً)", "مد متصل (4 حركات)", "مد منفصل", "مد عارض"],
+            correct: 0,
+            note: "مد لازم كلمي مثقل يمد 6 حركات لوقوع حرف مشدد بعد حرف المد."
+          }
+        ]
+      }
+    };
+
+    let currentChapter = 'noon';
+    let currentQIndex = 0;
+
+    // محرك الصوتيات بدون إنترنت (Web Audio API)
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null;
+    function getAudioCtx() { if (!audioCtx) audioCtx = new AudioContext(); return audioCtx; }
+
+    function playSuccessSound() {
+      const ctx = getAudioCtx();
+      const notes = [523.25, 659.25, 783.99, 1046.50];
+      notes.forEach((freq, idx) => {
+        setTimeout(() => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, ctx.currentTime);
+          gain.gain.setValueAtTime(0.3, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+          osc.connect(gain); gain.connect(ctx.destination);
+          osc.start(); osc.stop(ctx.currentTime + 0.38);
+        }, idx * 90);
+      });
+    }
+
+    function playFailSound() {
+      const ctx = getAudioCtx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(160, ctx.currentTime);
+      osc.frequency.linearRampToValueAtTime(110, ctx.currentTime + 0.25);
+      gain.gain.setValueAtTime(0.2, ctx.currentTime);
+      gain.gain.linearRampToValueAtTime(0.01, ctx.currentTime + 0.25);
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.start(); osc.stop(ctx.currentTime + 0.26);
+    }
+
+    // تبديل الأبواب
+    document.querySelectorAll('.chapter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.chapter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentChapter = btn.getAttribute('data-chapter');
+        currentQIndex = 0;
+        loadChapterData();
+      });
+    });
+
+    function loadChapterData() {
+      const data = tajweedData[currentChapter];
+      document.getElementById('ruleTitle').innerText = data.title;
+      document.getElementById('ruleLetters').innerText = data.letters;
+      document.getElementById('ruleDesc').innerText = data.desc;
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      const data = tajweedData[currentChapter];
+      const q = data.questions[currentQIndex];
+      
+      document.getElementById('quizCounter').innerText = `تمرين ${currentQIndex + 1} من ${data.questions.length}`;
+      document.getElementById('quizVerse').innerText = q.verse;
+      document.getElementById('quizSource').innerText = `${q.source} — ${q.questionText}`;
+      document.getElementById('feedbackMsg').innerText = '';
+      document.getElementById('nextQuizBtn').style.display = 'none';
+
+      const grid = document.getElementById('optionsGrid');
+      grid.innerHTML = '';
+
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.innerText = opt;
+        btn.onclick = () => checkAnswer(idx, btn, q);
+        grid.appendChild(btn);
+      });
+    }
+
+    function checkAnswer(chosenIdx, clickedBtn, q) {
+      const buttons = document.querySelectorAll('.option-btn');
+      buttons.forEach(b => b.disabled = true);
+
+      const feedback = document.getElementById('feedbackMsg');
+      if (chosenIdx === q.correct) {
+        clickedBtn.classList.add('correct');
+        feedback.style.color = '#4ade80';
+        feedback.innerText = ` أحسنت بارك الله فيك! ${q.note}`;
+        playSuccessSound();
+        confetti({ particleCount: 70, spread: 80, origin: { y: 0.6 } });
+      } else {
+        clickedBtn.classList.add('wrong');
+        buttons[q.correct].classList.add('correct');
+        feedback.style.color = '#f87171';
+        feedback.innerText = ` إجابة غير دقيقة. الصواب: ${q.note}`;
+        playFailSound();
+      }
+
+      document.getElementById('nextQuizBtn').style.display = 'inline-block';
+    }
+
+    document.getElementById('nextQuizBtn').onclick = () => {
+      const total = tajweedData[currentChapter].questions.length;
+      currentQIndex = (currentQIndex + 1) % total;
+      loadQuestion();
+    };
+
+    // تشغيل الباب الافتراضي
+    loadChapterData();
+  </script>
+</body>
+</html>
