@@ -174,7 +174,7 @@
       z-index: 150;
     }
 
-    /* الصناديق النصية الحرة والتحكم المستقل بأبعادها */
+    /* الصناديق النصية الحرة */
     .custom-textbox-widget {
       position: absolute;
       pointer-events: auto !important;
@@ -270,7 +270,7 @@
     }
     .w-del-btn:hover { color: #ef4444; }
 
-    /* مقابض التحجيم الحرة للمربعات النصية (مضبوطة لليمين والأسفل لتتبع حركة اليد الطبيعية) */
+    /* مقابض التحجيم للمربعات النصية */
     .resizer-w {
       position: absolute;
       top: 0; right: 0;
@@ -300,19 +300,20 @@
       z-index: 6;
     }
 
-    /* صندوق المصحف المطور والقابل للتحكم الحر في العرض والطول */
+    /* صندوق المصحف المطور - تم فك أقصى عرض ليتسع بحرية تامة */
     #quranTextContainer {
       position: absolute;
       top: 15%;
-      left: 16%;
+      left: 10%;
       z-index: 160;
       display: none;
       pointer-events: auto !important;
-      min-width: 320px;
-      min-height: 220px;
-      width: 68vw;
-      max-width: 1040px;
-      height: 72vh;
+      min-width: 340px;
+      min-height: 240px;
+      width: 76vw;
+      max-width: 98vw;
+      height: 76vh;
+      max-height: 96vh;
       background: rgba(15, 23, 42, 0.98);
       backdrop-filter: blur(14px);
       border: 2px solid #d97706;
@@ -334,6 +335,7 @@
       cursor: grab;
       touch-action: none;
       flex-shrink: 0;
+      gap: 8px;
     }
     .drag-header:active { cursor: grabbing; }
     .drag-title {
@@ -343,6 +345,30 @@
       display: flex;
       align-items: center;
       gap: 6px;
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .toggle-sidebar-btn {
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid #38bdf8;
+      color: #f0f9ff;
+      padding: 3px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: bold;
+      transition: all 0.2s;
+    }
+    .toggle-sidebar-btn:hover {
+      background: #0284c7;
+      color: #fff;
     }
     .card-close-btn {
       background: rgba(255,255,255,0.1);
@@ -360,6 +386,7 @@
       flex: 1;
       display: flex;
       overflow: hidden;
+      width: 100%;
     }
     .ayah-sidebar-nav {
       width: 210px;
@@ -368,6 +395,10 @@
       display: flex;
       flex-direction: column;
       flex-shrink: 0;
+      transition: all 0.25s ease;
+    }
+    .ayah-sidebar-nav.hidden-sidebar {
+      display: none !important;
     }
     .sidebar-header-title {
       padding: 8px 10px;
@@ -427,9 +458,10 @@
       padding: 14px 20px;
       overflow-y: auto;
       text-align: center;
+      width: 100%;
     }
 
-    /* مقابض التحجيم الحرة لصندوق المصحف الشريف (جهة اليمين والأسفل) */
+    /* مقابض التحجيم جهة اليمين والأسفل لتتسع مع اتجاه الماوس بدقة */
     .quran-resize-edge-w {
       position: absolute;
       top: 0; right: 0;
@@ -451,10 +483,10 @@
     .quran-resize-corner {
       position: absolute;
       bottom: 0; right: 0;
-      width: 22px; height: 22px;
+      width: 24px; height: 24px;
       cursor: se-resize;
       background: linear-gradient(135deg, transparent 50%, #f59e0b 50%);
-      border-bottom-right-radius: 12px;
+      border-bottom-right-radius: 14px;
       touch-action: none;
       z-index: 11;
     }
@@ -610,7 +642,6 @@
       pointer-events: auto !important;
     }
 
-    /* الشريط العلوي المنظم الخالي من التكرار */
     .top-bar {
       top: 36px;
       left: 50%;
@@ -628,7 +659,6 @@
       pointer-events: none !important;
     }
 
-    /* زر وضع السبورة الخالصة للشرح */
     .btn-focus-mode {
       background: linear-gradient(135deg, #e11d48, #be123c);
       color: #fff;
@@ -717,7 +747,6 @@
       gap: 5px;
     }
 
-    /* اللوحات الجانبية */
     .side-left {
       top: 40px;
       left: 10px;
@@ -815,7 +844,6 @@
     .slider-info { display: flex; justify-content: space-between; font-size: 10px; color: #9ca3af; }
     input[type="range"] { width: 100%; accent-color: #38bdf8; cursor: pointer; height: 4px; }
 
-    /* شريط الأدوات السفلي */
     .bottom-dock {
       bottom: 12px;
       left: 50%;
@@ -850,7 +878,6 @@
       color: #fff;
     }
 
-    /* أزرار الإظهار عند الطي */
     .toggle-panel-btn {
       position: fixed;
       z-index: 999;
@@ -987,7 +1014,7 @@
 </head>
 <body>
 
-  <!-- البنر الإعلاني مع زر الإغلاق المباشر -->
+  <!-- البنر الإعلاني -->
   <div class="academy-marquee-banner" id="topBanner">
     <div class="marquee-track">
       🌟 مرحباً بكم في سبورة <span style="color:#ffffff; font-weight:900; font-size:15px;">أكاديمية الفتح لعلوم القرآن الكريم</span> 
@@ -1009,7 +1036,7 @@
   <button class="toggle-panel-btn" id="toggleTopBtn">☰ إظهار شريط التحكم العلوي</button>
   <button id="restoreAllBtn">👁️ استعادة كافة الأشرطة والقوائم</button>
 
-  <!-- شريط التحكم العلوي المنظم الخالي من الأزرار المكررة -->
+  <!-- شريط التحكم العلوي -->
   <div class="panel top-bar" id="topBarPanel">
     <button class="btn-focus-mode" id="btnFocusMode" title="إخفاء جميع الواجهات وتحويل الشاشة لسبورة رسم خالصة">
       <span>🖥️</span>
@@ -1042,22 +1069,25 @@
     <button class="close-btn" id="hideTopBarBtn" title="طي هذا الشريط للأعلى">▲</button>
   </div>
 
-  <!-- مسرح السبورة (محمي تماماً من حجب اللمس) -->
+  <!-- مسرح السبورة -->
   <div id="boardStage">
     <div id="textWidgetsContainer"></div>
 
-    <!-- صندوق المصحف المطور والقابل للتحكم الحر في العرض والطول باللمس والماوس -->
+    <!-- صندوق المصحف المطور -->
     <div id="quranTextContainer">
       <div class="drag-header" id="dragHeader">
         <div class="drag-title">
           <span>📖</span>
-          <span>مصحف الشرح — المس أو انقر على أي آية للانتقال المباشر وتلاوتها (اسحب الأطراف لتغيير المقاس)</span>
+          <span>مصحف الشرح — المس أو انقر على أي آية للانتقال المباشر وتلاوتها</span>
         </div>
-        <button class="card-close-btn" id="closeQuranCardBtn" title="إغلاق اللوحة">✕</button>
+        <div class="header-actions">
+          <button class="toggle-sidebar-btn" id="toggleAyahSidebarBtn" title="إخفاء أو إظهار الفهرس الجانبي لتوسيع مساحة الآيات">📑 طي/إظهار الفهرس</button>
+          <button class="card-close-btn" id="closeQuranCardBtn" title="إغلاق اللوحة">✕</button>
+        </div>
       </div>
 
       <div class="quran-interactive-layout">
-        <div class="ayah-sidebar-nav">
+        <div class="ayah-sidebar-nav" id="ayahSidebarNav">
           <div class="sidebar-header-title">فهرس آيات السورة 📑</div>
           <div class="sidebar-ayah-list" id="sidebarAyahList"></div>
         </div>
@@ -1112,9 +1142,8 @@
         </div>
       </div>
 
-      <!-- مقابض التحجيم الحرة لصندوق المصحف: مضبوطة جهة اليمين لتتوسع في نفس اتجاه حركة يدك -->
-      <div class="quran-resize-edge-w" id="quranResizeW" title="اسحب يميناً ويساراً للتحكم في العرض فقط"></div>
-      <div class="quran-resize-edge-h" id="quranResizeH" title="اسحب لأعلى ولأسفل للتحكم في الطول فقط"></div>
+      <div class="quran-resize-edge-w" id="quranResizeW" title="اسحب يميناً ويساراً للتحكم في العرض"></div>
+      <div class="quran-resize-edge-h" id="quranResizeH" title="اسحب لأعلى ولأسفل للتحكم في الطول"></div>
       <div class="quran-resize-corner" id="quranResizeCorner" title="اسحب لتكبير وتصغير الطول والعرض معاً"></div>
     </div>
 
@@ -1344,6 +1373,15 @@
     const closeQuranCardBtn = document.getElementById('closeQuranCardBtn');
     const textWidgetsContainer = document.getElementById('textWidgetsContainer');
 
+    const ayahSidebarNav = document.getElementById('ayahSidebarNav');
+    const toggleAyahSidebarBtn = document.getElementById('toggleAyahSidebarBtn');
+
+    // طي وإظهار الفهرس الجانبي
+    toggleAyahSidebarBtn.onclick = (e) => {
+      e.stopPropagation();
+      ayahSidebarNav.classList.toggle('hidden-sidebar');
+    };
+
     let currentGrid = 'two-lines';
     let currentThemeBg = '#064e3b';
     let currentTool = 'pen';
@@ -1364,7 +1402,6 @@
     let totalPdfPages = 0;
     const pageIndicator = document.getElementById('pageIndicator');
 
-    // وحدة تحجيم السبورة
     let currentScale = 1.0;
     const scaleIndicator = document.getElementById('scaleIndicator');
     const btnZoomIn = document.getElementById('btnZoomIn');
@@ -1380,7 +1417,7 @@
     btnZoomOut.onclick = () => applyBoardScale(currentScale - 0.1);
     scaleIndicator.onclick = () => applyBoardScale(1.0);
 
-    // إدارة الواجهات والطي
+    // إدارة الواجهات
     const topBanner = document.getElementById('topBanner');
     const topBarPanel = document.getElementById('topBarPanel');
     const leftPanel = document.getElementById('leftPanel');
@@ -1481,7 +1518,6 @@
     dragHeader.addEventListener('mousedown', startDragQuran);
     dragHeader.addEventListener('touchstart', startDragQuran, { passive: true });
 
-    // تحجيم العرض جهة اليمين
     function startResizeQW(e) {
       isResizingQW = true;
       const pt = getEventClient(e);
@@ -1492,7 +1528,6 @@
     quranResizeW.addEventListener('mousedown', startResizeQW);
     quranResizeW.addEventListener('touchstart', startResizeQW, { passive: false });
 
-    // تحجيم الطول جهة الأسفل
     function startResizeQH(e) {
       isResizingQH = true;
       const pt = getEventClient(e);
@@ -1503,7 +1538,6 @@
     quranResizeH.addEventListener('mousedown', startResizeQH);
     quranResizeH.addEventListener('touchstart', startResizeQH, { passive: false });
 
-    // تحجيم الزاوية (طول وعرض معاً)
     function startResizeQBoth(e) {
       isResizingQBoth = true;
       const pt = getEventClient(e);
@@ -1554,7 +1588,7 @@
     };
 
     // ========================================================
-    // الصناديق النصية الحرة (مضبوطة في نفس اتجاه حركة اليد 100%)
+    // الصناديق النصية الحرة
     // ========================================================
     let widgetIdCounter = 0;
     function createCustomTextWidget(x, y) {
@@ -1631,7 +1665,6 @@
       colorInput.oninput = () => { textarea.style.color = colorInput.value; };
       delBtn.onclick = () => { widget.remove(); };
 
-      // سحب وتحجيم الصندوق الحر بمعادلات إيجابية متطابقة مع حركة الماوس
       let isDraggingW = false, isResW = false, isResH = false, isResBoth = false;
       let sWX = 0, sWY = 0, sWW = 0, sWH = 0, wOffX = 0, wOffY = 0;
 
@@ -1709,7 +1742,7 @@
       setTimeout(() => textarea.focus(), 60);
     }
 
-    // قاعدة بيانات IndexedDB أوفلاين
+    // IndexedDB
     let quranDB = null;
     function initIndexedDB() {
       const request = indexedDB.open('AlFatehQuranDB', 1);
@@ -1766,7 +1799,7 @@
       });
     }
 
-    // المؤثرات الصوتية والتشجيعية
+    // المؤثرات
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     let audioCtx = null;
     function getAudioContext() {
@@ -2064,7 +2097,7 @@
       if (isAudioPlaying) window.jumpToAyah(currentAudioIndex);
     };
 
-    // منطق الرسم والكانفاس
+    // الرسم والكانفاس
     function resizeCanvases() {
       const w = window.innerWidth;
       const h = window.innerHeight;
@@ -2264,7 +2297,10 @@
           oCtx.lineWidth = currentSize;
           oCtx.lineCap = 'round';
           if (currentTool === 'line') {
-            oCtx.beginPath(); oCtx.moveTo(startX, startY); oCtx.lineTo(x, y); oCtx.stroke();
+            oCtx.beginPath();
+            oCtx.moveTo(startX, startY);
+            oCtx.lineTo(x, y);
+            oCtx.stroke();
           } else if (currentTool === 'rect') {
             oCtx.strokeRect(startX, startY, x - startX, y - startY);
           } else if (currentTool === 'circle') {
@@ -2303,7 +2339,10 @@
           pCtx.lineWidth = currentSize;
           pCtx.lineCap = 'round';
           if (currentTool === 'line') {
-            pCtx.beginPath(); pCtx.moveTo(startX, startY); pCtx.lineTo(x, y); pCtx.stroke();
+            pCtx.beginPath();
+            pCtx.moveTo(startX, startY);
+            pCtx.lineTo(x, y);
+            pCtx.stroke();
           } else if (currentTool === 'rect') {
             pCtx.strokeRect(startX, startY, x - startX, y - startY);
           } else if (currentTool === 'circle') {
@@ -2640,7 +2679,7 @@
       tryLoad();
     }
 
-    // إدراج وعرض الآيات وربط النقر المباشر والفهرس
+    // إدراج وعرض الآيات
     document.getElementById('submitQuranBtn').onclick = async () => {
       if (quranDisplayMode === 'text') {
         const surahIdx = parseInt(textSurahSelect.value);
@@ -2713,7 +2752,7 @@
           mushafContainer.style.display = 'none';
           quranTextContainer.style.display = 'flex';
           quranTextContainer.style.top = '15%';
-          quranTextContainer.style.left = '16%';
+          quranTextContainer.style.left = '10%';
 
           pCtx.clearRect(0, 0, paintCanvas.width, paintCanvas.height);
           saveState();
