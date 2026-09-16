@@ -270,12 +270,12 @@
     }
     .w-del-btn:hover { color: #ef4444; }
 
-    /* مقابض التحجيم الحرة للمربعات النصية (عرض، طول، زاوية) */
+    /* مقابض التحجيم الحرة للمربعات النصية (مضبوطة لليمين والأسفل لتتبع حركة اليد الطبيعية) */
     .resizer-w {
       position: absolute;
-      top: 0; left: 0;
-      width: 8px; height: 100%;
-      cursor: w-resize;
+      top: 0; right: 0;
+      width: 10px; height: 100%;
+      cursor: ew-resize;
       background: transparent;
       touch-action: none;
       z-index: 5;
@@ -283,19 +283,19 @@
     .resizer-h {
       position: absolute;
       bottom: 0; left: 0;
-      width: 100%; height: 8px;
-      cursor: s-resize;
+      width: 100%; height: 10px;
+      cursor: ns-resize;
       background: transparent;
       touch-action: none;
       z-index: 5;
     }
     .resize-handle-corner {
       position: absolute;
-      bottom: 0; left: 0;
-      width: 18px; height: 18px;
-      cursor: sw-resize;
+      bottom: 0; right: 0;
+      width: 20px; height: 20px;
+      cursor: se-resize;
       background: linear-gradient(135deg, transparent 50%, #38bdf8 50%);
-      border-bottom-left-radius: 8px;
+      border-bottom-right-radius: 8px;
       touch-action: none;
       z-index: 6;
     }
@@ -429,12 +429,12 @@
       text-align: center;
     }
 
-    /* مقابض التحجيم الحرة لصندوق المصحف الشريف (عرضاً وطولاً) */
+    /* مقابض التحجيم الحرة لصندوق المصحف الشريف (جهة اليمين والأسفل) */
     .quran-resize-edge-w {
       position: absolute;
-      top: 0; left: 0;
-      width: 10px; height: 100%;
-      cursor: w-resize;
+      top: 0; right: 0;
+      width: 12px; height: 100%;
+      cursor: ew-resize;
       background: transparent;
       touch-action: none;
       z-index: 10;
@@ -442,19 +442,19 @@
     .quran-resize-edge-h {
       position: absolute;
       bottom: 0; left: 0;
-      width: 100%; height: 10px;
-      cursor: s-resize;
+      width: 100%; height: 12px;
+      cursor: ns-resize;
       background: transparent;
       touch-action: none;
       z-index: 10;
     }
     .quran-resize-corner {
       position: absolute;
-      bottom: 0; left: 0;
+      bottom: 0; right: 0;
       width: 22px; height: 22px;
-      cursor: sw-resize;
+      cursor: se-resize;
       background: linear-gradient(135deg, transparent 50%, #f59e0b 50%);
-      border-bottom-left-radius: 12px;
+      border-bottom-right-radius: 12px;
       touch-action: none;
       z-index: 11;
     }
@@ -1112,7 +1112,7 @@
         </div>
       </div>
 
-      <!-- مقابض التحجيم الحرة لصندوق المصحف: تحكم بالعرض وحده، وبالطول وحده، وبالزاوية معاً -->
+      <!-- مقابض التحجيم الحرة لصندوق المصحف: مضبوطة جهة اليمين لتتوسع في نفس اتجاه حركة يدك -->
       <div class="quran-resize-edge-w" id="quranResizeW" title="اسحب يميناً ويساراً للتحكم في العرض فقط"></div>
       <div class="quran-resize-edge-h" id="quranResizeH" title="اسحب لأعلى ولأسفل للتحكم في الطول فقط"></div>
       <div class="quran-resize-corner" id="quranResizeCorner" title="اسحب لتكبير وتصغير الطول والعرض معاً"></div>
@@ -1171,7 +1171,7 @@
     <button class="side-btn" id="clearBoardBtn" style="color:#f87171;">🗑️ مسح لوحة الشرح</button>
   </div>
 
-  <!-- اللوحة الجانبية اليمنى (تحتوي على روابط التجويد والاختبارات المعتمدة دون أي تكرار) -->
+  <!-- اللوحة الجانبية اليمنى -->
   <div class="panel side-right" id="rightPanel">
     <div class="panel-header">
       <button class="side-btn" id="undoBtn" style="padding:2px 8px;">↩️ التراجع</button>
@@ -1211,7 +1211,6 @@
     
     <button class="side-btn btn-green-spec" id="openQuranBtn" style="margin-top:4px;">📖 آيات القرآن</button>
     
-    <!-- النسخة المعتمدة والمفردة لأحكام التجويد وألعاب جزء عم -->
     <a href="tajweed.html" target="_blank" class="side-btn" style="background:#059669; color:#fff; font-weight:bold; text-decoration:none; margin-top:4px;">
       📜 أحكام التجويد وتمارين جزء عم
     </a>
@@ -1381,9 +1380,7 @@
     btnZoomOut.onclick = () => applyBoardScale(currentScale - 0.1);
     scaleIndicator.onclick = () => applyBoardScale(1.0);
 
-    // ========================================================
-    // إدارة الواجهات: طي الأشرطة ووضع "السبورة الكاملة للشرح"
-    // ========================================================
+    // إدارة الواجهات والطي
     const topBanner = document.getElementById('topBanner');
     const topBarPanel = document.getElementById('topBarPanel');
     const leftPanel = document.getElementById('leftPanel');
@@ -1395,13 +1392,11 @@
     const toggleTopBtn = document.getElementById('toggleTopBtn');
     const restoreAllBtn = document.getElementById('restoreAllBtn');
 
-    // إخفاء البنر العلوي
     document.getElementById('closeBannerBtn').onclick = () => {
       topBanner.classList.add('hidden-bar');
       topBarPanel.style.top = '10px';
     };
 
-    // طي الشريط العلوي
     document.getElementById('hideTopBarBtn').onclick = () => {
       topBarPanel.classList.add('hidden-bar');
       toggleTopBtn.style.display = 'block';
@@ -1411,7 +1406,6 @@
       toggleTopBtn.style.display = 'none';
     };
 
-    // طي اللوحة اليسرى
     document.getElementById('closeLeftBtn').onclick = () => {
       leftPanel.classList.add('closed-left');
       toggleLeftBtn.style.display = 'block';
@@ -1421,7 +1415,6 @@
       toggleLeftBtn.style.display = 'none';
     };
 
-    // طي اللوحة اليمنى
     document.getElementById('closeRightBtn').onclick = () => {
       rightPanel.classList.add('closed-right');
       toggleRightBtn.style.display = 'block';
@@ -1431,13 +1424,11 @@
       toggleRightBtn.style.display = 'none';
     };
 
-    // طي شريط الأدوات السفلي
     document.getElementById('hideBottomDockBtn').onclick = () => {
       bottomDockPanel.classList.add('hidden-bar');
       restoreAllBtn.style.display = 'block';
     };
 
-    // زر وضع السبورة الخالصة للشرح (إخفاء كل شيء بضغطة واحدة)
     document.getElementById('btnFocusMode').onclick = () => {
       topBanner.classList.add('hidden-bar');
       topBarPanel.classList.add('hidden-bar');
@@ -1450,7 +1441,6 @@
       restoreAllBtn.style.display = 'block';
     };
 
-    // زر استعادة كافة الواجهات
     restoreAllBtn.onclick = () => {
       topBanner.classList.remove('hidden-bar');
       topBarPanel.classList.remove('hidden-bar');
@@ -1465,7 +1455,7 @@
     };
 
     // ========================================================
-    // تحريك وتحجيم صندوق المصحف (طولاً وعرضاً بحرية تامة)
+    // تحريك وتحجيم صندوق المصحف (مضبوط في نفس اتجاه حركة اليد 100%)
     // ========================================================
     const quranResizeW = document.getElementById('quranResizeW');
     const quranResizeH = document.getElementById('quranResizeH');
@@ -1491,7 +1481,7 @@
     dragHeader.addEventListener('mousedown', startDragQuran);
     dragHeader.addEventListener('touchstart', startDragQuran, { passive: true });
 
-    // تحجيم العرض فقط
+    // تحجيم العرض جهة اليمين
     function startResizeQW(e) {
       isResizingQW = true;
       const pt = getEventClient(e);
@@ -1502,7 +1492,7 @@
     quranResizeW.addEventListener('mousedown', startResizeQW);
     quranResizeW.addEventListener('touchstart', startResizeQW, { passive: false });
 
-    // تحجيم الطول والارتفاع فقط
+    // تحجيم الطول جهة الأسفل
     function startResizeQH(e) {
       isResizingQH = true;
       const pt = getEventClient(e);
@@ -1533,14 +1523,14 @@
         quranTextContainer.style.left = (pt.x - qOffX) + 'px';
         quranTextContainer.style.top = (pt.y - qOffY) + 'px';
       } else if (isResizingQW) {
-        const deltaX = qStartX - pt.x;
+        const deltaX = (pt.x - qStartX) / currentScale;
         quranTextContainer.style.width = Math.max(300, qStartW + deltaX) + 'px';
       } else if (isResizingQH) {
-        const deltaY = pt.y - qStartY;
+        const deltaY = (pt.y - qStartY) / currentScale;
         quranTextContainer.style.height = Math.max(180, qStartH + deltaY) + 'px';
       } else if (isResizingQBoth) {
-        const deltaX = qStartX - pt.x;
-        const deltaY = pt.y - qStartY;
+        const deltaX = (pt.x - qStartX) / currentScale;
+        const deltaY = (pt.y - qStartY) / currentScale;
         quranTextContainer.style.width = Math.max(300, qStartW + deltaX) + 'px';
         quranTextContainer.style.height = Math.max(180, qStartH + deltaY) + 'px';
       }
@@ -1564,7 +1554,7 @@
     };
 
     // ========================================================
-    // الصناديق النصية الحرة والتحكم المستقل بأبعادها
+    // الصناديق النصية الحرة (مضبوطة في نفس اتجاه حركة اليد 100%)
     // ========================================================
     let widgetIdCounter = 0;
     function createCustomTextWidget(x, y) {
@@ -1596,9 +1586,9 @@
           <input type="color" class="color-picker-input" value="#ffffff" title="لون النص" style="width:22px; height:22px; border:none; border-radius:4px; cursor:pointer; background:none;">
         </div>
         <textarea class="w-editor-area" placeholder="اكتب الشرح أو القاعدة التجويدية هنا بطلاقة..."></textarea>
-        <div class="resizer-w" title="اسحب للتحكم في العرض فقط"></div>
-        <div class="resizer-h" title="اسحب للتحكم في الطول فقط"></div>
-        <div class="resize-handle-corner" title="اسحب للتحكم في الطول والعرض معاً"></div>
+        <div class="resizer-w" title="اسحب يميناً لتوسيع العرض"></div>
+        <div class="resizer-h" title="اسحب لأسفل لزيادة الطول"></div>
+        <div class="resize-handle-corner" title="اسحب لتكبير الطول والعرض معاً"></div>
       `;
 
       textWidgetsContainer.appendChild(widget);
@@ -1641,7 +1631,7 @@
       colorInput.oninput = () => { textarea.style.color = colorInput.value; };
       delBtn.onclick = () => { widget.remove(); };
 
-      // سحب وتحجيم الصندوق الحر
+      // سحب وتحجيم الصندوق الحر بمعادلات إيجابية متطابقة مع حركة الماوس
       let isDraggingW = false, isResW = false, isResH = false, isResBoth = false;
       let sWX = 0, sWY = 0, sWW = 0, sWH = 0, wOffX = 0, wOffY = 0;
 
@@ -1691,12 +1681,16 @@
           widget.style.left = (pt.x - wOffX) + 'px';
           widget.style.top = (pt.y - wOffY) + 'px';
         } else if (isResW) {
-          widget.style.width = Math.max(220, sWW + (sWX - pt.x)) + 'px';
+          const deltaX = (pt.x - sWX) / currentScale;
+          widget.style.width = Math.max(220, sWW + deltaX) + 'px';
         } else if (isResH) {
-          widget.style.height = Math.max(140, sWH + (pt.y - sWY)) + 'px';
+          const deltaY = (pt.y - sWY) / currentScale;
+          widget.style.height = Math.max(140, sWH + deltaY) + 'px';
         } else if (isResBoth) {
-          widget.style.width = Math.max(220, sWW + (sWX - pt.x)) + 'px';
-          widget.style.height = Math.max(140, sWH + (pt.y - sWY)) + 'px';
+          const deltaX = (pt.x - sWX) / currentScale;
+          const deltaY = (pt.y - sWY) / currentScale;
+          widget.style.width = Math.max(220, sWW + deltaX) + 'px';
+          widget.style.height = Math.max(140, sWH + deltaY) + 'px';
         }
       }
 
@@ -1715,9 +1709,7 @@
       setTimeout(() => textarea.focus(), 60);
     }
 
-    // ========================================================
     // قاعدة بيانات IndexedDB أوفلاين
-    // ========================================================
     let quranDB = null;
     function initIndexedDB() {
       const request = indexedDB.open('AlFatehQuranDB', 1);
@@ -1774,9 +1766,7 @@
       });
     }
 
-    // ========================================================
     // المؤثرات الصوتية والتشجيعية
-    // ========================================================
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     let audioCtx = null;
     function getAudioContext() {
@@ -1864,9 +1854,7 @@
       }
     };
 
-    // ========================================================
-    // مشغل التلاوة والتنقل المباشر بالنقر واللمس
-    // ========================================================
+    // مشغل التلاوة
     let activeAyahsData = [];
     let currentAudioIndex = 0;
     let isAudioPlaying = false;
@@ -2076,9 +2064,7 @@
       if (isAudioPlaying) window.jumpToAyah(currentAudioIndex);
     };
 
-    // ========================================================
-    // منطق الرسم والكانفاس ومعالجة أحداث اللمس والماوس
-    // ========================================================
+    // منطق الرسم والكانفاس
     function resizeCanvases() {
       const w = window.innerWidth;
       const h = window.innerHeight;
@@ -2117,26 +2103,42 @@
       if (currentGrid === 'ruled' || currentGrid === 'wide-ruled') {
         const space = currentGrid === 'wide-ruled' ? 56 : 42;
         for (let y = space; y < gridCanvas.height; y += space) {
-          gCtx.beginPath(); gCtx.moveTo(0, y); gCtx.lineTo(gridCanvas.width, y); gCtx.stroke();
+          gCtx.beginPath();
+          gCtx.moveTo(0, y);
+          gCtx.lineTo(gridCanvas.width, y);
+          gCtx.stroke();
         }
       } else if (currentGrid === 'two-lines') {
         for (let y = 50; y < gridCanvas.height; y += 70) {
-          gCtx.beginPath(); gCtx.moveTo(0, y); gCtx.lineTo(gridCanvas.width, y); gCtx.stroke();
-          gCtx.beginPath(); gCtx.moveTo(0, y + 24); gCtx.lineTo(gridCanvas.width, y + 24); gCtx.stroke();
+          gCtx.beginPath();
+          gCtx.moveTo(0, y);
+          gCtx.lineTo(gridCanvas.width, y);
+          gCtx.moveTo(0, y + 24);
+          gCtx.lineTo(gridCanvas.width, y + 24);
+          gCtx.stroke();
         }
       } else if (currentGrid === 'four-lines') {
         for (let y = 50; y < gridCanvas.height; y += 90) {
           for (let i = 0; i < 4; i++) {
-            gCtx.beginPath(); gCtx.moveTo(0, y + i * 16); gCtx.lineTo(gridCanvas.width, y + i * 16); gCtx.stroke();
+            gCtx.beginPath();
+            gCtx.moveTo(0, y + i * 16);
+            gCtx.lineTo(gridCanvas.width, y + i * 16);
+            gCtx.stroke();
           }
         }
       } else if (currentGrid === 'graph') {
         const step = 38;
         for (let x = 0; x < gridCanvas.width; x += step) {
-          gCtx.beginPath(); gCtx.moveTo(x, 0); gCtx.lineTo(x, gridCanvas.height); gCtx.stroke();
+          gCtx.beginPath();
+          gCtx.moveTo(x, 0);
+          gCtx.lineTo(x, gridCanvas.height);
+          gCtx.stroke();
         }
         for (let y = 0; y < gridCanvas.height; y += step) {
-          gCtx.beginPath(); gCtx.moveTo(0, y); gCtx.lineTo(gridCanvas.width, y); gCtx.stroke();
+          gCtx.beginPath();
+          gCtx.moveTo(0, y);
+          gCtx.lineTo(gridCanvas.width, y);
+          gCtx.stroke();
         }
       }
     }
