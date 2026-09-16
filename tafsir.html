@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>واحة التفسير ومعاني الكلمات والحديث النبوي — أكاديمية الفتح</title>
+  <link rel="manifest" href="manifest.json">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;800;900&family=Amiri+Quran&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+  
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body {
+      background: radial-gradient(circle at top, #0f172a 0%, #064e3b 60%, #022c22 100%);
+      font-family: 'Cairo', sans-serif;
+      color: #f8fafc;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-bottom: 60px;
+    }
+
+    /* الشريط العلوي */
+    .top-header {
+      width: 100%;
+      background: linear-gradient(90deg, #0f172a, #78350f, #064e3b);
+      border-bottom: 3px solid #facc15;
+      padding: 14px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .top-title {
+      font-size: 20px;
+      font-weight: 900;
+      color: #fef08a;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .nav-btn {
+      background: rgba(255,255,255,0.12);
+      border: 1.5px solid rgba(255,255,255,0.25);
+      color: #fff;
+      padding: 8px 18px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 800;
+      transition: all 0.25s;
+    }
+    .nav-btn:hover { background: #d97706; transform: scale(1.05); }
+
+    .main-wrapper {
+      width: 95vw;
+      max-width: 1100px;
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* شريط اختيار السورة */
+    .surah-picker-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(15, 23, 42, 0.85);
+      padding: 14px 20px;
+      border-radius: 18px;
+      border: 1.5px solid #d97706;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      flex-wrap: wrap;
+    }
+    .picker-label {
+      font-weight: 900;
+      color: #facc15;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .surah-select {
+      flex: 1;
+      min-width: 220px;
+      background: #0b111e;
+      border: 1.5px solid #38bdf8;
+      border-radius: 10px;
+      color: #fff;
+      padding: 10px 14px;
+      font-size: 15px;
+      font-weight: bold;
+      outline: none;
+      cursor: pointer;
+    }
+
+    /* بطاقة الآية المعروضة الكبرى */
+    .ayah-display-card {
+      background: linear-gradient(145deg, #1e293b, #0f172a);
+      border: 2.5px solid #facc15;
+      border-radius: 24px;
+      padding: 30px;
+      box-shadow: 0 15px 45px rgba(0,0,0,0.7);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      position: relative;
+    }
+    .ayah-quran-text {
+      font-family: 'Amiri Quran', serif;
+      font-size: 42px;
+      line-height: 2.4;
+      color: #fef08a;
+      text-align: center;
+      padding: 16px 20px;
+      background: rgba(0,0,0,0.3);
+      border-radius: 18px;
+      border: 1px dashed rgba(250, 204, 21, 0.4);
+    }
+    .ayah-nav-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+    .ctrl-btn {
+      background: #0284c7;
+      border: 1.5px solid #38bdf8;
+      color: #fff;
+      padding: 10px 22px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 900;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .ctrl-btn:hover { background: #0369a1; transform: scale(1.03); }
+    .ayah-indicator {
+      font-size: 15px;
+      font-weight: 800;
+      color: #94a3b8;
+    }
+
+    /* أقسام البيان والشرح */
+    .section-box {
+      border-radius: 16px;
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .sec-words {
+      background: rgba(2, 132, 199, 0.12);
+      border-right: 5px solid #38bdf8;
+    }
+    .sec-tafsir {
+      background: rgba(245, 158, 11, 0.12);
+      border-right: 5px solid #f59e0b;
+    }
+    .sec-title {
+      font-size: 18px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .sec-words .sec-title { color: #38bdf8; }
+    .sec-tafsir .sec-title { color: #facc15; }
+    .sec-content {
+      font-size: 18px;
+      line-height: 2;
+      color: #f1f5f9;
+      font-weight: 700;
+    }
+
+    /* زر فتح الحديث النبوي */
+    .hadith-trigger-btn {
+      background: linear-gradient(135deg, #10b981, #047857);
+      border: 2px solid #34d399;
+      color: #fff;
+      padding: 14px 24px;
+      border-radius: 16px;
+      font-size: 17px;
+      font-weight: 900;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 8px 25px rgba(16, 185, 129, 0.35);
+      transition: all 0.25s;
+    }
+    .hadith-trigger-btn:hover {
+      background: #059669;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(16, 185, 129, 0.5);
+    }
+
+    /* نافذة الحديث النبوي المنبثقة الموسعة للزووم */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(10px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+    .modal-overlay.active { display: flex; }
+    .hadith-modal-card {
+      background: #0f172a;
+      border: 3px solid #34d399;
+      border-radius: 24px;
+      width: 90vw;
+      max-width: 720px;
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      position: relative;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.9);
+      direction: rtl;
+    }
+    .modal-close-btn {
+      position: absolute;
+      top: 18px; left: 18px;
+      background: #dc2626;
+      border: none;
+      color: #fff;
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 16px;
+    }
+    .hadith-matn-box {
+      font-family: 'Amiri', serif;
+      font-size: 24px;
+      line-height: 2.2;
+      color: #fef08a;
+      background: rgba(16, 185, 129, 0.12);
+      border-right: 5px solid #10b981;
+      padding: 16px 20px;
+      border-radius: 12px;
+    }
+    .hadith-source-text {
+      font-size: 13px;
+      color: #94a3b8;
+      font-weight: 800;
+    }
+    .hadith-lesson-box {
+      font-size: 18px;
+      line-height: 1.9;
+      color: #f8fafc;
+      font-weight: 700;
+      background: rgba(255,255,255,0.04);
+      padding: 14px 18px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-header">
+    <div class="top-title">
+      <span>📖</span>
+      <span>واحة التفسير ومعاني الكلمات والحديث النبوي — جزء عم</span>
+    </div>
+    <a href="index.html" class="nav-btn">↩️ الرجوع للسبورة</a>
+  </div>
+
+  <div class="main-wrapper">
+    <!-- اختيار السورة -->
+    <div class="surah-picker-bar">
+      <div class="picker-label"><span>📑</span><span>اختر السورة الكريمة:</span></div>
+      <select class="surah-select" id="surahSelect"></select>
+    </div>
+
+    <!-- بطاقة الآية والتفسير -->
+    <div class="ayah-display-card">
+      <div class="ayah-nav-controls">
+        <button class="ctrl-btn" id="prevAyahBtn">⏮️ الآية السابقة</button>
+        <span class="ayah-indicator" id="ayahIndicator">الآية 1 من 7</span>
+        <button class="ctrl-btn" id="nextAyahBtn">الآية التالية ⏭️</button>
+      </div>
+
+      <div class="ayah-quran-text" id="ayahText">﴿ ... ﴾</div>
+
+      <!-- معاني الكلمات -->
+      <div class="section-box sec-words" id="wordsSection">
+        <div class="sec-title"><span>🔤</span><span>معاني مفردات الآية:</span></div>
+        <div class="sec-content" id="wordsContent">...</div>
+      </div>
+
+      <!-- المعنى الإجمالي بأسلوب ميسر -->
+      <div class="section-box sec-tafsir">
+        <div class="sec-title"><span>💡</span><span>المعنى الإجمالي والتفسير الميسر:</span></div>
+        <div class="sec-content" id="tafsirContent">...</div>
+      </div>
+
+      <!-- زر الحديث النبوي -->
+      <button class="hadith-trigger-btn" id="openHadithBtn">
+        <span>🕌</span>
+        <span>عرض الحديث النبوي الشريف المرتبط بالآية وفائدته التربوية</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- النافذة المنبثقة للحديث الشريف -->
+  <div class="modal-overlay" id="hadithModal">
+    <div class="hadith-modal-card">
+      <button class="modal-close-btn" onclick="document.getElementById('hadithModal').classList.remove('active')">✕</button>
+      <h3 style="color:#34d399; font-size:22px; font-weight:900; display:flex; align-items:center; gap:8px;">
+        <span>🕌</span>
+        <span>حديث نبوي شريف مرتبط بالآية الكريمة</span>
+      </h3>
+      <div class="hadith-matn-box" id="modalHadithMatn"></div>
+      <div class="hadith-source-text" id="modalHadithSource"></div>
+      <div style="color:#facc15; font-size:16px; font-weight:900;">🌟 الفائدة والشرح التربوي للأطفال والكبار:</div>
+      <div class="hadith-lesson-box" id="modalHadithLesson"></div>
+    </div>
+  </div>
+
+  <script>
+    // بنك التفسير ومعاني الكلمات والحديث النبوي المعتمد
+    const tafsirBank = {
+      1: {
+        name: "الفاتحة",
+        ayahs: [
+          {
+            num: 1,
+            text: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+            words: "<strong>بِسْمِ اللَّهِ:</strong> أَبْتَدِئُ قِرَاءَتِي مُسْتَعِينًا بِاللَّهِ رَاجِيًا بَرَكَتَهُ.<br><strong>الرَّحْمَٰنِ:</strong> ذُو الرَّحْمَةِ الْوَاسِعَةِ لِجَمِيعِ الْخَلْقِ.<br><strong>الرَّحِيمِ:</strong> ذُو الرَّحْمَةِ الْخَاصَّةِ بِعِبَادِهِ الْمُؤْمِنِينَ.",
+            tafsir: "أبدأ تلاوتي متبركاً باسم الله تعالى ومستعيناً به وحده في كل أموري، وهو سبحانه الرحمن الذي وسعت رحمته كل شيء، الرحيم بعباده الطائعين.",
+            hadith: "قَالَ رَسُولُ اللَّهِ ﷺ: «كُلُّ أَمْرٍ ذِي بَالٍ لاَ يُبْدَأُ فِيهِ بِبِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ فَهُوَ أَقْطَعُ» (أي منقوص البركة).",
+            source: "رواه عبد القادر الرهاوي وحسنه الألباني",
+            lesson: "نعلّم الطفل والناشئ أن البسملة هي مفتاح البركة والحفظ في كل خطوة؛ عند الأكل، والشرب، والمذاكرة، والنوم."
+          },
+          {
+            num: 2,
+            text: "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ",
+            words: "<strong>الْحَمْدُ:</strong> الثَّنَاءُ وَالشُّكْرُ لِلَّهِ بِصِفَاتِ كَمَالِهِ وَنِعَمِهِ.<br><strong>رَبِّ:</strong> الْخَالِقُ الْمَالِكُ الْمُدَبِّرُ لِكُلِّ شَيْءٍ.<br><strong>الْعَالَمِينَ:</strong> جَمِيعُ الْمَخْلُوقَاتِ مِنَ الإِنْسِ وَالْجِنِّ وَالْمَلائِكَةِ وَالْكَائِنَاتِ.",
+            tafsir: "الشكر والثناء الخالص لله وحده على نعمه العظيمة التي لا تحصى؛ فهو سبحانه خالق الكون ومربّي كل الخلائق بفضله وإحسانه.",
+            hadith: "قَالَ رَسُولُ اللَّهِ ﷺ: «أَفْضَلُ الذِّكْرِ لاَ إِلَهَ إِلاَّ اللَّهُ، وَأَفْضَلُ الدُّعَاءِ الْحَمْدُ لِلَّهِ».",
+            source: "رواه الترمذي وصححه الألباني",
+            lesson: "غرس خلق الحمد والشكر عند الأطفال؛ فكل نعمة نملكها من صحة وأهل وعلم هي عطاء كريم من الله يستوجب الشكر لتدوم."
+          },
+          {
+            num: 3,
+            text: "الرَّحْمَٰنِ الرَّحِيمِ",
+            words: "<strong>الرَّحْمَٰنِ الرَّحِيمِ:</strong> صِفَتَانِ جَلِيلَتَانِ تَدُلاَّنِ عَلَى كَمَالِ رَحْمَةِ اللَّهِ وَإِحْسَانِهِ الدَّائِمِ.",
+            tafsir: "تأكيد على صفة الرحمة الإلهية؛ فالله لا يعاجل عباده بالعقوبة، بل يفتح لهم أبواب التوبة والرحمة والمغفرة دائماً.",
+            hadith: "قَالَ النَّبِيُّ ﷺ: «إِنَّ لِلَّهِ مِائَةَ رَحْمَةٍ، أَنْزَلَ مِنْهَا رَحْمَةً وَاحِدَةً بَيْنَ الجِنِّ وَالإِنْسِ وَالبَهَائِمِ فَبِهَا يَتَرَاحَمُونَ، وَأَخَّرَ تِسْعًا وَتِسْعِينَ رَحْمَةً يَرْحَمُ بِهَا عِبَادَهُ يَوْمَ القِيَامَةِ».",
+            source: "صحيح مسلم",
+            lesson: "تعليم الطفل كيف يكون رحيماً بإخوانه وزملائه والحيوانات الضعيفة؛ لأن من لا يَرْحم لا يُرْحم."
+          },
+          {
+            num: 4,
+            text: "مَالِكِ يَوْمِ الدِّينِ",
+            words: "<strong>مَالِكِ:</strong> الْمُتَصَرِّفُ الْوَحِيدُ بِالْعَدْلِ وَالسُّلْطَانِ.<br><strong>يَوْمِ الدِّينِ:</strong> يَوْمُ الْقِيَامَةِ وَالْحِسَابِ وَالْجَزَاءِ عَلَى الأَعْمَالِ.",
+            tafsir: "الله وحده هو الحاكم والمالك في يوم القيامة، حيث يُجازى المحسن بإحسانه ويُحاسب المسيء على ما قدّم.",
+            hadith: "قَالَ رَسُولُ اللَّهِ ﷺ: «الكَيِّسُ (أي الذكي العاقل) مَنْ دَانَ نَفْسَهُ وَعَمِلَ لِمَا بَعْدَ المَوْتِ».",
+            source: "رواه الترمذي وحسنه",
+            lesson: "التذكير باليوم الآخر يعين النفس على مراقبة الله في السر والعلن، والحرص على الصدق وفعل الخيرات استعداداً للقاء الله."
+          },
+          {
+            num: 5,
+            text: "إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ",
+            words: "<strong>إِيَّاكَ نَعْبُدُ:</strong> لا نَعْبُدُ أَحَدًا غَيْرَكَ وَلا نُشْرِكُ بِكَ.<br><strong>وَإِيَّاكَ نَسْتَعِينُ:</strong> لا نَطْلُبُ الْعَوْنَ وَالتَّوْفِيقَ إِلاَّ مِنْكَ وَحْدَكَ.",
+            tafsir: "نخصك يا ربنا وحده بالعبادة الخالصة والدعاء، ونلجأ إليك وحدك لتعيننا على طاعتك والنجاح في أمور ديننا ودنيانا.",
+            hadith: "وَصِيَّةُ النَّبِيِّ ﷺ لِابْنِ عَبَّاسٍ: «إِذَا سَأَلْتَ فَاسْأَلِ اللَّهَ، وَإِذَا اسْتَعَنْتَ فَاسْتَعِنْ بِاللَّهِ».",
+            source: "صحيح الترمذي",
+            lesson: "قاعدة التوحيد والاعتماد على الله؛ فلا نخاف إلا من الله، وإذا احتجنا توفيقاً أو عوناً في دراستنا سألنا الله بقلب صادق."
+          },
+          {
+            num: 6,
+            text: "اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ",
+            words: "<strong>اهْدِنَا:</strong> دُلَّنَا وَوَفِّقْنَا وَثَبِّتْنَا.<br><strong>الصِّرَاطَ:</strong> الطَّرِيقَ الْوَاضِحَ.<br><strong>الْمُسْتَقِيمَ:</strong> الَّذِي لا اعْوِجَاجَ فِيهِ (وَهُوَ الإِسْلامُ وَالْقُرْآنُ).",
+            tafsir: "نسألك يا ربنا أن ترشدنا وتثبتنا على طريق الحق الواضح الذي يوصلنا إلى رضاك وجناتك النعيم.",
+            hadith: "ضَرَبَ رَسُولُ اللَّهِ ﷺ مَثَلاً: «صِرَاطًا مُسْتَقِيمًا، وَعَلَى جَنْبَتَيِ الصِّرَاطِ سُورَانِ فِيهِمَا أَبْوَابٌ مُفَتَّحَةٌ، وَعَلَى الأَبْوَابِ سُتُورٌ مُرْخَاةٌ، وَدَاعٍ يَدْعُو: يَا أَيُّهَا النَّاسُ ادْخُلُوا الصِّرَاطَ جَمِيعًا وَلاَ تَعْوَجُّوا».",
+            source: "رواه أحمد والترمذي وصححه الألباني",
+            lesson: "أهمية الدعاء بالثبات على الأخلاق الفاضلة والصلوات والقرآن في زمن كثرت فيه المشتتات."
+          },
+          {
+            num: 7,
+            text: "صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ",
+            words: "<strong>أَنْعَمْتَ عَلَيْهِمْ:</strong> النَّبِيِّينَ وَالصِّدِّيقِينَ وَالشُّهَدَاءِ وَالصَّالِحِينَ.<br><strong>الْمَغْضُوبِ عَلَيْهِمْ:</strong> عَرَفُوا الْحَقَّ وَلَمْ يَعْمَلُوا بِهِ.<br><strong>الضَّالِّينَ:</strong> عَبَدُوا اللَّهَ عَلَى جَهْلٍ وَانْحَرَفُوا عَنِ الْحَقِّ.",
+            tafsir: "طريق المؤمنين الأخيار الصالحين، لا طريق من عرف الحق وتركه تكبراً، ولا طريق من ضل وتعبد بالجهل والأهواء.",
+            hadith: "عَنْ أَبِي هُرَيْرَةَ رَضِيَ اللَّهُ عَنْهُ، أَنَّ النَّبِيَّ ﷺ قَالَ: «إِذَا أَمَّنَ الإِمَامُ فَأَمِّنُوا؛ فَإِنَّهُ مَنْ وَافَقَ تَأْمِينُهُ تَأْمِينَ المَلاَئِكَةِ غُفِرَ لَهُ مَا تَقَدَّمَ مِنْ ذَنْبِهِ».",
+            source: "صحيح البخاري",
+            lesson: "اختيار القدوة الحسنة من الأنبياء والصحابة والعلماء، وتجنب رفقاء السوء وأصحاب السلوكيات السيئة."
+          }
+        ]
+      },
+      112: {
+        name: "الإخلاص",
+        ayahs: [
+          {
+            num: 1,
+            text: "قُلْ هُوَ اللَّهُ أَحَدٌ",
+            words: "<strong>أَحَدٌ:</strong> وَاحِدٌ مُتَفَرِّدٌ لا شَرِيكَ لَهُ، وَلا نَظِيرَ وَلا مَثِيلَ.",
+            tafsir: "قل أيها الرسول والمؤمن: الله جل جلاله هو الواحد الأحد المتفرد بالكمال والألوهية، ليس له شريك ولا شبيه.",
+            hadith: "قَالَ رَسُولُ اللَّهِ ﷺ: «أَيَعْجِزُ أَحَدُكُمْ أَنْ يَقْرَأَ فِي لَيْلَةٍ ثُلُثَ القُرْآنِ؟ قَالُوا: وَكَيْفَ؟ قَالَ: ﴿قُلْ هُوَ اللَّهُ أَحَدٌ﴾ تَعْدِلُ ثُلُثَ القُرْآنِ».",
+            source: "صحيح البخاري",
+            lesson: "تثبيت عقيدة التوحيد في قلب الطفل؛ فالله يرانا ويسمعنا في كل مكان وهو وحده المستحق للعبادة."
+          },
+          {
+            num: 2,
+            text: "اللَّهُ الصَّمَدُ",
+            words: "<strong>الصَّمَدُ:</strong> السَّيِّدُ الْعَظِيمُ الَّذِي تَقْصِدُهُ جَمِيعُ الْخَلائِقِ فِي حَوَائِجِهَا.",
+            tafsir: "الله هو السيد الكامل الذي تصمد إليه الخلائق وتلجأ إليه كل الكائنات لقضاء حاجاتها وإجابة دعواتها.",
+            hadith: "سَمِعَ النَّبِيُّ ﷺ رَجُلاً يَقُولُ: «اللَّهُمَّ إِنِّي أَسْأَلُكَ بِأَنَّكَ أَنْتَ اللَّهُ الأَحَدُ الصَّمَدُ الَّذِي لَمْ يَلِدْ وَلَمْ يُولَدْ وَلَمْ يَكُنْ لَهُ كُفُوًا أَحَدٌ»، فَقَالَ ﷺ: «لَقَدْ سَأَلَ اللَّهَ بِاسْمِهِ الأَعْظَمِ الَّذِي إِذَا سُئِلَ بِهِ أَعْطَى، وَإِذَا دُعِيَ بِهِ أَجَابَ».",
+            source: "رواه أبو داود والترمذي وصححه الألباني",
+            lesson: "تعليم الطفل أن الصمد يعني أن نطلب من الله كل شيء نحتاجه؛ فهو الغني القادر على كل شيء."
+          },
+          {
+            num: 3,
+            text: "لَمْ يَلِدْ وَلَمْ يُولَدْ",
+            words: "<strong>لَمْ يَلِدْ:</strong> لَيْسَ لَهُ وَلَدٌ.<br><strong>وَلَمْ يُولَدْ:</strong> لَيْسَ لَهُ وَالِدٌ وَلا أُمٌّ، لِأَنَّهُ الأَوَّلُ الَّذِي لَيْسَ قَبْلَهُ شَيْءٌ.",
+            tafsir: "تنزه الله سبحانه عن الولد والوالد؛ فهو الغني عن كل أحد، وكل ما في السماوات والأرض عبيد له.",
+            hadith: "قَالَ اللَّهُ تَعَالَى فِي الحَدِيثِ القُدْسِيِّ: «كَذَّبَنِي ابْنُ آدَمَ وَلَمْ يَكُنْ لَهُ ذَلِكَ، وَشَتَمَنِي وَلَمْ يَكُنْ لَهُ ذَلِكَ... وَأَمَّا شَتْمُهُ إِيَّايَ فَقَوْلُهُ: اتَّخَذَ اللَّهُ وَلَدًا، وَأَنَا الأَحَدُ الصَّمَدُ لَمْ أَلِدْ وَلَمْ أُولَدْ وَلَمْ يَكُنْ لِي كُفُوًا أَحَدٌ».",
+            source: "صحيح البخاري",
+            lesson: "تعظيم الله وتنزيهه عن صفات النقص والمخلوقين؛ فالله خالق كل شيء ولا يشبهه أحد."
+          },
+          {
+            num: 4,
+            text: "وَلَمْ يَكُنْ لَهُ كُفُوًا أَحَدٌ",
+            words: "<strong>كُفُوًا:</strong> مُمَاثِلاً وَمُكَافِئًا وَشَبِيهًا.",
+            tafsir: "ليس لله مثيل ولا شبيه ولا مساوٍ في أسمائه وصفاته وأفعاله جل جلاله.",
+            hadith: "عَنْ عَائِشَةَ رَضِيَ اللَّهُ عَنْهَا أَنَّ رَجُلاً كَانَ يَقْرَأُ لِأَصْحَابِهِ فِي صَلاَتِهِ فَيَخْتِمُ بِـ ﴿قُلْ هُوَ اللَّهُ أَحَدٌ﴾، فَلَمَّا سَأَلُوهُ قَالَ: لأَنَّهَا صِفَةُ الرَّحْمَنِ وَأَنَا أُحِبُّ أَنْ أَقْرَأَ بِهَا، فَقَالَ النَّبِيُّ ﷺ: «أَخْبِرُوهُ أَنَّ اللَّهَ يُحِبُّهُ».",
+            source: "صحيح البخاري",
+            lesson: "محبة سورة الإخلاص وتكرارها يجلب محبة الله تعالى ورضوانه ودخول الجنة."
+          }
+        ]
+      },
+      113: {
+        name: "الفلق",
+        ayahs: [
+          {
+            num: 1,
+            text: "قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ",
+            words: "<strong>أَعُوذُ:</strong> أَلْتَجِئُ وَأَحْتَمِي وَأَتَحَصَّنُ.<br><strong>الْفَلَقِ:</strong> الصُّبْحِ إِذَا انْفَلَقَ نُورُهُ وَانْشَقَّ.",
+            tafsir: "قل أيها المسلم: ألتجئ وأعتصم برب الصباح وخالق كل ما ينفلق من حب ونوى ونور ليحميني من كل شر.",
+            hadith: "قَالَ النَّبِيُّ ﷺ لِعُقْبَةَ بْنِ عَامِرٍ: «أَلاَ أُعَلِّمُكَ سُوَرًا مَا أُنْزِلَ فِي التَّوْرَاةِ وَلاَ فِي الإِنْجِيلِ وَلاَ فِي الزَّبُورِ وَلاَ فِي الفُرْقَانِ مِثْلُهُنَّ؟ ﴿قُلْ هُوَ اللَّهُ أَحَدٌ﴾، وَ﴿قُلْ أَعُوذُ بِرَبِّ الفَلَقِ﴾، وَ﴿قُلْ أَعُوذُ بِرَبِّ النَّاسِ﴾».",
+            source: "رواه أحمد والنسائي وصححه الألباني",
+            lesson: "التحصين اليومي بالمعوذات صباحاً ومساءً يزرع في نفس الطفل الأمان التام والطمأنينة."
+          },
+          {
+            num: 2,
+            text: "مِنْ شَرِّ مَا خَلَقَ",
+            words: "<strong>شَرِّ مَا خَلَقَ:</strong> شَرِّ كُلِّ مَخْلُوقٍ فِيهِ شَرٌّ وَأَذَى مِنَ الإِنْسِ وَالْجِنِّ وَالسِّبَاعِ وَالْهَوَامِّ.",
+            tafsir: "أحتمي بالله من أذى وشر كل ما خلق في هذا العالم من مخلوقات ومخاوف لا يعلمها إلا هو.",
+            hadith: "قَالَ رَسُولُ اللَّهِ ﷺ: «مَنْ نَزَلَ مَنْزِلاً ثُمَّ قَالَ: أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ، لَمْ يَضُرَّهُ شَيْءٌ حَتَّى يَرْتَحِلَ مِنْ مَنْزِلِهِ ذَلِكَ».",
+            source: "صحيح مسلم",
+            lesson: "الاستعاذة بالله تطرد الخوف من الظلام أو الحشرات أو الأشياء المخيفة لأن الله أقوى من كل شيء."
+          },
+          {
+            num: 3,
+            text: "وَمِنْ شَرِّ غَاسِقٍ إِذَا وَقَبَ",
+            words: "<strong>غَاسِقٍ:</strong> اللَّيْلِ إِذَا أَظْلَمَ.<br><strong>وَقَبَ:</strong> دَخَلَ وَانْتَشَرَ ظَلامُهُ.",
+            tafsir: "وأتحصن بالله من شرور الليل ومخاوفه حين يدخل ظلامه وتنتشر فيه الهوام وأهل السوء.",
+            hadith: "نَظَرَ رَسُولُ اللَّهِ ﷺ إِلَى الْقَمَرِ فَقَالَ: «يَا عَائِشَةُ اسْتَعِيذِي بِاللَّهِ مِنْ شَرِّ هَذَا، فَإِنَّ هَذَا هُوَ الْغَاسِقُ إِذَا وَقَبَ».",
+            source: "رواه الترمذي وصححه الألباني",
+            lesson: "المحافظة على أذكار النوم وقراءة المعوذات والنفث في الكفين ومسح الجسد للحفظ والسكينة."
+          },
+          {
+            num: 4,
+            text: "وَمِنْ شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ",
+            words: "<strong>النَّفَّاثَاتِ:</strong> السَّاحِرَاتِ اللاَّتِي يَنْفُثْنَ (يَنْفُخْنَ مَعَ رِيقٍ خَفِيفٍ).<br><strong>الْعُقَدِ:</strong> عُقَدِ الْخُيُوطِ الَّتِي يَعْقِدْنَهَا لأَجْلِ السِّحْرِ وَالأَذَى.",
+            tafsir: "وأستجير بالله العظيم من كيد السحرة والمفسدين الذين يعقدون الخيوط وينفثون فيها لإيذاء الناس.",
+            hadith: "كَانَ رَسُولُ اللَّهِ ﷺ إِذَا اشْتَكَى (مَرِضَ) نَفَثَ عَلَى نَفْسِهِ بِالمُعَوِّذَاتِ وَمَسَحَ عَنْهُ بِيَدِهِ.",
+            source: "صحيح البخاري",
+            lesson: "القرآن هو الحصن والشفاء الواقي؛ فلا نلتفت للخرافات ولا نخاف السحر مادمنا مستمسكين بالقرآن والذكر."
+          },
+          {
+            num: 5,
+            text: "وَمِنْ شَرِّ حَاسِدٍ إِذَا حَسَدَ",
+            words: "<strong>حَاسِدٍ:</strong> مَنْ يَتَمَنَّى زَوَالَ النِّعْمَةِ عَنْ غَيْرِهِ.<br><strong>إِذَا حَسَدَ:</strong> إِذَا أَظْهَرَ حَسَدَهُ وَعَمِلَ بِمُقْتَضَاهُ بِالْعَيْنِ أَوِ الأَذَى.",
+            tafsir: "وألجأ إلى الله من شر العين والحاسد الذي يحزن لنعمة رآها على غيره ويتمنى زوالها.",
+            hadith: "قَالَ النَّبِيُّ ﷺ: «إِيَّاكُمْ وَالحَسَدَ، فَإِنَّ الحَسَدَ يَأْكُلُ الحَسَنَاتِ كَمَا تَأْكُلُ النَّارُ الحَطَبَ».",
+            source: "رواه أبو داود",
+            lesson: "سلامة الصدر ومحبة الخير للغير؛ ونعلم الطفل أن يقول: (ما شاء الله تبارك الله) إذا رأى شيئاً يعجبه."
+          }
+        ]
+      }
+    };
+
+    let curSurah = 1;
+    let curAyahIdx = 0;
+    let activeModalHadith = null;
+
+    // تعبئة قائمة السور
+    const surahSelect = document.getElementById('surahSelect');
+    Object.keys(tafsirBank).forEach(sNum => {
+      const s = tafsirBank[sNum];
+      const opt = document.createElement('option');
+      opt.value = sNum;
+      opt.innerText = `سورة ${s.name} (${s.ayahs.length} آيات)`;
+      surahSelect.appendChild(opt);
+    });
+
+    surahSelect.onchange = () => {
+      curSurah = parseInt(surahSelect.value);
+      curAyahIdx = 0;
+      loadAyahData();
+    };
+
+    function loadAyahData() {
+      const sData = tafsirBank[curSurah];
+      const aData = sData.ayahs[curAyahIdx];
+
+      document.getElementById('ayahIndicator').innerText = `الآية ${aData.num} من ${sData.ayahs.length}`;
+      document.getElementById('ayahText').innerText = `﴿ ${aData.text} ﴾`;
+      document.getElementById('wordsContent').innerHTML = aData.words;
+      document.getElementById('tafsirContent').innerText = aData.tafsir;
+
+      activeModalHadith = {
+        matn: aData.hadith,
+        source: aData.source,
+        lesson: aData.lesson
+      };
+    }
+
+    document.getElementById('nextAyahBtn').onclick = () => {
+      const sData = tafsirBank[curSurah];
+      if (curAyahIdx < sData.ayahs.length - 1) {
+        curAyahIdx++;
+        loadAyahData();
+      }
+    };
+
+    document.getElementById('prevAyahBtn').onclick = () => {
+      if (curAyahIdx > 0) {
+        curAyahIdx--;
+        loadAyahData();
+      }
+    };
+
+    // فتح نافذة الحديث النبوي
+    document.getElementById('openHadithBtn').onclick = () => {
+      if (!activeModalHadith) return;
+      document.getElementById('modalHadithMatn').innerText = activeModalHadith.matn;
+      document.getElementById('modalHadithSource').innerText = `تخريج الحديث: ${activeModalHadith.source}`;
+      document.getElementById('modalHadithLesson').innerText = activeModalHadith.lesson;
+      document.getElementById('hadithModal').classList.add('active');
+      confetti({ particleCount: 50, spread: 70, origin: { y: 0.6 } });
+    };
+
+    loadAyahData();
+  </script>
+</body>
+</html>
