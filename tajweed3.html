@@ -1,0 +1,1416 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>موسوعة التجويد الكبرى للأطفال والبث المباشر — أكاديمية الفتح</title>
+  <link rel="manifest" href="manifest.json">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;800;900&family=Amiri+Quran&display=swap" rel="stylesheet">
+  
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body {
+      background: radial-gradient(circle at top, #065f46 0%, #064e3b 45%, #022c22 100%);
+      font-family: 'Cairo', sans-serif;
+      color: #f8fafc;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+      padding-bottom: 60px;
+    }
+
+    .top-header {
+      width: 100%;
+      background: linear-gradient(90deg, #0f172a, #78350f, #064e3b);
+      border-bottom: 3px solid #facc15;
+      padding: 14px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .top-title {
+      font-size: 20px;
+      font-weight: 900;
+      color: #fef08a;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+    }
+    .nav-btn {
+      background: rgba(255,255,255,0.12);
+      border: 1.5px solid rgba(255,255,255,0.25);
+      color: #fff;
+      padding: 8px 18px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 800;
+      transition: all 0.25s;
+    }
+    .nav-btn:hover { background: #d97706; transform: scale(1.05); }
+
+    .main-wrapper {
+      width: 95vw;
+      max-width: 1200px;
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .main-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+    }
+    .main-nav-btn {
+      background: #0f172a;
+      border: 2px solid #334155;
+      color: #e2e8f0;
+      padding: 16px 20px;
+      border-radius: 16px;
+      font-size: 16px;
+      font-weight: 900;
+      cursor: pointer;
+      text-align: center;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .main-nav-btn:hover { border-color: #38bdf8; transform: translateY(-3px); }
+    .main-nav-btn.active {
+      background: linear-gradient(135deg, #d97706, #92400e);
+      border-color: #facc15;
+      color: #ffffff;
+      box-shadow: 0 0 25px rgba(245, 158, 11, 0.5);
+      transform: scale(1.02);
+    }
+
+    .section-tabs {
+      display: flex;
+      gap: 10px;
+      background: rgba(15, 23, 42, 0.85);
+      padding: 8px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.1);
+      flex-wrap: wrap;
+    }
+    .sec-tab-btn {
+      flex: 1;
+      min-width: 180px;
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+    .sec-tab-btn.active {
+      background: #0284c7;
+      color: #ffffff;
+      box-shadow: 0 4px 15px rgba(2, 132, 199, 0.5);
+    }
+
+    .sub-rules-bar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      background: rgba(15, 23, 42, 0.6);
+      padding: 12px;
+      border-radius: 16px;
+      border: 1px dashed rgba(245, 158, 11, 0.4);
+    }
+    .sub-rule-chip {
+      background: rgba(255,255,255,0.06);
+      border: 1.5px solid rgba(255,255,255,0.15);
+      color: #cbd5e1;
+      padding: 10px 22px;
+      border-radius: 30px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .sub-rule-chip.active {
+      background: #10b981;
+      border-color: #34d399;
+      color: #fff;
+      box-shadow: 0 0 16px rgba(16, 185, 129, 0.6);
+      transform: scale(1.04);
+    }
+
+    .display-box {
+      background: rgba(15, 23, 42, 0.96);
+      border: 3px solid #d97706;
+      border-radius: 24px;
+      padding: 32px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.85);
+      display: none;
+      animation: fadeIn 0.3s ease forwards;
+    }
+    .display-box.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    .zoom-lesson-card {
+      background: linear-gradient(145deg, #1e293b, #0f172a);
+      border: 2px solid #38bdf8;
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      margin-bottom: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .zoom-lesson-title {
+      font-size: 26px;
+      font-weight: 900;
+      color: #facc15;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 2px solid rgba(255,255,255,0.1);
+      padding-bottom: 12px;
+    }
+    .zoom-step-box {
+      background: rgba(2, 132, 199, 0.12);
+      border-right: 6px solid #38bdf8;
+      border-radius: 12px;
+      padding: 16px 20px;
+      font-size: 19px;
+      line-height: 1.9;
+      color: #f1f5f9;
+      font-weight: 700;
+    }
+    .zoom-step-box strong { color: #facc15; }
+    .story-note {
+      background: rgba(245, 158, 11, 0.16);
+      border: 2px dashed #f59e0b;
+      border-radius: 16px;
+      padding: 18px 24px;
+      font-size: 19px;
+      color: #fef08a;
+      line-height: 1.9;
+      font-weight: 800;
+    }
+
+    /* كروت الواجب المنزلي والتكليف العملي */
+    .homework-card {
+      background: linear-gradient(145deg, #1e293b, #0f172a);
+      border: 2.5px solid #10b981;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 12px 35px rgba(16, 185, 129, 0.25);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .hw-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid rgba(255,255,255,0.1);
+      padding-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .hw-title {
+      font-size: 24px;
+      font-weight: 900;
+      color: #34d399;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .hw-task-box {
+      background: rgba(16, 185, 129, 0.1);
+      border-right: 6px solid #10b981;
+      border-radius: 14px;
+      padding: 20px 24px;
+      font-size: 19px;
+      line-height: 2;
+      color: #f8fafc;
+      font-weight: 700;
+    }
+    .hw-steps-list {
+      list-style-type: none;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 10px;
+    }
+    .hw-steps-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 18px;
+      line-height: 1.8;
+      color: #e2e8f0;
+    }
+    .hw-steps-list li span.badge-num {
+      background: #10b981;
+      color: #0f172a;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 14px;
+      flex-shrink: 0;
+      margin-top: 4px;
+    }
+    .hw-copy-btn {
+      background: linear-gradient(135deg, #10b981, #059669);
+      border: 1.5px solid #34d399;
+      color: #fff;
+      padding: 10px 22px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 900;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .hw-copy-btn:hover { background: #047857; transform: scale(1.03); }
+
+    .examples-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+    }
+    .big-example-card {
+      background: linear-gradient(135deg, #1e293b 0%, #0b1329 100%);
+      border: 2px solid rgba(255,255,255,0.12);
+      border-radius: 18px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 14px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+      transition: transform 0.25s, border-color 0.25s;
+    }
+    .big-example-card:hover {
+      transform: translateY(-5px);
+      border-color: #f59e0b;
+      box-shadow: 0 16px 40px rgba(245, 158, 11, 0.3);
+    }
+    .verse-banner {
+      font-family: 'Amiri Quran', serif;
+      font-size: 38px;
+      line-height: 2.3;
+      text-align: center;
+      padding: 12px;
+      background: rgba(0,0,0,0.3);
+      border-radius: 12px;
+    }
+    .target-char { color: #38bdf8; font-weight: 900; text-shadow: 0 0 14px rgba(56, 189, 248, 0.9); }
+    .reason-char { color: #fb923c; font-weight: 900; text-shadow: 0 0 14px rgba(251, 146, 60, 0.9); }
+    .ex-info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      color: #94a3b8;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 8px;
+      font-weight: 800;
+    }
+
+    .quiz-giant-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 22px;
+    }
+    .quiz-giant-verse {
+      font-family: 'Amiri Quran', serif;
+      font-size: 44px;
+      line-height: 2.2;
+      color: #fef08a;
+      background: rgba(2, 132, 199, 0.12);
+      border: 2.5px dashed #38bdf8;
+      border-radius: 20px;
+      padding: 24px 36px;
+      width: 100%;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+    }
+    .quiz-giant-q { font-size: 24px; font-weight: 900; color: #ffffff; }
+    .quiz-giant-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      width: 100%;
+      max-width: 680px;
+    }
+    .giant-opt-btn {
+      background: rgba(255,255,255,0.07);
+      border: 2px solid rgba(255,255,255,0.15);
+      color: #fff;
+      padding: 18px;
+      border-radius: 16px;
+      font-size: 20px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .giant-opt-btn:hover { background: rgba(56, 189, 248, 0.25); border-color: #38bdf8; transform: scale(1.02); }
+    .giant-opt-btn.correct { background: #16a34a !important; border-color: #4ade80 !important; color: #fff !important; transform: scale(1.04); }
+    .giant-opt-btn.wrong { background: #dc2626 !important; border-color: #f87171 !important; color: #fff !important; }
+    .quiz-feedback-box { font-size: 20px; font-weight: 900; min-height: 40px; line-height: 1.7; }
+    .giant-next-btn {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      border: none;
+      color: #0f172a;
+      font-size: 18px;
+      font-weight: 900;
+      padding: 12px 36px;
+      border-radius: 12px;
+      cursor: pointer;
+      display: none;
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+    }
+
+    .game-giant-arena {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      text-align: center;
+    }
+    .game-target-box {
+      width: 100%;
+      max-width: 650px;
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      border: 3px solid #facc15;
+      border-radius: 24px;
+      padding: 30px;
+      box-shadow: 0 0 30px rgba(250, 204, 21, 0.3);
+    }
+    .game-target-word { font-family: 'Amiri Quran', serif; font-size: 52px; color: #fef08a; line-height: 2; }
+    .game-baskets-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      width: 100%;
+      max-width: 750px;
+    }
+    .giant-basket-btn {
+      background: rgba(2, 132, 199, 0.18);
+      border: 2.5px solid #0284c7;
+      color: #fff;
+      padding: 18px;
+      border-radius: 16px;
+      font-size: 19px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+    .giant-basket-btn:hover { background: #0284c7; transform: scale(1.05); }
+  </style>
+</head>
+<body>
+
+  <div class="top-header">
+    <div class="top-title">
+      <span>🌟</span>
+      <span>موسوعة التجويد الكبرى لشرح زووم التفاعلي — جزء عم</span>
+    </div>
+    <a href="index.html" class="nav-btn">↩️ رجوع للسبورة</a>
+  </div>
+
+  <div class="main-wrapper">
+    <div class="main-nav">
+      <button class="main-nav-btn active" data-chapter="noon">النون الساكنة والتنوين (5 أحكام)</button>
+      <button class="main-nav-btn" data-chapter="meem">أحكام الميم الساكنة (3 أحكام)</button>
+      <button class="main-nav-btn" data-chapter="qalqala">أحكام القلقلة (3 مراتب)</button>
+      <button class="main-nav-btn" data-chapter="madd">أحكام المدود الفرعية (4 أحكام)</button>
+    </div>
+
+    <div class="section-tabs">
+      <button class="sec-tab-btn active" data-tab="cards">👨‍🏫 كارت الشرح الموسع للزووم</button>
+      <button class="sec-tab-btn" data-tab="examples">📜 بنك الـ 10 أمثلة لكل حكم فرعي</button>
+      <button class="sec-tab-btn" data-tab="homework">📝 تكليف وواجب الطالب المنزلي</button>
+      <button class="sec-tab-btn" data-tab="quiz">📝 20 تمريناً تفاعلياً عملاقاً</button>
+      <button class="sec-tab-btn" data-tab="game">🎯 لعبة صائد الأحكام</button>
+    </div>
+
+    <div class="sub-rules-bar" id="subRulesBar"></div>
+
+    <!-- 1. صندوق الشرح -->
+    <div class="display-box active" id="box_cards">
+      <div id="lessonCardContainer"></div>
+    </div>
+
+    <!-- 2. صندوق الأمثلة -->
+    <div class="display-box" id="box_examples">
+      <h3 style="color:#facc15; font-size:22px; margin-bottom:18px; text-align:center;" id="examplesTitle">10 أمثلة محققة للحكم المختار:</h3>
+      <div class="examples-grid" id="examplesGrid"></div>
+    </div>
+
+    <!-- 3. صندوق الواجب والتكليف المنزلي -->
+    <div class="display-box" id="box_homework">
+      <div class="homework-card" id="homeworkCard"></div>
+    </div>
+
+    <!-- 4. صندوق الـ 20 تمريناً -->
+    <div class="display-box" id="box_quiz">
+      <div class="quiz-giant-card">
+        <div style="display:flex; gap:10px; align-items:center;">
+          <span style="background:#0284c7; padding:4px 18px; border-radius:20px; font-weight:900;" id="quizCounter">تمرين 1 من 20</span>
+          <span style="background:rgba(255,255,255,0.1); padding:4px 14px; border-radius:12px; font-weight:800;" id="quizType">اختيار من متعدد</span>
+        </div>
+        <div class="quiz-giant-verse" id="quizVerse">﴿ ... ﴾</div>
+        <div class="quiz-giant-q" id="quizQ">...</div>
+        <div class="quiz-giant-grid" id="quizGrid"></div>
+        <div class="quiz-feedback-box" id="quizFeedback"></div>
+        <button class="giant-next-btn" id="nextQuizBtn">التالي ❯</button>
+      </div>
+    </div>
+
+    <!-- 5. صندوق اللعبة -->
+    <div class="display-box" id="box_game">
+      <div class="game-giant-arena">
+        <div style="display:flex; gap:20px; font-size:20px; font-weight:900;">
+          <div>🏆 النقاط: <span id="gameScore" style="color:#facc15;">0</span></div>
+          <div>🔥 التتابع: <span id="gameStreak" style="color:#4ade80;">0</span></div>
+        </div>
+        <div class="game-target-box">
+          <div style="color:#94a3b8; font-size:16px; margin-bottom:8px;" id="gameSurah">سورة الفلق</div>
+          <div class="game-target-word" id="gameWord">﴿ غَاسِقٍ إِذَا ﴾</div>
+          <div style="color:#38bdf8; font-size:18px; font-weight:800;">ما هو الحكم التجويدي للشاهد الملون؟</div>
+        </div>
+        <div class="game-baskets-grid" id="gameBaskets"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const masterData = {
+      noon: {
+        title: "النون الساكنة والتنوين",
+        subRules: [
+          { id: "izhar", name: "1. الإظهار الحلقي" },
+          { id: "idgham_g", name: "2. الإدغام بغنة" },
+          { id: "idgham_w", name: "3. الإدغام بغير غنة" },
+          { id: "iqlab", name: "4. الإقلاب" },
+          { id: "ikhfa", name: "5. الإخفاء الحقيقي" }
+        ],
+        lessons: {
+          izhar: {
+            title: "الإظهار الحلقي (أصدقاء الحلق الستة: ء، هـ، ع، ح، غ، خ)",
+            steps: [
+              "<strong>تعريفه للأطفال:</strong> نطق النون الساكنة أو التنوين واضحة وصريحة ونظيفة كالشمس دون زيادة صوت الغنة.",
+              "<strong>حروفه:</strong> (الهمزة، الهاء، العين، الحاء، الغين، الخاء).",
+              "<strong>كيف ننطقه أمام الكاميرا؟</strong> نقف باللسان برقة على مخرج النون وننطق الحرف الحلقي بعدها بنقاء تام."
+            ],
+            story: "✨ قصة للأطفال: النون الساكنة تحب أصدقاءها الستة الساكنين في الحلق؛ فعندما تراهم تسلم عليهم بوضوح وتقول: أنا النون الظاهرة!"
+          },
+          idgham_g: {
+            title: "الإدغام بغنة (حفلة الاندماج في يَنْمُو)",
+            steps: [
+              "<strong>تعريفه للأطفال:</strong> دمج النون الساكنة أو التنوين بالكامل في الحرف الذي يليها ليصبح حرفاً مشدداً مع غنة حركتين كالعصفور.",
+              "<strong>حروفه:</strong> مجموعة في كلمة (يَنْمُو) [الياء، النون، الميم، الواو].",
+              "<strong>التطبيق:</strong> لا ننطق نوناً نهائياً، بل نتحول مباشرة للحرف التالي مع رنة لطيفة من الأنف."
+            ],
+            story: "✨ قصة للأطفال: النون شربت عصير الذوبان وذابت تماماً داخل حروف (ينمو) وتركت صوتاً جميلاً يخرج من الأنف!"
+          },
+          idgham_w: {
+            title: "الإدغام بغير غنة (القطار السريع: ر، ل)",
+            steps: [
+              "<strong>تعريفه للأطفال:</strong> إدخال النون أو التنوين في الراء أو اللام تماماً دون أي مد أو غنة.",
+              "<strong>حروفه:</strong> حرفان سريعان وقويان هما (الراء واللام).",
+              "<strong>التطبيق:</strong> الانتقال السريع والمشدد إلى الراء أو اللام فوراً."
+            ],
+            story: "✨ قصة للأطفال: الراء واللام قطار سريع جداً؛ يبتلع النون في طريقه بسرعة البرق دون توقف!"
+          },
+          iqlab: {
+            title: "الإقلاب (النون تتحول لميم خفيفة مع الباء)",
+            steps: [
+              "<strong>تعريفه للأطفال:</strong> قلب صوت النون الساكنة أو التنوين ميماً مخفاة بغنة حركتين عند ملاقاة حرف الباء.",
+              "<strong>حرفه:</strong> حرف واحد فقط هو (الباء).",
+              "<strong>علامته في المصحف:</strong> ميم صغيرة قائمة (مـ) فوق الحرف."
+            ],
+            story: "✨ قصة للأطفال: النون تحترم حرف الباء؛ فتغير ملابسها وتتحول إلى ميم لطيفة مع غنة رقيقة!"
+          },
+          ikhfa: {
+            title: "الإخفاء الحقيقي (النون تختبئ وراء الستار)",
+            steps: [
+              "<strong>تعريفه للأطفال:</strong> نطق النون بحالة وسط بين الظهور والإدغام مع إخراج غنة حركتين من الأنف.",
+              "<strong>حروفه:</strong> 15 حرفاً مجموعة في أوائل كلمات: (صف ذا ثنا كم جاد شخص قد سما دم طيبا زد في تقى ضع ظالما).",
+              "<strong>سر التفخيم والترقيق:</strong> نفخم الغنة إذا كان بعدها حرف مفخم (ص، ض، ط، ظ، ق) ونرققها مع البقية."
+            ],
+            story: "✨ قصة للأطفال: النون تلعب لعبة الغميضة وتختبئ خلف الحرف، ونحن نبحث عنها بصوت الغنة الرنان!"
+          }
+        },
+        homeworks: {
+          izhar: {
+            title: "واجب صائد الإظهار الحلقي 🔍",
+            task: "افتح المصحف الشريف على سورتي (الغاشية) و(الفلق)، ثم نفّذ المهام الآتية بدقة وإتقان:",
+            steps: [
+              "استخرج (3 مواضع) لتنوين أو نون ساكنة جاء بعدها حرف من حروف الحلق الستة، واكتبها في كراستك بخط جميل.",
+              "ضع دائرة باللون الأخضر حول النون الساكنة أو التنوين، ودائرة باللون البرتقالي حول الحرف الحلقي الذي بعدها.",
+              "سجّل مقطعاً صوتياً بصوتك وأنت تقرأ قوله تعالى: ﴿غَاسِقٍ إِذَا وَقَبَ﴾ موضحاً نطق الإظهار دون سكت ودون غنة زائدة وأرسله لمُعلمك."
+            ]
+          },
+          idgham_g: {
+            title: "واجب بطل الإدغام بغنة 🕊️",
+            task: "افتح سورتي (الزلزلة) و(المسد)، وكن باحثاً ماهراً عن حروف (يَنْمُو):",
+            steps: [
+              "استخرج موضعين لإدغام النون في الياء (فَمَنْ يَعْمَلْ)، وموضعين لتنوين بعده واو (لَهَبٍ وَتَبَّ).",
+              "اكتب الكلمات في جدول وحدد: (الحرف المدغم) و(الحرف المدغم فيه).",
+              "اقرأ الآيات مع إخراج رنة الغنة بمقدار حركتين من الأنف أمام ولي أمرك واطلب منه وضع علامة تميز لك."
+            ]
+          },
+          idgham_w: {
+            title: "واجب قطار الإدغام السريع 🚂",
+            task: "مهمة سريعة في سورتي (الهمزة) و(القارعة):",
+            steps: [
+              "استخرج موضع الإدغام في سورة الهمزة (وَيْلٌ لِكُلِّ) وفي سورة القارعة (عِيشَةٍ رَاضِيَةٍ).",
+              "اكتب في كراستك الفرق بين نطق الإدغام بغنة والإدغام بغير غنة باختصار شديد.",
+              "تدرّب على نطق (عِيشَةٍ رَّاضِيَةٍ) بدون أي غنة نهائياً، واقرأها للمعلم في بداية الحصة القادمة."
+            ]
+          },
+          iqlab: {
+            title: "واجب علامة الميم السحرية (الإقلاب) 🪄",
+            task: "ابحث في سورتي (الهمزة) و(عبس) عن حرف الميم الصغيرة (مـ):",
+            steps: [
+              "استخرج كلمة (لَيُنْبَذَنَّ) وكلمة (كِرَامٍ بَرَرَةٍ) واكتبهما بالرسم القرآني في كشكولك.",
+              "وضّح لماذا قُلبت النون والتنوين إلى ميم في هذين الموضعين؟ وما هو الحرف المتسبب في ذلك؟",
+              "سجّل تلاوتك لآية ﴿كَلَّا لَيُنْبَذَنَّ فِي الْحُطَمَةِ﴾ مع تلامس الشفتين برقة وإخراج الغنة."
+            ]
+          },
+          ikhfa: {
+            title: "واجب مغامرة إخفاء النون (لعبة الغميضة) 🎭",
+            task: "مهمة كبرى في سورتي (الفلق) و(البلد):",
+            steps: [
+              "استخرج (4 كلمات) فيها إخفاء حقيقي: اثنتان بغنة مرققة (مثل: شَرِّ، ذَاتَ) واثنتان بغنة مفخمة (مثل: عَنْ صَلَاتِهِمْ، فَلْيَنْظُرْ).",
+              "لوّن الحرف الذي اختبأت النون عنده بلونك المفضل في الكراسة.",
+              "اقرأ سورة الفلق كاملة غيباً مع تطبيق إخفاء النون في ﴿مِنْ شَرِّ﴾ تطبيقاً نموذجياً."
+            ]
+          }
+        },
+        examplesBySub: {
+          izhar: [
+            { verse: "نُطْفَ<span class='target-char'>ةٍ</span> <span class='reason-char'>خَ</span>لَقَهُ", surah: "عبس (19)", rule: "تنوين بعده خاء" },
+            { verse: "غَاسِ<span class='target-char'>قٍ</span> <span class='reason-char'>إِ</span>ذَا وَقَبَ", surah: "الفلق (3)", rule: "تنوين بعده همزة" },
+            { verse: "مِ<span class='target-char'>نْ</span> <span class='reason-char'>أَ</span>هْلِ الْكِتَابِ", surah: "البينة (1)", rule: "نون ساكنة بعدها همزة" },
+            { verse: "يَوْمَئِ<span class='target-char'>ذٍ</span> <span class='reason-char'>خَ</span>اشِعَةٌ", surah: "الغاشية (2)", rule: "تنوين بعده خاء" },
+            { verse: "نَارٌ <span class='reason-char'>حَ</span>امِيَةٌ", surah: "القارعة (11)", rule: "تنوين بعده حاء" },
+            { verse: "عَيْ<span class='target-char'>نٍ</span> <span class='reason-char'>آ</span>نِيَةٍ", surah: "الغاشية (5)", rule: "تنوين بعده همزة" },
+            { verse: "فَصَلِّ لِرَبِّكَ وَا<span class='target-char'>نْ</span><span class='reason-char'>حَ</span>رْ", surah: "الكوثر (2)", rule: "نون ساكنة بعدها حاء" },
+            { verse: "مِ<span class='target-char'>نْ</span> <span class='reason-char'>خَ</span>وْفٍ", surah: "قريش (4)", rule: "نون ساكنة بعدها خاء" },
+            { verse: "عَيْ<span class='target-char'>نٍ</span> <span class='reason-char'>جَ</span>ارِيَةٍ", surah: "الغاشية (12)", rule: "تنوين بعده جيم (إخفاء للمقارنة)" },
+            { verse: "مَ<span class='target-char'>نْ</span> <span class='reason-char'>خَ</span>شِيَ الرَّحْمَنَ", surah: "النبأ (مصحح)", rule: "نون ساكنة بعدها خاء" }
+          ],
+          idgham_g: [
+            { verse: "فَمَ<span class='target-char'>نْ</span> <span class='reason-char'>يَ</span>عْمَلْ مِثْقَالَ", surah: "الزلزلة (7)", rule: "نون ساكنة بعدها ياء" },
+            { verse: "لَهَ<span class='target-char'>بٍ</span> <span class='reason-char'>وَ</span>تَبَّ", surah: "المسد (1)", rule: "تنوين بعده واو" },
+            { verse: "حَبًّ<span class='target-char'>ا</span> <span class='reason-char'>وَ</span>نَبَاتاً", surah: "النبأ (15)", rule: "تنوين بعده واو" },
+            { verse: "جَزَاءً <span class='reason-char'>مِ</span>نْ رَبِّكَ", surah: "النبأ (36)", rule: "تنوين بعده ميم" },
+            { verse: "مِ<span class='target-char'>نْ</span> <span class='reason-char'>مَ</span>سَدٍ", surah: "المسد (5)", rule: "نون ساكنة بعدها ميم" },
+            { verse: "مَسَ<span class='target-char'>دٍ</span> <span class='reason-char'>تَ</span>بَّتْ (وصلاً)", surah: "المسد (1)", rule: "تنوين بعده تاء" },
+            { verse: "أَمْشَ<span class='target-char'>اجٍ</span> <span class='reason-char'>نَ</span>بْتَلِيهِ", surah: "الإنسان (2)", rule: "تنوين بعده نون" },
+            { verse: "مِ<span class='target-char'>نْ</span> <span class='reason-char'>نُ</span>طْفَةٍ", surah: "عبس (19)", rule: "نون ساكنة بعدها نون" },
+            { verse: "وُجُو<span class='target-char'>هٌ</span> <span class='reason-char'>يَ</span>وْمَئِذٍ", surah: "الغاشية (8)", rule: "تنوين بعده ياء" },
+            { verse: "خَيْرً<span class='target-char'>ا</span> <span class='reason-char'>يَ</span>رَهُ", surah: "الزلزلة (7)", rule: "تنوين بعده ياء" }
+          ],
+          idgham_w: [
+            { verse: "وَيْ<span class='target-char'>لٌ</span> <span class='reason-char'>لِ</span>كُلِّ هُمَزَةٍ", surah: "الهمزة (1)", rule: "تنوين بعده لام" },
+            { verse: "عِيشَ<span class='target-char'>ةٍ</span> <span class='reason-char'>رَ</span>اضِيَةٍ", surah: "القارعة (7)", rule: "تنوين بعده راء" },
+            { verse: "أَ<span class='target-char'>نْ</span> <span class='reason-char'>رَ</span>آهُ اسْتَغْنَى", surah: "العلق (7)", rule: "نون ساكنة بعدها راء" },
+            { verse: "مِ<span class='target-char'>نْ</span> <span class='reason-char'>رَ</span>بِّكَ عَطَاءً", surah: "النبأ (36)", rule: "نون ساكنة بعدها راء" },
+            { verse: "مِ<span class='target-char'>نْ</span> <span class='reason-char'>لَّ</span>دُنْهُ", surah: "الكهف / جزء عم مثله", rule: "نون ساكنة بعدها لام" },
+            { verse: "فَسَلا<span class='target-char'>مٌ</span> <span class='reason-char'>لَّ</span>كَ", surah: "الواقعة", rule: "تنوين بعده لام" },
+            { verse: "لَئِ<span class='target-char'>نْ</span> <span class='reason-char'>لَّ</span>مْ يَنتَهِ", surah: "العلق (15)", rule: "نون ساكنة بعدها لام" },
+            { verse: "غَفُو<span class='target-char'>رٌ</span> <span class='reason-char'>رَّ</span>حِيمٌ", surah: "البروج", rule: "تنوين بعده راء" },
+            { verse: "فِي عِيشَ<span class='target-char'>ةٍ</span> <span class='reason-char'>رَّ</span>اضِيَةٍ", surah: "الحاقة / القارعة", rule: "تنوين بعده راء" },
+            { verse: "كُ<span class='target-char'>لًّا</span> <span class='reason-char'>لَّ</span>مَّا", surah: "البلد", rule: "تنوين بعده لام" }
+          ],
+          iqlab: [
+            { verse: "لَيُ<span class='target-char'>نْ</span><span class='reason-char'>بَ</span>ذَنَّ فِي الْحُطَمَةِ", surah: "الهمزة (4)", rule: "نون ساكنة بعدها باء" },
+            { verse: "كِرَا<span class='target-char'>مٍ</span> <span class='reason-char'>بَ</span>رَرَةٍ", surah: "عبس (16)", rule: "تنوين بعده باء" },
+            { verse: "ذَ<span class='target-char'>نْ</span><span class='reason-char'>بٍ</span> قَتَلْتُمْ", surah: "الشمس (14)", rule: "نون بعدها باء (بِذَنْبِهِمْ)" },
+            { verse: "أَ<span class='target-char'>نْ</span><span class='reason-char'>بِ</span>تْنَا فِيهَا", surah: "عبس (27)", rule: "نون ساكنة بعدها باء" },
+            { verse: "مِ<span class='target-char'>نْ</span> <span class='reason-char'>بَ</span>عْدِ مَا جَاءَتْهُمُ", surah: "البينة (4)", rule: "نون ساكنة بعدها باء" },
+            { verse: "مِ<span class='target-char'>نْ</span> <span class='reason-char'>بَ</span>عْدِهَا", surah: "النازعات (30)", rule: "نون ساكنة بعدها باء" },
+            { verse: "جَزَاءً <span class='reason-char'>بِ</span>مَا كَانُوا", surah: "السجدة", rule: "تنوين بعده باء" },
+            { verse: "عَلِي<span class='target-char'>مٌ</span> <span class='reason-char'>بِ</span>ذَاتِ الصُّدُورِ", surah: "الحديد", rule: "تنوين بعده باء" },
+            { verse: "كَلَّا لَئِ<span class='target-char'>نْ</span> <span class='reason-char'>لَ</span>مْ يَنْتَهِ لَنَسْفَعًا <span class='reason-char'>بِ</span>النَّاصِيَةِ", surah: "العلق (15)", rule: "تنوين بعده باء" },
+            { verse: "أَ<span class='target-char'>نْ</span> <span class='reason-char'>بُ</span>ورِكَ", surah: "النمل / شواهد جزء عم", rule: "نون ساكنة بعدها باء" }
+          ],
+          ikhfa: [
+            { verse: "مِ<span class='target-char'>نْ</span> <span class='reason-char'>شَ</span>رِّ مَا خَلَقَ", surah: "الفلق (2)", rule: "نون ساكنة بعدها شين" },
+            { verse: "نَاراً <span class='reason-char'>ذَ</span>اتَ لَهَبٍ", surah: "المسد (3)", rule: "تنوين بعده ذال" },
+            { verse: "عَ<span class='target-char'>نْ</span> <span class='reason-char'>صَ</span>لَاتِهِمْ سَاهُونَ", surah: "الماعون (5)", rule: "نون ساكنة بعدها صاد (مفخمة)" },
+            { verse: "فَمَ<span class='target-char'>نْ</span> <span class='reason-char'>ثَ</span>قُلَتْ مَوَازِينُهُ", surah: "القارعة (6)", rule: "نون ساكنة بعدها ثاء" },
+            { verse: "يَتِيمً<span class='target-char'>ا</span> <span class='reason-char'>ذَ</span>ا مَقْرَبَةٍ", surah: "البلد (15)", rule: "تنوين بعده ذال" },
+            { verse: "فَلْيَ<span class='target-char'>نْ</span><span class='reason-char'>ظُ</span>رِ الْإِنْسَانُ", surah: "الطارق (5)", rule: "نون ساكنة بعدها ظاء (مفخمة)" },
+            { verse: "مَ<span class='target-char'>نْ</span> <span class='reason-char'>دَ</span>سَّاهَا", surah: "الشمس (10)", rule: "نون ساكنة بعدها دال" },
+            { verse: "مَ<span class='target-char'>نْ</span> <span class='reason-char'>زَ</span>كَّاهَا", surah: "الشمس (9)", rule: "نون ساكنة بعدها زاي" },
+            { verse: "إِ<span class='target-char'>نْ</span> <span class='reason-char'>كُ</span>نْتُمْ", surah: "البلد", rule: "نون ساكنة بعدها كاف" },
+            { verse: "أَ<span class='target-char'>نْ</span><span class='reason-char'>تُ</span>مْ عَابِدُونَ", surah: "الكافرون (3)", rule: "نون ساكنة بعدها تاء" }
+          ]
+        },
+        quizzes: [
+          { type: "mcq", verse: "﴿ غَاسِقٍ إِذَا وَقَبَ ﴾", q: "ما الحكم في (غَاسِقٍ إِذَا)؟", opts: ["إظهار حلقي", "إدغام بغنة", "إقلاب", "إخفاء"], ans: 0, note: "إظهار حلقي لمجيء الهمزة بعد التنوين." },
+          { type: "tf", verse: "﴿ فَمَنْ يَعْمَلْ ﴾", q: "النون في (فَمَنْ يَعْمَلْ) حكمها إظهار حلقي؟", opts: ["صح", "خطأ"], ans: 1, note: "خطأ، حكمها إدغام بغنة لوقوع الياء بعد النون." },
+          { type: "mcq", verse: "﴿ لَيُنْبَذَنَّ ﴾", q: "الحكم في نون (لَيُنْبَذَنَّ) هو:", opts: ["إقلاب", "إخفاء", "إظهار", "إدغام"], ans: 0, note: "إقلاب النون ميماً مخفاة لمجيء حرف الباء." },
+          { type: "tf", verse: "﴿ وَيْلٌ لِكُلِّ ﴾", q: "التنوين في (وَيْلٌ لِكُلِّ) يدغم بغير غنة؟", opts: ["صح", "خطأ"], ans: 0, note: "صح، اللام من حرفي الإدغام بغير غنة." },
+          { type: "mcq", verse: "﴿ مِنْ شَرِّ مَا خَلَقَ ﴾", q: "حكم النون في (مِنْ شَرِّ):", opts: ["إخفاء حقيقي", "إظهار حلقي", "إقلاب", "إدغام"], ans: 0, note: "إخفاء حقيقي لمجيء الشين." },
+          { type: "mcq", verse: "﴿ كِرَامٍ بَرَرَةٍ ﴾", q: "حكم التنوين في (كِرَامٍ بَرَرَةٍ):", opts: ["إقلاب", "إظهار", "إدغام", "إخفاء"], ans: 0, note: "إقلاب التنوين ميماً لوقوع الباء بعده." },
+          { type: "tf", verse: "﴿ عِيشَةٍ رَاضِيَةٍ ﴾", q: "التنوين قبل الراء يدغم بغنة؟", opts: ["صح", "خطأ"], ans: 1, note: "خطأ، يدغم بغير غنة." },
+          { type: "mcq", verse: "﴿ نَاراً ذَاتَ لَهَبٍ ﴾", q: "حكم التنوين في (نَاراً ذَاتَ):", opts: ["إخفاء حقيقي", "إظهار حلقي", "إدغام", "إقلاب"], ans: 0, note: "إخفاء حقيقي لوقوع الذال." },
+          { type: "tf", verse: "﴿ مِنْ أَهْلِ الْكِتَابِ ﴾", q: "النون قبل الهمزة مظهرة إظهاراً حلقياً؟", opts: ["صح", "خطأ"], ans: 0, note: "صح، الهمزة حرف حلقي." },
+          { type: "mcq", verse: "﴿ حَبّاً وَنَبَاتاً ﴾", q: "حكم التنوين في (حَبّاً وَنَبَاتاً):", opts: ["إدغام بغنة", "إدغام بغير غنة", "إظهار", "إخفاء"], ans: 0, note: "إدغام بغنة في الواو." },
+          { type: "mcq", verse: "﴿ عَنْ صَلَاتِهِمْ ﴾", q: "الغنة في (عَنْ صَلَاتِهِمْ) حكمها:", opts: ["إخفاء بغنة مفخمة", "إخفاء بغنة مرققة", "إظهار", "إدغام"], ans: 0, note: "مفخمة لأن حرف الصاد مفخم." },
+          { type: "tf", verse: "﴿ أَنْ رَآهُ اسْتَغْنَى ﴾", q: "النون تدغم بغير غنة في الراء؟", opts: ["صح", "خطأ"], ans: 0, note: "صح." },
+          { type: "mcq", verse: "﴿ جَزَاءً مِنْ رَبِّكَ ﴾", q: "الحكم في (جَزَاءً مِنْ):", opts: ["إدغام بغنة", "إظهار", "إقلاب", "إخفاء"], ans: 0, note: "إدغام بغنة في الميم." },
+          { type: "tf", verse: "﴿ يَوْمَئِذٍ خَاشِعَةٌ ﴾", q: "التنوين في (يَوْمَئِذٍ خَاشِعَةٌ) حكمه إخفاء؟", opts: ["صح", "خطأ"], ans: 1, note: "خطأ، إظهار حلقي لوقوع الخاء." },
+          { type: "mcq", verse: "﴿ فَمَنْ ثَقُلَتْ ﴾", q: "حكم النون في (فَمَنْ ثَقُلَتْ):", opts: ["إخفاء حقيقي", "إظهار", "إقلاب", "إدغام"], ans: 0, note: "إخفاء حقيقي لوقوع الثاء." },
+          { type: "tf", verse: "﴿ يَتِيمًا ذَا مَقْرَبَةٍ ﴾", q: "التنوين قبل الذال مخفى؟", opts: ["صح", "خطأ"], ans: 0, note: "صح." },
+          { type: "mcq", verse: "﴿ كَلَّا لَئِنْ لَمْ يَنْتَهِ ﴾", q: "حكم (لَئِنْ لَمْ):", opts: ["إدغام بغير غنة", "إدغام بغنة", "إظهار", "إقلاب"], ans: 0, note: "إدغام بغير غنة في اللام." },
+          { type: "tf", verse: "﴿ قَوْلًا ثَقِيلًا ﴾", q: "التنوين في (قَوْلًا ثَقِيلًا) حكمه إقلاب؟", opts: ["صح", "خطأ"], ans: 1, note: "خطأ، إخفاء حقيقي." },
+          { type: "mcq", verse: "﴿ مَنْ خَشِيَ الرَّحْمَنَ ﴾", q: "حكم النون في (مَنْ خَشِيَ):", opts: ["إظهار حلقي", "إدغام", "إخفاء", "إقلاب"], ans: 0, note: "إظهار حلقي." },
+          { type: "tf", verse: "﴿ أَنْ بُورِكَ ﴾", q: "النون قبل الباء تقلب ميماً؟", opts: ["صح", "خطأ"], ans: 0, note: "صح، حكمها الإقلاب." }
+        ],
+        gameItems: [
+          { word: "غَاسِقٍ إِذَا", rule: "إظهار حلقي", surah: "الفلق" },
+          { word: "فَمَنْ يَعْمَلْ", rule: "إدغام بغنة", surah: "الزلزلة" },
+          { word: "وَيْلٌ لِكُلِّ", rule: "إدغام بغير غنة", surah: "الهمزة" },
+          { word: "لَيُنْبَذَنَّ", rule: "إقلاب", surah: "الهمزة" },
+          { word: "مِنْ شَرِّ", rule: "إخفاء حقيقي", surah: "الفلق" }
+        ],
+        baskets: ["إظهار حلقي", "إدغام بغنة", "إدغام بغير غنة", "إقلاب", "إخفاء حقيقي"]
+      },
+      meem: {
+        title: "أحكام الميم الساكنة",
+        subRules: [
+          { id: "m_ikhfa", name: "1. الإخفاء الشفوي" },
+          { id: "m_idgham", name: "2. إدغام المتماثلين" },
+          { id: "m_izhar", name: "3. الإظهار الشفوي" }
+        ],
+        lessons: {
+          m_ikhfa: {
+            title: "الإخفاء الشفوي (ميم ساكنة بعدها باء مع غنة)",
+            steps: [
+              "<strong>تعريفه للأطفال:</strong> نطق الميم الساكنة بملامسة رقيقة للشفتين دون ضغط قوي مع غنة حركتين.",
+              "<strong>حرفه:</strong> حرف واحد فقط هو (الباء).",
+              "<strong>التطبيق:</strong> نلامس الشفتين برفق في كلمة (تَرْمِيهِمْ بِحِجَارَةٍ)."
+            ],
+            story: "✨ قصة للأطفال: الميم والباء يسكنان في الشفتين معاً؛ فعندما تزور الباء الميم تهمس برقة وتخرج غنة ناعمة!"
+          },
+          m_idgham: {
+            title: "إدغام المتماثلين الصغير (ميم ساكنة بعدها ميم)",
+            steps: [
+              "<strong>تعريفه للأطفال:</strong> إدخال ميم ساكنة في ميم متحركة لتصبحا ميماً واحدة مشددة مع غنة حركتين.",
+              "<strong>حرفه:</strong> حرف الميم فقط.",
+              "<strong>التطبيق:</strong> (أَطْعَمَهُمْ مِنْ جُوعٍ)."
+            ],
+            story: "✨ قصة للأطفال: الميم الأولى التقت بأختها التوأم الميم الثانية فاحتضنتها وأصبحتا ميماً واحدة قوية!"
+          },
+          m_izhar: {
+            title: "الإظهار الشفوي (باقي حروف الهجاء الـ 26)",
+            steps: [
+              "<strong>تعريفه للأطفال:</strong> نطق الميم بوضوح دون تطويل في الغنة إذا جاء بعدها أي حرف عدا الباء والميم.",
+              "<strong>تنبيه هام للزووم:</strong> احذر إخفاء الميم عند الواو والفاء لقرب المخرج (كَيْدَهُمْ فِي)."
+            ],
+            story: "✨ قصة للأطفال: الميم تبتسم لكل الحروف الـ 26 وتظهر أمامهم بوضوح وقوة!"
+          }
+        },
+        homeworks: {
+          m_ikhfa: {
+            title: "واجب رنين الشفتين (الإخفاء الشفوي) 👄",
+            task: "مهمة استكشافية في سورتي (الفيل) و(العاديات):",
+            steps: [
+              "استخرج قوله تعالى: ﴿تَرْمِيهِمْ بِحِجَارَةٍ﴾ وقوله: ﴿إِنَّ رَبَّهُمْ بِهِمْ يَوْمَئِذٍ لَخَبِيرٌ﴾ واكتبهما بخط عريض.",
+              "اشرح كيف تتلامس الشفتان عند نطق الميم قبل الباء، وهل نضغط عليهما بقوة أم برقة ولطف؟",
+              "سجّل قراءة الآيتين بمقطع صوتي لمعلمك وأنت تؤدي غنة الإخفاء الشفوي بنعومة وبمقدار حركتين."
+            ]
+          },
+          m_idgham: {
+            title: "واجب توأم الميم المتماثلين 👭",
+            task: "افتح سورة (قريش) وسورة (الهمزة) وركّز على حرف الميم:",
+            steps: [
+              "استخرج موضعين التقت فيهما ميم ساكنة بميم متحركة في سورة قريش (أَطْعَمَهُمْ مِنْ، آمَنَهُمْ مِنْ).",
+              "بيّن كيف تصبح الميمان ميماً واحدة عليها شدة وغنة واضحة.",
+              "تدرّب على تلاوة سورة قريش أمام أسرتك مع إظهار غنة الإدغام المشددة كاملة."
+            ]
+          },
+          m_izhar: {
+            title: "واجب حارس الإظهار الشفوي الصريح 🛡️",
+            task: "مهمة تدقيقية في سورة (الفيل) وسورة (الشرح):",
+            steps: [
+              "استخرج (3 مواضع) لإظهار الميم الساكنة عند الياء والفاء والنون (أَلَمْ يَجْعَلْ، كَيْدَهُمْ فِي، أَلَمْ نَشْرَحْ).",
+              "اكتب تحذيراً بخط يدك: لماذا يجب أن ننتبه ولا نخفي الميم عند حرف الفاء في (كَيْدَهُمْ فِي)؟",
+              "اقرأ سورة الفيل كاملة أمام المعلم في المقابلة القادمة مظهراً جميع الميمات الساكنة بوضوح."
+            ]
+          }
+        },
+        examplesBySub: {
+          m_ikhfa: [
+            { verse: "تَرْمِيهِ<span class='target-char'>مْ</span> <span class='reason-char'>بِ</span>حِجَارَةٍ", surah: "الفيل (4)", rule: "ميم ساكنة بعدها باء" },
+            { verse: "رَبُّهُ<span class='target-char'>مْ</span> <span class='reason-char'>بِ</span>ذَنْبِهِمْ", surah: "الشمس (14)", rule: "ميم ساكنة بعدها باء" },
+            { verse: "رَبَّهُ<span class='target-char'>مْ</span> <span class='reason-char'>بِ</span>هِمْ يَوْمَئِذٍ", surah: "العاديات (11)", rule: "ميم ساكنة بعدها باء" },
+            { verse: "أَنْتُ<span class='target-char'>مْ</span> <span class='reason-char'>بِ</span>هِ مُؤْمِنُونَ", surah: "الأنعام", rule: "ميم ساكنة بعدها باء" },
+            { verse: "وَكَلْبُهُ<span class='target-char'>مْ</span> <span class='reason-char'>بَ</span>اسِطٌ", surah: "الكهف", rule: "ميم ساكنة بعدها باء" },
+            { verse: "يَخْشَوْنَ رَبَّهُ<span class='target-char'>مْ</span> <span class='reason-char'>بِ</span>الْغَيْبِ", surah: "الملك (12)", rule: "ميم ساكنة بعدها باء" },
+            { verse: "فَبَشِّرْهُ<span class='target-char'>مْ</span> <span class='reason-char'>بِ</span>عَذَابٍ أَلِيمٍ", surah: "الانشقاق (24)", rule: "ميم ساكنة بعدها باء" },
+            { verse: "جَزَاؤُهُ<span class='target-char'>مْ</span> <span class='reason-char'>بِ</span>مَا صَبَرُوا", surah: "الإنسان (12)", rule: "ميم ساكنة بعدها باء" },
+            { verse: "مَا لَهُ<span class='target-char'>مْ</span> <span class='reason-char'>بِ</span>هِ مِنْ عِلْمٍ", surah: "الكهف", rule: "ميم ساكنة بعدها باء" },
+            { verse: "أَمْ تَأْمُرُهُ<span class='target-char'>مْ</span> <span class='reason-char'>بِ</span>هَذَا", surah: "الطور", rule: "ميم ساكنة بعدها باء" }
+          ],
+          m_idgham: [
+            { verse: "أَطْعَمَهُ<span class='target-char'>مْ</span> <span class='reason-char'>مِ</span>نْ جُوعٍ", surah: "قريش (4)", rule: "ميم بعدها ميم" },
+            { verse: "وَآمَنَهُ<span class='target-char'>مْ</span> <span class='reason-char'>مِ</span>نْ خَوْفٍ", surah: "قريش (4)", rule: "ميم بعدها ميم" },
+            { verse: "فِي قُلُوبِهِ<span class='target-char'>مْ</span> <span class='reason-char'>مَ</span>رَضٌ", surah: "المطففين / البقرة", rule: "ميم بعدها ميم" },
+            { verse: "إِنَّهَا عَلَيْهِ<span class='target-char'>مْ</span> <span class='reason-char'>مُ</span>ؤْصَدَةٌ", surah: "الهمزة (8)", rule: "ميم بعدها ميم" },
+            { verse: "لَهُ<span class='target-char'>مْ</span> <span class='reason-char'>مَ</span>ا يَشَاءُونَ", surah: "ق", rule: "ميم بعدها ميم" },
+            { verse: "خَلَقَكُ<span class='target-char'>مْ</span> <span class='reason-char'>مِ</span>نْ تُرَابٍ", surah: "فاطر", rule: "ميم بعدها ميم" },
+            { verse: "كُنْتُ<span class='target-char'>مْ</span> <span class='reason-char'>مُ</span>ؤْمِنِينَ", surah: "آل عمران", rule: "ميم بعدها ميم" },
+            { verse: "أَمْ لَهُ<span class='target-char'>مْ</span> <span class='reason-char'>مَ</span>لَكُوتُ", surah: "ص", rule: "ميم بعدها ميم" },
+            { verse: "أَثْقَلَتْهُ<span class='target-char'>مْ</span> <span class='reason-char'>مَ</span>غْرَمٌ", surah: "الطور", rule: "ميم بعدها ميم" },
+            { verse: "عَلَيْهِ<span class='target-char'>مْ</span> <span class='reason-char'>مِ</span>نْ كُلِّ بَابٍ", surah: "الرعد", rule: "ميم بعدها ميم" }
+          ],
+          m_izhar: [
+            { verse: "أَلَ<span class='target-char'>مْ</span> <span class='reason-char'>يَ</span>جْعَلْ كَيْدَهُمْ", surah: "الفيل (2)", rule: "ميم ساكنة بعدها ياء" },
+            { verse: "كَيْدَهُ<span class='target-char'>مْ</span> <span class='reason-char'>فِ</span>ي تَضْلِيلٍ", surah: "الفيل (2)", rule: "ميم ساكنة بعدها فاء (إظهار شديد)" },
+            { verse: "أَلَ<span class='target-char'>مْ</span> <span class='reason-char'>نَ</span>شْرَحْ لَكَ", surah: "الشرح (1)", rule: "ميم ساكنة بعدها نون" },
+            { verse: "لَكُ<span class='target-char'>مْ</span> <span class='reason-char'>دِ</span>ينُكُمْ وَلِيَ دِينِ", surah: "الكافرون (6)", rule: "ميم ساكنة بعدها دال" },
+            { verse: "عَلَيْهِ<span class='target-char'>مْ</span> <span class='reason-char'>نَ</span>ارٌ مُؤْصَدَةٌ", surah: "البلد (20)", rule: "ميم ساكنة بعدها نون" },
+            { verse: "عَنْ صَلَاتِهِ<span class='target-char'>مْ</span> <span class='reason-char'>سَ</span>اهُونَ", surah: "الماعون (5)", rule: "ميم ساكنة بعدها سين" },
+            { verse: "هُمْ يُرَ<span class='target-char'>اءُ</span>ونَ", surah: "الماعون (6)", rule: "ميم بعدها ياء" },
+            { verse: "أَنْتُ<span class='target-char'>مْ</span> <span class='reason-char'>عَ</span>ابِدُونَ", surah: "الكافرون (3)", rule: "ميم ساكنة بعدها عين" },
+            { verse: "إِنَّهُمْ كَا<span class='target-char'>نُ</span>وا", surah: "النبأ (27)", rule: "ميم ساكنة بعدها كاف" },
+            { verse: "جَزَاؤُهُ<span class='target-char'>مْ</span> <span class='reason-char'>عِ</span>نْدَ رَبِّهِمْ", surah: "البينة (8)", rule: "ميم ساكنة بعدها عين" }
+          ]
+        },
+        quizzes: [
+          { type: "mcq", verse: "﴿ تَرْمِيهِمْ بِحِجَارَةٍ ﴾", q: "ما حكم الميم في (تَرْمِيهِمْ بِحِجَارَةٍ)؟", opts: ["إخفاء شفوي", "إظهار شفوي", "إدغام متماثلين", "إقلاب"], ans: 0, note: "إخفاء شفوي لوقوع الباء بعد الميم الساكنة." },
+          { type: "tf", verse: "﴿ أَطْعَمَهُمْ مِنْ جُوعٍ ﴾", q: "الميم في (أَطْعَمَهُمْ مِنْ) حكمها إدغام متماثلين صغير؟", opts: ["صح", "خطأ"], ans: 0, note: "صح، لمجيء ميم متحركة بعد ميم ساكنة." },
+          { type: "mcq", verse: "﴿ كَيْدَهُمْ فِي تَضْلِيلٍ ﴾", q: "حكم الميم قبل الفاء في (كَيْدَهُمْ فِي):", opts: ["إظهار شفوي شديد", "إخفاء شفوي", "إدغام", "قلقلة"], ans: 0, note: "إظهار شفوي شديد لا يجوز إخفاؤه." },
+          { type: "tf", verse: "﴿ أَلَمْ يَجْعَلْ ﴾", q: "الميم في (أَلَمْ يَجْعَلْ) تدغم في الياء؟", opts: ["صح", "خطأ"], ans: 1, note: "خطأ، حكمها إظهار شفوي." },
+          { type: "mcq", verse: "﴿ رَبَّهُمْ بِهِمْ ﴾", q: "حكم الميم في (رَبَّهُمْ بِهِمْ):", opts: ["إخفاء شفوي", "إظهار", "إدغام", "قلقلة"], ans: 0, note: "إخفاء شفوي." },
+          { type: "tf", verse: "﴿ لَكُمْ دِينُكُمْ ﴾", q: "الميم الساكنة في (لَكُمْ دِينُكُمْ) مظهرة شفوياً؟", opts: ["صح", "خطأ"], ans: 0, note: "صح، الدال حرف إظهار شفوي." },
+          { type: "mcq", verse: "﴿ آمَنَهُمْ مِنْ خَوْفٍ ﴾", q: "حكم الميمين في (آمَنَهُمْ مِنْ):", opts: ["إدغام متماثلين", "إظهار", "إخفاء", "قلقلة"], ans: 0, note: "إدغام متماثلين بغنة." },
+          { type: "tf", verse: "﴿ عَلَيْهِمْ نَارٌ ﴾", q: "الميم قبل النون تخفى؟", opts: ["صح", "خطأ"], ans: 1, note: "خطأ، تظهر شفوياً." },
+          { type: "mcq", verse: "﴿ أَلَمْ نَشْرَحْ ﴾", q: "حكم الميم في (أَلَمْ نَشْرَحْ):", opts: ["إظهار شفوي", "إخفاء شفوي", "إدغام", "قلقلة"], ans: 0, note: "إظهار شفوي." },
+          { type: "tf", verse: "﴿ صَلَاتِهِمْ سَاهُونَ ﴾", q: "الميم قبل السين حكمها إظهار شفوي؟", opts: ["صح", "خطأ"], ans: 0, note: "صح." },
+          { type: "mcq", verse: "﴿ رَبُّهُمْ بِذَنْبِهِمْ ﴾", q: "حكم الميم في (رَبُّهُمْ بِذَنْبِهِمْ):", opts: ["إخفاء شفوي", "إظهار شفوي", "إدغام", "قلقلة"], ans: 0, note: "إخفاء شفوي." },
+          { type: "tf", verse: "﴿ أَنْعَمْتَ عَلَيْهِمْ ﴾", q: "الميم الساكنة في (أَنْعَمْتَ) مظهرة شفوياً؟", opts: ["صح", "خطأ"], ans: 0, note: "صح." },
+          { type: "mcq", verse: "﴿ هُمْ فِيهَا ﴾", q: "الميم قبل الفاء يجب فيها:", opts: ["شدة الإظهار", "الإخفاء", "الإدغام", "القلقلة"], ans: 0, note: "شدة الإظهار لقرب المخرجين." },
+          { type: "tf", verse: "﴿ كَلَّا بَلْ رَانَ عَلَى قُلُوبِهِمْ مَا ﴾", q: "حكم (قُلُوبِهِمْ مَا) إدغام متماثلين؟", opts: ["صح", "خطأ"], ans: 0, note: "صح." },
+          { type: "mcq", verse: "﴿ أَمْ لَمْ تُنْذِرْهُمْ ﴾", q: "الميم في (أَمْ لَمْ) حكمها:", opts: ["إظهار شفوي", "إخفاء", "إدغام", "قلقلة"], ans: 0, note: "إظهار شفوي." },
+          { type: "tf", verse: "﴿ إِنَّهُمْ كَانُوا ﴾", q: "الميم قبل الكاف تدغم؟", opts: ["صح", "خطأ"], ans: 1, note: "خطأ، تظهر شفوياً." },
+          { type: "mcq", verse: "﴿ فَمَا لَهُمْ عَنِ ﴾", q: "حكم الميم في (فَمَا لَهُمْ عَنِ):", opts: ["إظهار شفوي", "إخفاء", "إدغام", "قلقلة"], ans: 0, note: "إظهار شفوي." },
+          { type: "tf", verse: "﴿ جَزَاؤُهُمْ عِنْدَ ﴾", q: "الميم قبل العين مظهرة؟", opts: ["صح", "خطأ"], ans: 0, note: "صح." },
+          { type: "mcq", verse: "﴿ يَمُدُّهُمْ فِي طُغْيَانِهِمْ ﴾", q: "حكم الميم في (يَمُدُّهُمْ فِي):", opts: ["إظهار شفوي شديد", "إخفاء", "إدغام", "قلقلة"], ans: 0, note: "إظهار شفوي شديد." },
+          { type: "tf", verse: "﴿ خَلَقَكُمْ ثُمَّ ﴾", q: "الميم قبل الثاء تخفى؟", opts: ["صح", "خطأ"], ans: 1, note: "خطأ، تظهر شفوياً." }
+        ],
+        gameItems: [
+          { word: "تَرْمِيهِمْ بِحِجَارَةٍ", rule: "إخفاء شفوي", surah: "الفيل" },
+          { word: "أَطْعَمَهُمْ مِنْ", rule: "إدغام متماثلين", surah: "قريش" },
+          { word: "أَلَمْ يَجْعَلْ", rule: "إظهار شفوي", surah: "الفيل" },
+          { word: "لَكُمْ دِينُكُمْ", rule: "إظهار شفوي", surah: "الكافرون" },
+          { word: "رَبَّهُمْ بِهِمْ", rule: "إخفاء شفوي", surah: "العاديات" }
+        ],
+        baskets: ["إخفاء شفوي", "إدغام متماثلين", "إظهار شفوي"]
+      },
+      qalqala: {
+        title: "أحكام القلقلة",
+        subRules: [
+          { id: "q_sughra", name: "1. القلقلة الصغرى" },
+          { id: "q_kubra", name: "2. القلقلة الكبرى المخففة" },
+          { id: "q_mushaddad", name: "3. القلقلة الكبرى المشددة" }
+        ],
+        lessons: {
+          q_sughra: {
+            title: "القلقلة الصغرى (حرف القلقلة ساكن في وسط الكلمة)",
+            steps: [
+              "<strong>تعريفها للأطفال:</strong> نبرة اهتزاز خفيفة وسريعة في الحرف الساكن بوسط الكلمة دون توقف عن القراءة.",
+              "<strong>حروفها:</strong> ق، ط، ب، ج، د (قُطْبُ جَدّ).",
+              "<strong>أمثلتها:</strong> (صَ<span class='target-char'>دْ</span>رَكَ)، (اقْ<span class='target-char'>رَ</span>أْ)."
+            ],
+            story: "✨ قصة للأطفال: الكرة تقفز قفزة خفيفة وسريعة وهي تجري في منتصف الملعب!"
+          },
+          q_kubra: {
+            title: "القلقلة الكبرى المخففة (عند الوقف على الحرف الأخير)",
+            steps: [
+              "<strong>تعريفها للأطفال:</strong> نبرة اهتزاز قوية ومسموعة جداً عند الوقف على حرف القلقلة في نهاية الآية.",
+              "<strong>أمثلتها:</strong> (الْفَلَ<span class='target-char'>قْ</span>)، (أَحَ<span class='target-char'>دْ</span>)."
+            ],
+            story: "✨ قصة للأطفال: الكرة اصطدمت بالجدار النهائي فارتدت بصوت قوي ومسموع!"
+          },
+          q_mushaddad: {
+            title: "القلقلة الكبرى المشددة (أعلى المراتب عند الوقف على المشدد)",
+            steps: [
+              "<strong>تعريفها للأطفال:</strong> أشد درجات القلقلة وتحدث عندما نقف على حرف قلقلة مشدد.",
+              "<strong>المثال الذهبي بجزء عم:</strong> (وَتَ<span class='target-char'>بَّ</span>) في سورة المسد."
+            ],
+            story: "✨ قصة للأطفال: بطل القلقلة الخارق؛ يحبس كل طاقته ثم يفجر قلقلة قوية تهز المكان!"
+          }
+        },
+        homeworks: {
+          q_sughra: {
+            title: "واجب قفزة القلقلة الصغرى السريعة ⚡",
+            task: "مهمة تدريبية في سورة (الشرح) وسورة (العاديات):",
+            steps: [
+              "استخرج (4 كلمات) في وسطها حرف قلقلة ساكن (مثل: صَدْرَكَ، أَنْقَضَ، ضَبْحاً، قَدْحاً).",
+              "اكتب الكلمات وضع سكوناً بارزاً فوق حرف القلقلة بقلم ملون.",
+              "اقرأ سورة الشرح لمعلمك مع قلقلة الدال والقاف بخفة وسرعة دون تمطيط أو سكت."
+            ]
+          },
+          q_kubra: {
+            title: "واجب رنين القلقلة الكبرى عند الوقف 🔔",
+            task: "افتح سورة (الفلق) وسورة (الإخلاص) واستمع لنهايات الآيات:",
+            steps: [
+              "استخرج حروف القلقلة المقفول عليها بالسكون في نهايات آيات السورتين: (الْفَلَقِ، وَقَبَ، الْعُقَدِ، حَسَدَ، أَحَدٌ، الصَّمَدُ).",
+              "سجّل مقطعاً صوتياً تتلو فيه سورة الإخلاص مبيناً نبرة القلقلة القوية والواضحة عند نهاية كل آية.",
+              "اشرح لأسرتك الفرق بين قلقلة الدال في (صَدْرَكَ) وقلقلة الدال في (أَحَدْ)."
+            ]
+          },
+          q_mushaddad: {
+            title: "واجب بطل القلقلة المشددة الخارقة 💥",
+            task: "تحدي خاص في سورة (المسد):",
+            steps: [
+              "استخرج كلمة (وَتَبَّ) في الآية الأولى من سورة المسد واكتبها بحجم كبير.",
+              "بيّن لمعلمك لماذا تعتبر قلقلة الباء في (وَتَبَّ) أقوى وأعلى رتبة من قلقلة الدال في (مَسَدٍ)؟",
+              "تدرب على الضغط على الحرف المشدد أولاً ثم إطلاق القلقلة بقوة وسجلها في رسالة صوتية."
+            ]
+          }
+        },
+        examplesBySub: {
+          q_sughra: [
+            { verse: "أَلَمْ نَشْرَحْ لَكَ صَ<span class='target-char'>دْ</span>رَكَ", surah: "الشرح (1)", rule: "دال ساكنة وسطية" },
+            { verse: "الَّذِي أَ<span class='target-char'>نْ</span><span class='reason-char'>قَ</span>ضَ ظَهْرَكَ", surah: "الشرح (3)", rule: "قاف ساكنة وسطية" },
+            { verse: "اقْ<span class='target-char'>رَ</span>أْ بِاسْمِ رَبِّكَ", surah: "العلق (1)", rule: "قاف ساكنة بالوسط" },
+            { verse: "وَالْعَادِيَاتِ ضَ<span class='target-char'>بْ</span>حاً", surah: "العاديات (1)", rule: "باء ساكنة بالوسط" },
+            { verse: "فَالْمُورِيَاتِ قَ<span class='target-char'>دْ</span>حاً", surah: "العاديات (2)", rule: "دال ساكنة بالوسط" },
+            { verse: "فَالْمُغِيرَاتِ صُ<span class='target-char'>بْ</span>حاً", surah: "العاديات (3)", rule: "باء ساكنة بالوسط" },
+            { verse: "فَأَثَرْنَ بِهِ نَ<span class='target-char'>قْ</span>عاً", surah: "العاديات (4)", rule: "قاف ساكنة بالوسط" },
+            { verse: "فَوَسَ<span class='target-char'>طْ</span>نَ بِهِ جَمْعاً", surah: "العاديات (5)", rule: "طاء ساكنة بالوسط" },
+            { verse: "إِنَّ شَانِئَكَ هُوَ الْأَ<span class='target-char'>بْ</span>تَرُ", surah: "الكوثر (3)", rule: "باء ساكنة بالوسط" },
+            { verse: "فِي جِيدِهَا حَ<span class='target-char'>بْ</span>لٌ", surah: "المسد (5)", rule: "باء ساكنة بالوسط" }
+          ],
+          q_kubra: [
+            { verse: "قُلْ أَعُوذُ بِرَبِّ الْفَلَ<span class='target-char'>قِ</span>", surah: "الفلق (1)", rule: "قاف موقوف عليها" },
+            { verse: "قُلْ هُوَ اللَّهُ أَحَ<span class='target-char'>دٌ</span>", surah: "الإخلاص (1)", rule: "دال موقوف عليها" },
+            { verse: "اللَّهُ الصَّمَ<span class='target-char'>دُ</span>", surah: "الإخلاص (2)", rule: "دال موقوف عليها" },
+            { verse: "لَمْ يَلِدْ وَلَمْ يُولَ<span class='target-char'>دْ</span>", surah: "الإخلاص (3)", rule: "دال موقوف عليها" },
+            { verse: "وَالسَّمَاءِ ذَاتِ الْبُرُو<span class='target-char'>جِ</span>", surah: "البروج (1)", rule: "جيم موقوف عليها" },
+            { verse: "وَشَاهِدٍ وَمَشْهُو<span class='target-char'>دٍ</span>", surah: "البروج (3)", rule: "دال موقوف عليها" },
+            { verse: "وَالسَّمَاءِ وَالطَّارِ<span class='target-char'>قِ</span>", surah: "الطارق (1)", rule: "قاف موقوف عليها" },
+            { verse: "وَالنَّجْمِ الثَّاقِ<span class='target-char'>بِ</span>", surah: "الطارق (3)", rule: "باء موقوف عليها" },
+            { verse: "خَلَقَ الْإِنْسَانَ مِنْ عَلَ<span class='target-char'>قٍ</span>", surah: "العلق (2)", rule: "قاف موقوف عليها" },
+            { verse: "فِي عَمَدٍ مُمَدَّ<span class='target-char'>دَةٍ</span> (دال)", surah: "الهمزة", rule: "دال موقوف عليها" }
+          ],
+          q_mushaddad: [
+            { verse: "تَبَّتْ يَدَا أَبِي لَهَبٍ وَتَ<span class='target-char'>بَّ</span>", surah: "المسد (1)", rule: "باء مشددة موقوف عليها" },
+            { verse: "ذَلِكَ بِأَنَّ اللَّهَ هُوَ الْحَ<span class='target-char'>قُّ</span>", surah: "الحج", rule: "قاف مشددة موقوف عليها" },
+            { verse: "فِي أَمْرٍ مَرِي<span class='target-char'>جٍ</span>", surah: "ق", rule: "جيم مشددة" },
+            { verse: "وَأَنَّهُ هُوَ رَبُّ الشِّعْ<span class='target-char'>رَى</span>", surah: "النجم", rule: "وقف مشدد" },
+            { verse: "أَحَ<span class='target-char'>قٌّ</span> هُوَ", surah: "يونس", rule: "قاف مشددة" },
+            { verse: "كَمَثَلِ حَ<span class='target-char'>بٍّ</span>", surah: "البقرة", rule: "باء مشددة" },
+            { verse: "فَلَا جُنَا<span class='target-char'>حَ</span>", surah: "النساء", rule: "وقف مشدد" },
+            { verse: "وَلَا جَ<span class='target-char'>آنٌّ</span>", surah: "الرحمن", rule: "وقف مشدد" },
+            { verse: "إِلَى يَوْمِ الْوَقْتِ الْمَعْلُو<span class='target-char'>مِ</span>", surah: "الحجر", rule: "وقف مشدد" },
+            { verse: "فَيَكُونُ شَيْئًا مَذْكُو<span class='target-char'>رًا</span>", surah: "الإنسان", rule: "وقف مشدد" }
+          ]
+        },
+        quizzes: [
+          { type: "mcq", verse: "﴿ وَتَبَّ ﴾", q: "مرتبة القلقلة عند الوقف على (وَتَبَّ):", opts: ["كبرى مشددة (أعلى المراتب)", "صغرى", "إخفاء", "همس"], ans: 0, note: "قلقلة كبرى مشددة لأن الباء مشددة وموقوف عليها." },
+          { type: "tf", verse: "﴿ صَدْرَكَ ﴾", q: "الدال في (صَدْرَكَ) قلقلة كبرى؟", opts: ["صح", "خطأ"], ans: 1, note: "خطأ، قلقلة صغرى في وسط الكلمة." },
+          { type: "mcq", verse: "﴿ الْفَلَقِ ﴾", q: "نوع القلقلة عند الوقف على (الْفَلَقِ):", opts: ["قلقلة كبرى مخففة", "قلقلة صغرى", "إدغام", "رخاوة"], ans: 0, note: "قلقلة كبرى مخففة لسكون الوقف." },
+          { type: "tf", verse: "﴿ أَحَدٌ ﴾", q: "عند الوقف على (أَحَدٌ) تقلقل الدال؟", opts: ["صح", "خطأ"], ans: 0, note: "صح، الدال من حروف قطب جد." },
+          { type: "mcq", verse: "﴿ الْبُرُوجِ ﴾", q: "حرف القلقلة في نهاية الآية هو:", opts: ["الجيم", "الراء", "الواو", "الباء"], ans: 0, note: "حرف الجيم." },
+          { type: "tf", verse: "﴿ الثَّاقِبِ ﴾", q: "تقلقل الباء في (الثَّاقِبِ) وصلاً ووقفاً بنفس القوة؟", opts: ["صح", "خطأ"], ans: 1, note: "خطأ، تقلقل عند الوقف فقط." },
+          { type: "mcq", verse: "﴿ أَدْرَاكَ ﴾", q: "الدال في (أَدْرَاكَ) قلقلتها:", opts: ["صغرى", "كبرى مشددة", "كبرى مخففة", "لا تقلقل"], ans: 0, note: "صغرى في الوسط." },
+          { type: "tf", verse: "﴿ لَمْ يَلِدْ وَلَمْ يُولَدْ ﴾", q: "الدال في الموضعين مقلقلة؟", opts: ["صح", "خطأ"], ans: 0, note: "صح." },
+          { type: "mcq", verse: "﴿ حَبْلٌ مِنْ مَسَدٍ ﴾", q: "الباء في (حَبْلٌ) قلقلتها:", opts: ["صغرى", "كبرى", "مشددة", "لا توجد"], ans: 0, note: "صغرى." },
+          { type: "tf", verse: "﴿ انْشَقَّتْ ﴾", q: "القاف المشددة في (انْشَقَّتْ) مقلقلة؟", opts: ["صح", "خطأ"], ans: 1, note: "خطأ، القاف مفتوحة وليست ساكنة." },
+          { type: "mcq", verse: "﴿ مِنْ عَلَقٍ ﴾", q: "عند الوقف على (عَلَقٍ) يكون الحكم:", opts: ["قلقلة كبرى", "قلقلة صغرى", "إخفاء", "إدغام"], ans: 0, note: "قلقلة كبرى في القاف." },
+          { type: "tf", verse: "﴿ اقْرَأْ ﴾", q: "القاف في (اقْرَأْ) قلقلة صغرى؟", opts: ["صح", "خطأ"], ans: 0, note: "صح." },
+          { type: "mcq", verse: "﴿ ضَبْحاً ﴾", q: "الباء في (ضَبْحاً) قلقلتها:", opts: ["صغرى", "كبرى", "إدغام", "إظهار"], ans: 0, note: "صغرى." },
+          { type: "tf", verse: "﴿ نَقْعاً ﴾", q: "القاف في (نَقْعاً) تقلقل قلقلة صغرى؟", opts: ["صح", "خطأ"], ans: 0, note: "صح." },
+          { type: "mcq", verse: "﴿ الْأَبْتَرُ ﴾", q: "حرف القلقلة في (الْأَبْتَرُ) هو:", opts: ["الباء", "الراء", "التاء", "الهمزة"], ans: 0, note: "الباء الساكنة." },
+          { type: "tf", verse: "﴿ ذَاتِ الْحَبْكِ ﴾", q: "الباء في (الْحَبْكِ) قلقلة صغرى؟", opts: ["صح", "خطأ"], ans: 0, note: "صح." },
+          { type: "mcq", verse: "﴿ مَا الْحُطَمَةُ ﴾", q: "الطاء في (الْحُطَمَةُ) تقلقل؟", opts: ["لا تقلقل لأنها مفتوحة", "صغرى", "كبرى", "مشددة"], ans: 0, note: "لا تقلقل إلا إذا كانت ساكنة." },
+          { type: "tf", verse: "﴿ النَّجْمُ الثَّاقِبُ ﴾", q: "الجيم في (النَّجْمُ) تقلقل؟", opts: ["صح", "خطأ"], ans: 0, note: "صح، الجيم ساكنة." },
+          { type: "mcq", verse: "﴿ حِجَارَةٍ مِنْ سِجِّيلٍ ﴾", q: "الجيم المشددة في (سِجِّيلٍ) تقلقل؟", opts: ["لا تقلقل", "صغرى", "كبرى", "مشددة"], ans: 0, note: "لا تقلقل لأنها مكسورة وليست ساكنة." },
+          { type: "tf", verse: "﴿ مَسَدٍ ﴾", q: "عند الوقف على (مَسَدٍ) نقلقل الدال؟", opts: ["صح", "خطأ"], ans: 0, note: "صح، قلقلة كبرى." }
+        ],
+        gameItems: [
+          { word: "الْفَلَقِ (وقفاً)", rule: "قلقلة كبرى", surah: "الفلق" },
+          { word: "وَتَبَّ (وقفاً)", rule: "قلقلة كبرى مشددة", surah: "المسد" },
+          { word: "صَدْرَكَ", rule: "قلقلة صغرى", surah: "الشرح" },
+          { word: "أَحَدٌ (وقفاً)", rule: "قلقلة كبرى", surah: "الإخلاص" },
+          { word: "اقْرَأْ", rule: "قلقلة صغرى", surah: "العلق" }
+        ],
+        baskets: ["قلقلة صغرى", "قلقلة كبرى", "قلقلة كبرى مشددة"]
+      },
+      madd: {
+        title: "أحكام المدود الفرعية",
+        subRules: [
+          { id: "m_mottasel", name: "1. المد المتصل" },
+          { id: "m_monfasel", name: "2. المد المنفصل" },
+          { id: "m_lazem", name: "3. المد اللازم" },
+          { id: "m_ared", name: "4. المد العارض للسكون" }
+        ],
+        lessons: {
+          m_mottasel: {
+            title: "المد الواجب المتصل (الهمزة في نفس الكلمة)",
+            steps: [
+              "<strong>تعريفه للأطفال:</strong> اجتماع حرف المد والهمزة في كلمة واحدة.",
+              "<strong>مقداره:</strong> واجب المد 4 أو 5 حركات وجوباً.",
+              "<strong>أمثلته:</strong> (جَ<span class='target-char'>ا</span><span class='reason-char'>ءَ</span>)، (السَّمَ<span class='target-char'>ا</span><span class='reason-char'>ءِ</span>)."
+            ],
+            story: "✨ قصة للأطفال: حرف المد التقى بالهمزة في نفس الغرفة ففتح ذراعيه ومط صوته طويلاً ليرحب بها!"
+          },
+          m_monfasel: {
+            title: "المد الجائز المنفصل (الهمزة في الكلمة التالية)",
+            steps: [
+              "<strong>تعريفه للأطفال:</strong> حرف المد في آخر الكلمة الأولى والهمزة في أول الكلمة الثانية.",
+              "<strong>مقداره:</strong> جائز، يمد حركتين أو 4 أو 5 حركات.",
+              "<strong>أمثلته:</strong> (إِنَّ<span class='target-char'>ا</span> <span class='reason-char'>أَ</span>عْطَيْنَاكَ)."
+            ],
+            story: "✨ قصة للأطفال: حرف المد ينادي على الهمزة الواقفة في المنزل المجاور بصوت ممتد وجميل!"
+          },
+          m_lazem: {
+            title: "المد اللازم الكلمي المثقل (البطل 6 حركات)",
+            steps: [
+              "<strong>تعريفه للأطفال:</strong> أن يأتي بعد حرف المد حرف مشدد قوي في نفس الكلمة.",
+              "<strong>مقداره:</strong> 6 حركات كاملة لزوماً دون زيادة أو نقصان.",
+              "<strong>أمثلته:</strong> (الصَّ<span class='target-char'>ا</span><span class='reason-char'>خَّ</span>ةُ)، (الطَّ<span class='target-char'>ا</span><span class='reason-char'>مَّ</span>ةُ)."
+            ],
+            story: "✨ قصة للأطفال: حرف المد يجمع طاقته ليمد صوته 6 حركات لينتصر على وحش الشدة الثقيل!"
+          },
+          m_ared: {
+            title: "المد العارض للسكون (استراحة نهاية الآية)",
+            steps: [
+              "<strong>تعريفه للأطفال:</strong> الوقف على كلمة آخرها حرف مد يليه سكون عارض لأجل الوقف.",
+              "<strong>مقداره:</strong> يجوز 2 أو 4 أو 6 حركات.",
+              "<strong>أمثلته:</strong> (بِالدِّي<span class='target-char'>نِ</span>)، (الْعَالَمِي<span class='target-char'>نَ</span>)."
+            ],
+            story: "✨ قصة للأطفال: القارئ يتوقف للاستراحة عند الوقف فيمد صوته براحة حركتين أو 4 أو 6!"
+          }
+        },
+        homeworks: {
+          m_mottasel: {
+            title: "واجب قطار المد المتصل (الهمزة في نفس الكلمة) 🏠",
+            task: "مهمة تدريبية في سورة (النصر) وسورة (النبأ):",
+            steps: [
+              "استخرج قوله تعالى: ﴿إِذَا جَاءَ نَصْرُ اللَّهِ﴾ وقوله: ﴿عَمَّ يَتَسَاءَلُونَ﴾ واكتب الكلمتين بخط كبير.",
+              "ضع علامة المد (~) فوق الألف بلون أحمر بارز، وبيّن لماذا سمي مداً متصلاً؟",
+              "تدرّب على مد صوتك بأربع حركات كاملة مسجلاً تلاوة سورة النصر بصوت رائع لمُعلمك."
+            ]
+          },
+          m_monfasel: {
+            title: "واجب نداء المد المنفصل عبر النوافذ 🏢",
+            task: "استكشاف ممتع في سورتي (الكوثر) و(الكافرون):",
+            steps: [
+              "استخرج (3 مواضع) جاء فيها حرف المد في كلمة والهمزة في الكلمة التي بعدها (إِنَّا أَعْطَيْنَاكَ، يَا أَيُّهَا، وَلَا أَنْتُمْ).",
+              "اكتب الكلمات في كشكولك مبيناً أين يقع حرف المد وأين تقع الهمزة.",
+              "اقرأ سورة الكوثر وسورة الكافرون مبيناً المد المنفصل بجواز مده حركتين أو 4 حركات."
+            ]
+          },
+          m_lazem: {
+            title: "واجب البطل الخارق للمد اللازم (6 حركات) 🦸‍♂️",
+            task: "تحدي الأبطال في سورة (عبس) وسورة (النازعات):",
+            steps: [
+              "استخرج كلمتي (الصَّاخَّةُ) و(الطَّامَّةُ) واكتبهما برسم المصحف وضبط التشكيل والشدة.",
+              "عدّ على أصابع يدك 6 حركات متساوية وأنت تقرأ كلمة ﴿فَإِذَا جَاءَتِ الصَّاخَّةُ﴾.",
+              "اشرح لمعلمك لماذا نمد هذه الكلمات 6 حركات إجبارياً ولا يجوز أن نقصّرها؟"
+            ]
+          },
+          m_ared: {
+            title: "واجب استراحة القارئ (المد العارض للسكون) ☕",
+            task: "مهمة إتقان أواخر الآيات في سورة (الماعون):",
+            steps: [
+              "استخرج أواخر آيات سورة الماعون السبع كلها: (بِالدِّينِ، الْيَتِيمَ، الْمِسْكِينِ، لِلْمُصَلِّينَ، سَاهُونَ، يُرَاءُونَ، الْمَاعُونَ).",
+              "بيّن ما هو الحرف الذي سكن لأجل الوقف في كل كلمة؟ وكم حركة يجوز لنا أن نمده؟",
+              "سجّل تلاوة سورة الماعون كاملة بالتوسط (4 حركات) في جميع رؤوس الآيات."
+            ]
+          }
+        },
+        examplesBySub: {
+          m_mottasel: [
+            { verse: "إِذَا جَ<span class='target-char'>ا</span><span class='reason-char'>ءَ</span> نَصْرُ اللَّهِ", surah: "النصر (1)", rule: "مد واجب متصل (4-5 حركات)" },
+            { verse: "وَالسَّمَ<span class='target-char'>ا</span><span class='reason-char'>ءِ</span> وَالطَّارِقِ", surah: "الطارق (1)", rule: "مد واجب متصل" },
+            { verse: "عَمَّ يَتَسَ<span class='target-char'>ا</span><span class='reason-char'>ءَ</span>لُونَ", surah: "النبأ (1)", rule: "مد واجب متصل" },
+            { verse: "وَجِ<span class='target-char'>ي</span><span class='reason-char'>ءَ</span> يَوْمَئِذٍ بِجَهَنَّمَ", surah: "الفجر (23)", rule: "مد واجب متصل" },
+            { verse: "فَإِذَا جَ<span class='target-char'>ا</span><span class='reason-char'>ءَ</span>تِ الصَّاخَّةُ", surah: "عبس (33)", rule: "مد متصل في (جَاءَتِ)" },
+            { verse: "وَأَمَّا السَّ<span class='target-char'>ا</span><span class='reason-char'>ئِ</span>لَ فَلَا تَنْهَرْ", surah: "الضحى (10)", rule: "مد واجب متصل" },
+            { verse: "حَنِيفً<span class='target-char'>ا</span> <span class='reason-char'>مُ</span>سْلِمًا", surah: "البينة (مصحح)", rule: "مد متصل" },
+            { verse: "إِذَا السَّمَ<span class='target-char'>ا</span><span class='reason-char'>ءُ</span> انْفَطَرَتْ", surah: "الانفطار (1)", rule: "مد واجب متصل" },
+            { verse: "إِذَا السَّمَ<span class='target-char'>ا</span><span class='reason-char'>ءُ</span> انْشَقَّتْ", surah: "الانشقاق (1)", rule: "مد واجب متصل" },
+            { verse: "وَالسَّمَ<span class='target-char'>ا</span><span class='reason-char'>ءِ</span> ذَاتِ الْبُرُوجِ", surah: "البروج (1)", rule: "مد واجب متصل" }
+          ],
+          m_monfasel: [
+            { verse: "إِنَّ<span class='target-char'>ا</span> <span class='reason-char'>أَ</span>عْطَيْنَاكَ الْكَوْثَرَ", surah: "الكوثر (1)", rule: "مد جائز منفصل" },
+            { verse: "وَمَ<span class='target-char'>ا</span> <span class='reason-char'>أَ</span>دْرَاكَ مَا الْقَارِعَةُ", surah: "القارعة (3)", rule: "مد جائز منفصل" },
+            { verse: "قُلْ يَ<span class='target-char'>ا</span> <span class='reason-char'>أَ</span>يُّهَا الْكَافِرُونَ", surah: "الكافرون (1)", rule: "مد جائز منفصل" },
+            { verse: "وَلَ<span class='target-char'>ا</span> <span class='reason-char'>أَ</span>نَا عَابِدٌ", surah: "الكافرون (4)", rule: "مد جائز منفصل" },
+            { verse: "وَلَ<span class='target-char'>ا</span> <span class='reason-char'>أَ</span>نْتُمْ عَابِدُونَ", surah: "الكافرون (3)", rule: "مد جائز منفصل" },
+            { verse: "إِنَّ<span class='target-char'>ا</span> <span class='reason-char'>أَ</span>نْزَلْنَاهُ فِي لَيْلَةِ الْقَدْرِ", surah: "القدر (1)", rule: "مد جائز منفصل" },
+            { verse: "وَمَ<span class='target-char'>ا</span> <span class='reason-char'>أَ</span>دْرَاكَ مَا لَيْلَةُ الْقَدْرِ", surah: "القدر (2)", rule: "مد جائز منفصل" },
+            { verse: "فِي<span class='target-char'>هَ</span><span class='reason-char'>ا</span> <span class='reason-char'>أَ</span>بَدًا", surah: "البينة (8)", rule: "مد جائز منفصل" },
+            { verse: "تَبَّتْ يَدَ<span class='target-char'>ا</span> <span class='reason-char'>أَ</span>بِي لَهَبٍ", surah: "المسد (1)", rule: "مد جائز منفصل" },
+            { verse: "إِلَّ<span class='target-char'>ا</span> <span class='reason-char'>أَ</span>نْ يَشَاءَ اللَّهُ", surah: "الإنسان (30)", rule: "مد جائز منفصل" }
+          ],
+          m_lazem: [
+            { verse: "فَإِذَا جَاءَتِ الصَّ<span class='target-char'>ا</span><span class='reason-char'>خَّ</span>ةُ", surah: "عبس (33)", rule: "مد لازم كلمي مثقل (6 حركات)" },
+            { verse: "فَإِذَا جَاءَتِ الطَّ<span class='target-char'>ا</span><span class='reason-char'>مَّ</span>ةُ الْكُبْرَى", surah: "النازعات (34)", rule: "مد لازم كلمي مثقل (6 حركات)" },
+            { verse: "وَلَا الضَّ<span class='target-char'>ا</span><span class='reason-char'>لِّ</span>ينَ", surah: "الفاتحة (7)", rule: "مد لازم كلمي مثقل (6 حركات)" },
+            { verse: "أَتُحَ<span class='target-char'>ا</span><span class='reason-char'>جُّ</span>ونِّي", surah: "الأنعام", rule: "مد لازم كلمي مثقل" },
+            { verse: "الْحَ<span class='target-char'>ا</span><span class='reason-char'>قَّ</span>ةُ", surah: "الحاقة (1)", rule: "مد لازم كلمي مثقل" },
+            { verse: "مَا الْحَ<span class='target-char'>ا</span><span class='reason-char'>قَّ</span>ةُ", surah: "الحاقة (2)", rule: "مد لازم كلمي مثقل" },
+            { verse: "دَ<span class='target-char'>ا</span><span class='reason-char'>بَّ</span>ةٍ", surah: "النور", rule: "مد لازم كلمي مثقل" },
+            { verse: "صَ<span class='target-char'>ا</span><span class='reason-char'>فَّ</span>اتٍ", surah: "الملك (19)", rule: "مد لازم كلمي مثقل" },
+            { verse: "تَأْمُرُ<span class='target-char'>و</span><span class='reason-char'>نِّ</span>ي", surah: "الزمر", rule: "مد لازم كلمي مثقل" },
+            { verse: "يُشَ<span class='target-char'>ا</span><span class='reason-char'>قِّ</span> اللَّهَ", surah: "الحشر", rule: "مد لازم كلمي مثقل" }
+          ],
+          m_ared: [
+            { verse: "الَّذِي يُكَذِّبُ بِالدِّي<span class='target-char'>نِ</span>", surah: "الماعون (1)", rule: "مد عارض للسكون (2، 4، 6)" },
+            { verse: "فَذَلِكَ الَّذِي يَدُعُّ الْيَتِي<span class='target-char'>مَ</span>", surah: "الماعون (2)", rule: "مد عارض للسكون" },
+            { verse: "وَلَا يَحُضُّ عَلَى طَعَامِ الْمِسْكِي<span class='target-char'>نِ</span>", surah: "الماعون (3)", rule: "مد عارض للسكون" },
+            { verse: "فَوَيْلٌ لِلْمُصَلِّي<span class='target-char'>نَ</span>", surah: "الماعون (4)", rule: "مد عارض للسكون" },
+            { verse: "الَّذِينَ هُمْ عَنْ صَلَاتِهِمْ سَاهُو<span class='target-char'>نَ</span>", surah: "الماعون (5)", rule: "مد عارض للسكون" },
+            { verse: "الَّذِينَ هُمْ يُرَاءُو<span class='target-char'>نَ</span>", surah: "الماعون (6)", rule: "مد عارض للسكون" },
+            { verse: "وَيَمْنَعُونَ الْمَاعُو<span class='target-char'>نَ</span>", surah: "الماعون (7)", rule: "مد عارض للسكون" },
+            { verse: "قُلْ يَا أَيُّهَا الْكَافِرُو<span class='target-char'>نَ</span>", surah: "الكافرون (1)", rule: "مد عارض للسكون" },
+            { verse: "لَا أَعْبُدُ مَا تَعْبُدُو<span class='target-char'>نَ</span>", surah: "الكافرون (2)", rule: "مد عارض للسكون" },
+            { verse: "لِإِيلَافِ قُرَيْ<span class='target-char'>شٍ</span>", surah: "قريش (1)", rule: "مد لين عارض للسكون" }
+          ]
+        },
+        quizzes: [
+          { type: "mcq", verse: "﴿ إِذَا جَاءَ نَصْرُ اللَّهِ ﴾", q: "ما نوع المد في (جَاءَ)؟", opts: ["مد واجب متصل", "مد جائز منفصل", "مد لازم", "مد بدل"], ans: 0, note: "مد واجب متصل لاجتماع المد والهمزة في كلمة واحدة." },
+          { type: "tf", verse: "﴿ إِنَّا أَعْطَيْنَاكَ ﴾", q: "المد بين (إِنَّا) و (أَعْطَيْنَاكَ) مد واجب متصل؟", opts: ["صح", "خطأ"], ans: 1, note: "خطأ، مد جائز منفصل لانفصال الهمزة في الكلمة الثانية." },
+          { type: "mcq", verse: "﴿ الصَّاخَّةُ ﴾", q: "مقدار مد كلمة (الصَّاخَّةُ):", opts: ["6 حركات لزوماً", "حركتان", "4 حركات", "جائز"], ans: 0, note: "مد لازم كلمي مثقل يمد 6 حركات لزوماً." },
+          { type: "tf", verse: "﴿ بِالدِّينِ ﴾", q: "عند الوقف على (بِالدِّينِ) يجوز مدها 2 أو 4 أو 6 حركات؟", opts: ["صح", "خطأ"], ans: 0, note: "صح، لأنه مد عارض للسكون." },
+          { type: "mcq", verse: "﴿ وَالسَّمَاءِ ﴾", q: "المد في (وَالسَّمَاءِ) حكمه:", opts: ["واجب متصل", "جائز منفصل", "عارض", "طبيعي"], ans: 0, note: "واجب متصل." },
+          { type: "tf", verse: "﴿ الطَّامَّةُ ﴾", q: "نوع المد في (الطَّامَّةُ) مد لازم كلمي مثقل؟", opts: ["صح", "خطأ"], ans: 0, note: "صح، لمجيء الميم المشددة بعد الألف." },
+          { type: "mcq", verse: "﴿ وَمَا أَدْرَاكَ ﴾", q: "المد في (وَمَا أَدْرَاكَ) هو:", opts: ["مد جائز منفصل", "مد متصل", "مد لازم", "مد بدل"], ans: 0, note: "مد جائز منفصل." },
+          { type: "tf", verse: "﴿ قُلْ يَا أَيُّهَا الْكَافِرُونَ ﴾", q: "المد في (يَا أَيُّهَا) مد متصل؟", opts: ["صح", "خطأ"], ans: 1, note: "خطأ، مد منفصل حكماً." },
+          { type: "mcq", verse: "﴿ يَتَسَاءَلُونَ ﴾", q: "المد في (يَتَسَاءَلُونَ) هو:", opts: ["مد واجب متصل", "مد منفصل", "مد عارض", "مد لازم"], ans: 0, note: "مد واجب متصل." },
+          { type: "tf", verse: "﴿ الْكَافِرُونَ ﴾", q: "الواو عند الوقف على (الْكَافِرُونَ) تمد مداً عارضاً للسكون؟", opts: ["صح", "خطأ"], ans: 0, note: "صح." },
+          { type: "mcq", verse: "﴿ سَوَاءٌ عَلَيْهِمْ ﴾", q: "المد في (سَوَاءٌ):", opts: ["مد متصل", "مد منفصل", "مد عارض", "مد بدل"], ans: 0, note: "مد واجب متصل." },
+          { type: "tf", verse: "﴿ فِي جِيدِهَا ﴾", q: "الياء في (جِيدِهَا) مد طبيعي حركتان؟", opts: ["صح", "خطأ"], ans: 0, note: "صح." },
+          { type: "mcq", verse: "﴿ وَلَا الضَّالِّينَ ﴾", q: "نوع المد في (الضَّالِّينَ):", opts: ["مد لازم كلمي مثقل", "مد متصل", "مد منفصل", "مد لين"], ans: 0, note: "مد لازم كلمي مثقل 6 حركات." },
+          { type: "tf", verse: "﴿ قُرَيْشٍ ﴾", q: "عند الوقف على كلمة (قُرَيْشٍ) يسمى المد مد لين؟", opts: ["صح", "خطأ"], ans: 0, note: "صح." },
+          { type: "mcq", verse: "﴿ وَلَا أَنْتُمْ ﴾", q: "المد في (وَلَا أَنْتُمْ):", opts: ["مد جائز منفصل", "مد متصل", "مد عارض", "مد لازم"], ans: 0, note: "مد منفصل." },
+          { type: "tf", verse: "﴿ سَيَصْلَى ﴾", q: "الألف المقصورة في (سَيَصْلَى) مد لازم 6 حركات؟", opts: ["صح", "خطأ"], ans: 1, note: "خطأ، مد طبيعي حركتان." },
+          { type: "mcq", verse: "﴿ إِيلَافِهِمْ ﴾", q: "الهمزة المسبوقة للياء في (إِيلَافِهِمْ) تسمى:", opts: ["مد بدل", "مد متصل", "مد منفصل", "مد لازم"], ans: 0, note: "مد بدل." },
+          { type: "tf", verse: "﴿ خَيْرٌ مِنْ أَلْفِ شَهْرٍ ﴾", q: "المد اللازم يجوز تقصيره لحركتين؟", opts: ["صح", "خطأ"], ans: 1, note: "خطأ، يمد 6 حركات لزوماً." },
+          { type: "mcq", verse: "﴿ الْعَالَمِينَ ﴾", q: "يجوز في المد العارض للسكون:", opts: ["2 أو 4 أو 6 حركات", "حركتان فقط", "6 حركات فقط", "لا يمد"], ans: 0, note: "القصر والتوسط والطول (2، 4، 6)." },
+          { type: "tf", verse: "﴿ حَآقَّةُ ﴾", q: "المد في (الْحَاقَّةُ) مد لازم كلمي مثقل؟", opts: ["صح", "خطأ"], ans: 0, note: "صح." }
+        ],
+        gameItems: [
+          { word: "جَاءَ", rule: "مد متصل", surah: "النصر" },
+          { word: "إِنَّا أَعْطَيْنَاكَ", rule: "مد منفصل", surah: "الكوثر" },
+          { word: "الصَّاخَّةُ", rule: "مد لازم", surah: "عبس" },
+          { word: "بِالدِّينِ (وقفاً)", rule: "مد عارض للسكون", surah: "الماعون" },
+          { word: "وَالسَّمَاءِ", rule: "مد متصل", surah: "الطارق" }
+        ],
+        baskets: ["مد متصل", "مد منفصل", "مد لازم", "مد عارض للسكون"]
+      }
+    };
+
+    let curChap = 'noon';
+    let curTab = 'cards';
+    let curSubRule = 'izhar';
+    let curQIdx = 0;
+    let score = 0;
+    let streak = 0;
+    let gameCurIdx = 0;
+
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let actx = null;
+    function getACtx() { if (!actx) actx = new AudioContext(); return actx; }
+
+    function soundWin() {
+      const ctx = getACtx();
+      [523.25, 659.25, 783.99, 1046.50].forEach((f, i) => {
+        setTimeout(() => {
+          const osc = ctx.createOscillator();
+          const g = ctx.createGain();
+          osc.type = 'triangle'; osc.frequency.setValueAtTime(f, ctx.currentTime);
+          g.gain.setValueAtTime(0.3, ctx.currentTime);
+          g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+          osc.connect(g); g.connect(ctx.destination);
+          osc.start(); osc.stop(ctx.currentTime + 0.38);
+        }, i * 90);
+      });
+    }
+
+    function soundLose() {
+      const ctx = getACtx();
+      const osc = ctx.createOscillator();
+      const g = ctx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(170, ctx.currentTime);
+      osc.frequency.linearRampToValueAtTime(110, ctx.currentTime + 0.25);
+      g.gain.setValueAtTime(0.2, ctx.currentTime);
+      g.gain.linearRampToValueAtTime(0.01, ctx.currentTime + 0.25);
+      osc.connect(g); g.connect(ctx.destination);
+      osc.start(); osc.stop(ctx.currentTime + 0.26);
+    }
+
+    document.querySelectorAll('.main-nav-btn').forEach(btn => {
+      btn.onclick = () => {
+        document.querySelectorAll('.main-nav-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        curChap = btn.getAttribute('data-chapter');
+        curSubRule = masterData[curChap].subRules[0].id;
+        curQIdx = 0;
+        gameCurIdx = 0;
+        renderAll();
+      };
+    });
+
+    document.querySelectorAll('.sec-tab-btn').forEach(btn => {
+      btn.onclick = () => {
+        document.querySelectorAll('.sec-tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        curTab = btn.getAttribute('data-tab');
+        document.querySelectorAll('.display-box').forEach(box => box.classList.remove('active'));
+        document.getElementById(`box_${curTab}`).classList.add('active');
+      };
+    });
+
+    function renderAll() {
+      renderSubRules();
+      renderCards();
+      renderExamples();
+      renderHomework();
+      renderQuiz();
+      renderGame();
+    }
+
+    function renderSubRules() {
+      const bar = document.getElementById('subRulesBar');
+      bar.innerHTML = '';
+      const rules = masterData[curChap].subRules;
+      rules.forEach(r => {
+        const chip = document.createElement('button');
+        chip.className = `sub-rule-chip ${r.id === curSubRule ? 'active' : ''}`;
+        chip.innerText = r.name;
+        chip.onclick = () => {
+          curSubRule = r.id;
+          renderSubRules();
+          renderCards();
+          renderExamples();
+          renderHomework();
+        };
+        bar.appendChild(chip);
+      });
+    }
+
+    function renderCards() {
+      const cardBox = document.getElementById('lessonCardContainer');
+      const lesson = masterData[curChap].lessons[curSubRule];
+      if (!lesson) {
+        cardBox.innerHTML = `<div class="zoom-lesson-card"><div class="zoom-lesson-title">اختر حكماً فرعياً لعرض كارت شرحه الموسع</div></div>`;
+        return;
+      }
+      let stepsHtml = '';
+      lesson.steps.forEach((st, i) => {
+        stepsHtml += `<div class="zoom-step-box"><span>📍 الخطوة ${i+1}: </span>${st}</div>`;
+      });
+
+      cardBox.innerHTML = `
+        <div class="zoom-lesson-card">
+          <div class="zoom-lesson-title">
+            <span>📖</span>
+            <span>${lesson.title}</span>
+          </div>
+          ${stepsHtml}
+          <div class="story-note">${lesson.story}</div>
+        </div>
+      `;
+    }
+
+    function renderExamples() {
+      const grid = document.getElementById('examplesGrid');
+      grid.innerHTML = '';
+      const subObj = masterData[curChap].subRules.find(r => r.id === curSubRule);
+      const subName = subObj ? subObj.name : '';
+      const exList = masterData[curChap].examplesBySub[curSubRule] || [];
+
+      document.getElementById('examplesTitle').innerText = `10 أمثلة عملية محققة من جزء عم على (${subName}):`;
+
+      exList.forEach((ex, idx) => {
+        const c = document.createElement('div');
+        c.className = 'big-example-card';
+        c.innerHTML = `
+          <div class="ex-info-row">
+            <span>مثال (${idx + 1})</span>
+            <span style="color:#facc15;">سورة ${ex.surah}</span>
+          </div>
+          <div class="verse-banner">﴿ ${ex.verse} ﴾</div>
+          <div style="font-size:15px; color:#38bdf8; font-weight:bold; text-align:center;">
+            ${ex.rule}
+          </div>
+        `;
+        grid.appendChild(c);
+      });
+    }
+
+    function renderHomework() {
+      const hwBox = document.getElementById('homeworkCard');
+      const hw = masterData[curChap].homeworks[curSubRule];
+      if (!hw) {
+        hwBox.innerHTML = `<div style="text-align:center; padding:20px; font-size:18px;">اختر حكماً لعرض واجبه المنزلي والتكليف العملي</div>`;
+        return;
+      }
+
+      let stepsHtml = '';
+      hw.steps.forEach((st, i) => {
+        stepsHtml += `
+          <li>
+            <span class="badge-num">${i + 1}</span>
+            <div>${st}</div>
+          </li>
+        `;
+      });
+
+      hwBox.innerHTML = `
+        <div class="hw-header">
+          <div class="hw-title">
+            <span>📌</span>
+            <span>${hw.title}</span>
+          </div>
+          <button class="hw-copy-btn" onclick="copyHomeworkText()">
+            <span>📋</span>
+            <span id="copyBtnText">نسخ نص الواجب لواتساب</span>
+          </button>
+        </div>
+        <div class="hw-task-box">
+          <div style="color:#facc15; font-size:20px; margin-bottom:6px;">🎯 التكليف المطلوب من الطالب:</div>
+          <div>${hw.task}</div>
+          <ul class="hw-steps-list">
+            ${stepsHtml}
+          </ul>
+        </div>
+      `;
+    }
+
+    window.copyHomeworkText = function() {
+      const hw = masterData[curChap].homeworks[curSubRule];
+      if (!hw) return;
+      let text = `🌟 أكاديمية الفتح لعلوم القرآن 🌟\n`;
+      text += `📝 ${hw.title}\n\n`;
+      text += `🎯 المطلوب من الطالب:\n${hw.task}\n\n`;
+      hw.steps.forEach((s, idx) => {
+        text += `${idx + 1}. ${s}\n`;
+      });
+      text += `\n🌿 نسأل الله التوفيق والفتح المبين لطلابنا الأعزاء!`;
+
+      navigator.clipboard.writeText(text).then(() => {
+        const btnText = document.getElementById('copyBtnText');
+        if (btnText) {
+          btnText.innerText = "✓ تم النسخ بنجاح!";
+          setTimeout(() => { btnText.innerText = "نسخ نص الواجب لواتساب"; }, 2500);
+        }
+      });
+    };
+
+    function renderQuiz() {
+      const data = masterData[curChap];
+      const q = data.quizzes[curQIdx];
+      document.getElementById('quizCounter').innerText = `تمرين ${curQIdx + 1} من ${data.quizzes.length}`;
+      document.getElementById('quizType').innerText = q.type === 'mcq' ? 'اختيار من متعدد' : 'صح أم خطأ';
+      document.getElementById('quizVerse').innerText = q.verse;
+      document.getElementById('quizQ').innerText = q.q;
+      document.getElementById('quizFeedback').innerText = '';
+      document.getElementById('nextQuizBtn').style.display = 'none';
+
+      const grid = document.getElementById('quizGrid');
+      grid.innerHTML = '';
+
+      q.opts.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'giant-opt-btn';
+        btn.innerText = opt;
+        btn.onclick = () => {
+          document.querySelectorAll('.giant-opt-btn').forEach(b => b.disabled = true);
+          const fb = document.getElementById('quizFeedback');
+          if (idx === q.ans) {
+            btn.classList.add('correct');
+            fb.style.color = '#4ade80';
+            fb.innerText = `🌟 أحسنت بارك الله فيك! ${q.note}`;
+            soundWin();
+            confetti({ particleCount: 80, spread: 90, origin: { y: 0.6 } });
+          } else {
+            btn.classList.add('wrong');
+            document.querySelectorAll('.giant-opt-btn')[q.ans].classList.add('correct');
+            fb.style.color = '#f87171';
+            fb.innerText = ` إجابة غير دقيقة. الصواب: ${q.note}`;
+            soundLose();
+          }
+          document.getElementById('nextQuizBtn').style.display = 'inline-block';
+        };
+        grid.appendChild(btn);
+      });
+    }
+
+    document.getElementById('nextQuizBtn').onclick = () => {
+      const total = masterData[curChap].quizzes.length;
+      curQIdx = (curQIdx + 1) % total;
+      renderQuiz();
+    };
+
+    function renderGame() {
+      const data = masterData[curChap];
+      const item = data.gameItems[gameCurIdx];
+      document.getElementById('gameSurah').innerText = `سورة ${item.surah}`;
+      document.getElementById('gameWord').innerText = `﴿ ${item.word} ﴾`;
+
+      const box = document.getElementById('gameBaskets');
+      box.innerHTML = '';
+      data.baskets.forEach(bName => {
+        const btn = document.createElement('button');
+        btn.className = 'giant-basket-btn';
+        btn.innerText = `سلة ${bName}`;
+        btn.onclick = () => {
+          if (bName === item.rule) {
+            score += 10;
+            streak++;
+            soundWin();
+            confetti({ particleCount: 60, spread: 70, origin: { y: 0.7 } });
+          } else {
+            streak = 0;
+            soundLose();
+          }
+          document.getElementById('gameScore').innerText = score;
+          document.getElementById('gameStreak').innerText = streak;
+          gameCurIdx = (gameCurIdx + 1) % data.gameItems.length;
+          renderGame();
+        };
+        box.appendChild(btn);
+      });
+    }
+
+    renderAll();
+  </script>
+</body>
+</html>
