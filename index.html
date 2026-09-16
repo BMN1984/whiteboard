@@ -150,20 +150,20 @@
       pointer-events: none;
     }
 
-    /* طبقات الكانفاس */
-    #gridCanvas { position: absolute; top: 0; left: 0; pointer-events: none !important; z-index: 1; }
-    #pdfCanvas { position: absolute; top: 0; left: 0; pointer-events: none !important; z-index: 2; }
+    /* طبقات الكانفاس بأبعاد واسعة لتغطية كافة مستويات الزووم */
+    #gridCanvas { position: absolute; top: -50vh; left: -50vw; width: 200vw; height: 200vh; pointer-events: none !important; z-index: 1; }
+    #pdfCanvas { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none !important; z-index: 2; }
     #paintCanvas { 
       position: absolute; 
-      top: 0; left: 0; 
-      width: 100vw; 
-      height: 100vh; 
+      top: -50vh; left: -50vw; 
+      width: 200vw; 
+      height: 200vh; 
       cursor: crosshair; 
       touch-action: none; 
       pointer-events: auto !important; 
       z-index: 3; 
     }
-    #overlayCanvas { position: absolute; top: 0; left: 0; pointer-events: none !important; z-index: 4; }
+    #overlayCanvas { position: absolute; top: -50vh; left: -50vw; width: 200vw; height: 200vh; pointer-events: none !important; z-index: 4; }
 
     /* حاوية الصناديق الحرة */
     #textWidgetsContainer {
@@ -300,7 +300,7 @@
       z-index: 6;
     }
 
-    /* صندوق المصحف المطور - تم فك أقصى عرض ليتسع بحرية تامة */
+    /* صندوق المصحف المطور */
     #quranTextContainer {
       position: absolute;
       top: 15%;
@@ -461,7 +461,6 @@
       width: 100%;
     }
 
-    /* مقابض التحجيم جهة اليمين والأسفل لتتسع مع اتجاه الماوس بدقة */
     .quran-resize-edge-w {
       position: absolute;
       top: 0; right: 0;
@@ -1025,7 +1024,7 @@
         <span>💬</span><span>00201116845186</span>
       </a> 🌿
     </div>
-    <button class="banner-close-btn" id="closeBannerBtn" title="إغلاق هذا الشريط">✕ إخفاء</button>
+    <button class="banner-close-btn" id="closeBannerBtn" title="إغلاق هذا الشريط">✕ إغلاق</button>
   </div>
 
   <div id="celebrationOverlay"></div>
@@ -1379,7 +1378,6 @@
     const ayahSidebarNav = document.getElementById('ayahSidebarNav');
     const toggleAyahSidebarBtn = document.getElementById('toggleAyahSidebarBtn');
 
-    // طي وإظهار الفهرس الجانبي
     toggleAyahSidebarBtn.onclick = (e) => {
       e.stopPropagation();
       ayahSidebarNav.classList.toggle('hidden-sidebar');
@@ -1494,9 +1492,7 @@
       restoreAllBtn.style.display = 'none';
     };
 
-    // ========================================================
-    // تحريك وتحجيم صندوق المصحف (مضبوط في نفس اتجاه حركة اليد 100%)
-    // ========================================================
+    // تحريك وتحجيم صندوق المصحف
     const quranResizeW = document.getElementById('quranResizeW');
     const quranResizeH = document.getElementById('quranResizeH');
     const quranResizeCorner = document.getElementById('quranResizeCorner');
@@ -1590,9 +1586,7 @@
       stopQuranAudio();
     };
 
-    // ========================================================
     // الصناديق النصية الحرة
-    // ========================================================
     let widgetIdCounter = 0;
     function createCustomTextWidget(x, y) {
       widgetIdCounter++;
@@ -2100,10 +2094,10 @@
       if (isAudioPlaying) window.jumpToAyah(currentAudioIndex);
     };
 
-    // الرسم والكانفاس
+    // الرسم والكانفاس مع تغطية كاملة للشاشة
     function resizeCanvases() {
-      const w = window.innerWidth;
-      const h = window.innerHeight;
+      const w = window.innerWidth * 2;
+      const h = window.innerHeight * 2;
 
       const tempCanvas = document.createElement('canvas');
       tempCanvas.width = paintCanvas.width || w;
@@ -2124,8 +2118,8 @@
     window.addEventListener('orientationchange', () => setTimeout(resizeCanvases, 200));
 
     [paintCanvas, gridCanvas, pdfCanvas, overlayCanvas].forEach(c => {
-      c.width = window.innerWidth;
-      c.height = window.innerHeight;
+      c.width = window.innerWidth * 2;
+      c.height = window.innerHeight * 2;
     });
 
     function drawGrid() {
@@ -2138,14 +2132,14 @@
 
       if (currentGrid === 'ruled' || currentGrid === 'wide-ruled') {
         const space = currentGrid === 'wide-ruled' ? 56 : 42;
-        for (let y = space; y < gridCanvas.height; y += space) {
+        for (let y = 0; y < gridCanvas.height; y += space) {
           gCtx.beginPath();
           gCtx.moveTo(0, y);
           gCtx.lineTo(gridCanvas.width, y);
           gCtx.stroke();
         }
       } else if (currentGrid === 'two-lines') {
-        for (let y = 50; y < gridCanvas.height; y += 70) {
+        for (let y = 0; y < gridCanvas.height; y += 70) {
           gCtx.beginPath();
           gCtx.moveTo(0, y);
           gCtx.lineTo(gridCanvas.width, y);
@@ -2154,7 +2148,7 @@
           gCtx.stroke();
         }
       } else if (currentGrid === 'four-lines') {
-        for (let y = 50; y < gridCanvas.height; y += 90) {
+        for (let y = 0; y < gridCanvas.height; y += 90) {
           for (let i = 0; i < 4; i++) {
             gCtx.beginPath();
             gCtx.moveTo(0, y + i * 16);
@@ -2187,6 +2181,7 @@
     }
     saveState();
 
+    // تصحيح دالة الإحداثيات لتعمل بدقة تتام مع الماوس والتاتش ومع أي قيمة زووم scale
     function getCoords(e) {
       let clientX, clientY;
       if (e.touches && e.touches.length > 0) {
@@ -2196,9 +2191,10 @@
         clientX = e.clientX;
         clientY = e.clientY;
       }
+      const rect = paintCanvas.getBoundingClientRect();
       return {
-        x: clientX / currentScale,
-        y: clientY / currentScale
+        x: (clientX - rect.left) * (paintCanvas.width / rect.width),
+        y: (clientY - rect.top) * (paintCanvas.height / rect.height)
       };
     }
 
@@ -2234,7 +2230,7 @@
       startY = y;
 
       if (currentTool === 'text') {
-        createCustomTextWidget(x, y);
+        createCustomTextWidget(e.clientX, e.clientY);
         return;
       }
       if (currentTool === 'hand') {
