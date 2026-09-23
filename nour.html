@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>نور البيان التفاعلي | أكاديمية الفتح لعلوم القرآن</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700;800&family=Zain:wght@400;700;800;900&display=swap" rel="stylesheet">
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Cairo', 'Tajawal', 'sans-serif'],
+            quran: ['Amiri', 'serif'],
+            kids: ['Zain', 'Cairo', 'sans-serif']
+          },
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              500: '#059669',
+              600: '#047857',
+              700: '#064e3b',
+              amber: '#f59e0b',
+              sky: '#0ea5e9',
+              coral: '#f43f5e',
+              purple: '#8b5cf6',
+              gold: '#eab308'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    .tashkeel-word {
+      font-family: 'Amiri', 'Cairo', serif;
+      line-height: 2 !important;
+      letter-spacing: 0.02em;
+      text-rendering: optimizeLegibility;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    .pres-text-display {
+      font-family: 'Amiri', 'Cairo', serif;
+      line-height: 1.85 !important;
+      overflow: visible !important;
+      text-rendering: optimizeLegibility;
+      font-feature-settings: "kern" 1, "liga" 1;
+      letter-spacing: 0.015em;
+    }
+    .kid-card {
+      transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .kid-card:hover {
+      transform: translateY(-4px) scale(1.015);
+    }
+    .kid-card:active {
+      transform: translateY(2px) scale(0.98);
+    }
+    .theme-clouds {
+      background: radial-gradient(circle at 15% 20%, #ffffff 0%, #f0f9ff 55%, #e0f2fe 100%);
+      border: 2.5px solid #7dd3fc;
+      box-shadow: 0 12px 30px -10px rgba(14, 165, 233, 0.18);
+    }
+    .theme-garden {
+      background: radial-gradient(circle at 85% 15%, #ffffff 0%, #f0fdf4 55%, #dcfce7 100%);
+      border: 2.5px solid #86efac;
+      box-shadow: 0 12px 30px -10px rgba(34, 197, 94, 0.18);
+    }
+    .theme-sunshine {
+      background: radial-gradient(circle at 50% 10%, #ffffff 0%, #fffbeb 55%, #fef3c7 100%);
+      border: 2.5px solid #fde047;
+      box-shadow: 0 12px 30px -10px rgba(234, 179, 8, 0.18);
+    }
+    .theme-lavender {
+      background: radial-gradient(circle at 20% 80%, #ffffff 0%, #faf5ff 55%, #f3e8ff 100%);
+      border: 2.5px solid #d8b4fe;
+      box-shadow: 0 12px 30px -10px rgba(168, 85, 247, 0.18);
+    }
+    .theme-peach {
+      background: radial-gradient(circle at 80% 80%, #ffffff 0%, #fff1f2 55%, #ffe4e6 100%);
+      border: 2.5px solid #fecdd3;
+      box-shadow: 0 12px 30px -10px rgba(244, 63, 94, 0.18);
+    }
+    .colored-char {
+      display: inline;
+      font-weight: 900;
+      transition: color 0.2s ease;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(105vh) scale(0.7) rotate(0deg); opacity: 0; }
+      10% { opacity: 0.95; }
+      90% { opacity: 0.95; }
+      100% { transform: translateY(-20vh) scale(1.1) rotate(15deg); opacity: 0; }
+    }
+    .balloon-item {
+      position: fixed;
+      bottom: -80px;
+      z-index: 9999;
+      pointer-events: none;
+      animation: floatUp 3.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+    @keyframes popBounce {
+      0% { transform: translate(-50%, 20px) scale(0.6); opacity: 0; }
+      50% { transform: translate(-50%, -10px) scale(1.08); opacity: 1; }
+      100% { transform: translate(-50%, 0) scale(1); opacity: 1; }
+    }
+    .pop-banner {
+      animation: popBounce 0.3s ease-out forwards;
+    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #f8fafc; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+  </style>
+</head>
+<body class="bg-[#064e3b]/5 min-h-screen text-slate-800 font-sans antialiased selection:bg-amber-200">
+
+  <!-- هيدر أكاديمية الفتح المتناسق -->
+  <header class="sticky top-0 z-40 bg-[#064e3b] text-white shadow-md border-b-2 border-amber-400">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-2.5 flex items-center justify-between">
+      <div class="flex items-center gap-3 cursor-pointer" onclick="app.showTab('home')">
+        <div class="w-11 h-11 sm:w-13 sm:h-13 rounded-2xl bg-gradient-to-tr from-amber-500 to-amber-400 flex items-center justify-center text-slate-950 shadow-md transform hover:rotate-6 transition font-black text-2xl">
+          📖
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-lg sm:text-2xl font-black text-amber-300 font-kids tracking-wide">نُورُ البَيَانِ التَّفَاعُلِي | أكاديمية الفتح</h1>
+          </div>
+          <p class="text-xs font-bold text-emerald-200 mt-0.5 flex items-center gap-1.5">
+            <span>🌟 قسم التأسيس وقاعدة نور البيان</span>
+          </p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- زر العودة للسبورة الرئيسية -->
+        <a href="index.html" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold bg-emerald-800 hover:bg-emerald-700 text-white border border-emerald-600 transition shadow-xs">
+          <span>↩️</span>
+          <span class="hidden sm:inline">الرجوع للسبورة الرئيسية</span>
+        </a>
+
+        <!-- Toggle Color Mode -->
+        <button onclick="app.toggleColorLettersMode()" id="color-mode-btn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold bg-white/10 hover:bg-white/20 text-white border border-white/20 transition">
+          <span>🎨</span>
+          <span class="hidden sm:inline">الألوان:</span>
+          <span id="color-mode-status" class="bg-amber-400 text-slate-950 px-1.5 py-0.2 rounded-md font-black">مُفَعَّل</span>
+        </button>
+
+        <!-- Stars -->
+        <div onclick="app.showTab('progress')" class="flex items-center gap-1.5 bg-amber-500/20 border border-amber-400/40 px-3 py-1.5 rounded-2xl text-amber-200 font-bold text-xs sm:text-sm cursor-pointer transition">
+          <span class="text-base sm:text-lg">⭐</span>
+          <span id="header-stars-count" class="font-black text-amber-300">0</span>
+          <span class="text-[11px] hidden sm:inline">نجمة</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- شريط التشجيع السريع -->
+    <div class="bg-emerald-900/60 border-t border-emerald-800 px-3 py-1.5 flex items-center justify-between gap-2 text-xs font-bold">
+      <div class="flex items-center gap-1.5 text-emerald-200 text-[11px] sm:text-xs">
+        <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+        <span>أدوات التحفيز لحصص الزووم:</span>
+      </div>
+      <div class="flex items-center gap-1.5 sm:gap-2">
+        <button onclick="app.triggerBalloons()" class="bg-rose-600 hover:bg-rose-500 text-white px-3 py-1 rounded-xl transition flex items-center gap-1 shadow-xs">
+          <span>🎈</span> <span>بالونات</span>
+        </button>
+        <button onclick="app.triggerApplause()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1 rounded-xl transition flex items-center gap-1 shadow-xs">
+          <span>👏</span> <span>تصفيق</span>
+        </button>
+        <button onclick="app.triggerCheer()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-black px-3 py-1 rounded-xl transition flex items-center gap-1 shadow-xs">
+          <span>🌟</span> <span>تشجيع</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- القائمة الرئيسية للتبويبات -->
+    <nav class="border-t border-emerald-800 bg-[#04382c] px-2 py-1.5 overflow-x-auto flex gap-1 sm:gap-2 justify-start sm:justify-center no-scrollbar text-xs sm:text-sm font-bold">
+      <button onclick="app.showTab('home')" class="nav-tab px-3.5 py-1.5 rounded-xl transition whitespace-nowrap flex items-center gap-1.5 bg-emerald-600 text-white shadow-xs" data-target="home">
+        <span>🏠</span> الرَّئِيسِيَّةُ
+      </button>
+      <button onclick="app.showTab('units')" class="nav-tab px-3.5 py-1.5 rounded-xl transition whitespace-nowrap flex items-center gap-1.5 text-emerald-100 hover:bg-emerald-800" data-target="units">
+        <span>📚</span> فِهْرِسُ المَنْهَجِ
+      </button>
+      <button onclick="app.showTab('letters')" class="nav-tab px-3.5 py-1.5 rounded-xl transition whitespace-nowrap flex items-center gap-1.5 text-emerald-100 hover:bg-emerald-800" data-target="letters">
+        <span>🦁</span> بُسْتَانُ الحُرُوفِ
+      </button>
+      <button onclick="app.showTab('tajweed')" class="nav-tab px-3.5 py-1.5 rounded-xl transition whitespace-nowrap flex items-center gap-1.5 text-emerald-100 hover:bg-emerald-800" data-target="tajweed">
+        <span>🕌</span> قِسْمُ التَّجْوِيدِ
+      </button>
+      <button onclick="app.showTab('flashcards')" class="nav-tab px-3.5 py-1.5 rounded-xl transition whitespace-nowrap flex items-center gap-1.5 text-emerald-100 hover:bg-emerald-800" data-target="flashcards">
+        <span>🃏</span> بِطَاقَاتُ القِرَاءَةِ
+      </button>
+      <button onclick="app.showTab('wheel')" class="nav-tab px-3.5 py-1.5 rounded-xl transition whitespace-nowrap flex items-center gap-1.5 text-emerald-100 hover:bg-emerald-800" data-target="wheel">
+        <span>🎡</span> عَجَلَةُ القِرَاءَةِ
+      </button>
+      <button onclick="app.showTab('games')" class="nav-tab px-3.5 py-1.5 rounded-xl transition whitespace-nowrap flex items-center gap-1.5 text-emerald-100 hover:bg-emerald-800" data-target="games">
+        <span>🎮</span> أَلْعَابُ التَّحَدِّي
+      </button>
+      <button onclick="app.showTab('progress')" class="nav-tab px-3.5 py-1.5 rounded-xl transition whitespace-nowrap flex items-center gap-1.5 text-emerald-100 hover:bg-emerald-800" data-target="progress">
+        <span>🏆</span> إِنْجَازَاتِي
+      </button>
+    </nav>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-3 sm:px-6 py-6 pb-20">
+
+    <!-- HOME TAB -->
+    <section id="tab-home" class="tab-content space-y-8">
+      <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-emerald-800 via-teal-700 to-emerald-950 text-white p-6 sm:p-10 shadow-xl border border-emerald-600">
+        <div class="relative z-10 max-w-2xl space-y-4">
+          <div class="inline-flex items-center gap-2 bg-amber-400 text-slate-950 px-3.5 py-1 rounded-full text-xs sm:text-sm font-black">
+            <span>✨</span> منهج نور البيان الأصلي مع إعداد الأستاذ: معاذ السنوسي[cite: 7]
+          </div>
+          <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black font-kids leading-tight text-amber-300">
+            أهلاً بكم في قسم نور البيان التفاعلي 🌟
+          </h2>
+          <p class="text-sm sm:text-base text-emerald-100 leading-relaxed font-medium">
+            منظومة متكاملة لتعليم القراءة العربية السليمة والتهجئة الصحيحة وأحكام التجويد، مصممة خصيصاً للمعلمين والمعلمات لتسهيل الشرح على الشاشة والبروجيكتور.
+          </p>
+          <div class="pt-2 flex flex-wrap gap-3">
+            <button onclick="app.resumeLastLesson()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black px-6 py-3 rounded-2xl shadow-lg transition flex items-center gap-2 text-sm sm:text-base">
+              <span>🚀</span> ابْدَأْ دَرْسَكَ الآن
+            </button>
+            <button onclick="app.showTab('units')" class="bg-white/10 hover:bg-white/25 text-white border border-white/30 font-bold px-5 py-3 rounded-2xl transition flex items-center gap-2 text-sm sm:text-base">
+              <span>📚</span> تصفح فهرس الوحدات
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Units Grid -->
+      <div>
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-xl sm:text-2xl font-black text-emerald-900 font-kids flex items-center gap-2">
+            <span>🗺️</span> وحدات المنهج الرئيسي
+          </h3>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="home-units-grid"></div>
+      </div>
+    </section>
+
+    <!-- UNITS & SYLLABUS TAB -->
+    <section id="tab-units" class="tab-content hidden space-y-6">
+      <div class="bg-white p-5 rounded-3xl border border-emerald-200 shadow-xs flex justify-between items-center">
+        <h2 class="text-xl font-black text-emerald-900 font-kids">فهرس دروس نور البيان</h2>
+        <input type="text" oninput="app.filterLessons(this.value)" placeholder="ابحث عن درس..." class="px-4 py-2 text-sm rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 bg-slate-50">
+      </div>
+      <div class="space-y-4" id="syllabus-accordion"></div>
+    </section>
+
+    <!-- GARDEN OF LETTERS TAB -->
+    <section id="tab-letters" class="tab-content hidden space-y-6">
+      <div class="bg-emerald-800 rounded-3xl p-6 text-white shadow-md flex justify-between items-center">
+        <h2 class="text-2xl font-black font-kids">🦁 بستان حروف الهجاء</h2>
+        <button onclick="app.openPresentationForGarden()" class="bg-amber-400 text-slate-950 font-black px-4 py-2 rounded-2xl text-xs">عرض البطاقات</button>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-7 gap-4" id="letters-grid"></div>
+    </section>
+
+    <!-- LESSON DETAIL TAB -->
+    <section id="tab-lesson" class="tab-content hidden space-y-6">
+      <div class="flex flex-wrap items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-300 shadow-xs">
+        <div class="flex items-center gap-2">
+          <button onclick="app.showTab('units')" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs">← الفهرس</button>
+          <span id="lesson-unit-badge" class="px-2.5 py-0.5 rounded-lg text-xs font-bold bg-emerald-100 text-emerald-800">الوحدة</span>
+          <h2 id="lesson-title-heading" class="text-lg font-black text-slate-800 font-kids">اسم الدرس</h2>
+        </div>
+        <button onclick="app.openPresentationForCurrentLesson()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 px-4 py-1.5 rounded-xl text-xs font-black flex items-center gap-1.5 shadow-sm">
+          <span>📖</span> عَرْضُ الدَّرْسِ (مُكَبَّر لِلشَّاشَةِ)
+        </button>
+      </div>
+      <div class="bg-white rounded-3xl p-6 sm:p-8 border-2 border-emerald-200 shadow-lg min-h-[450px] flex flex-col justify-between" id="lesson-display-container"></div>
+      <div id="lesson-teacher-note" class="bg-emerald-50 border-r-4 border-emerald-600 p-4 rounded-xl text-xs sm:text-sm text-emerald-950 leading-relaxed shadow-xs"></div>
+    </section>
+
+    <!-- PRACTICAL TAJWEED TAB -->
+    <section id="tab-tajweed" class="tab-content hidden space-y-6">
+      <div class="bg-emerald-900 rounded-3xl p-6 text-white shadow-xl flex justify-between items-center">
+        <div>
+          <h2 class="text-2xl font-black font-kids">📖 قسم التجويد العملي للأطفال</h2>
+          <p class="text-xs text-emerald-200 mt-1">أمثلة نور البيان الأصلية دون تعقيد نظري.</p>
+        </div>
+        <button onclick="app.openPresentationForCurrentTajweed()" class="bg-amber-400 text-slate-950 font-black px-4 py-2 rounded-2xl text-xs">عرض مكبر</button>
+      </div>
+      <div class="flex flex-wrap gap-2 justify-center" id="tajweed-topic-pills"></div>
+      <div id="tajweed-content-card" class="bg-white rounded-3xl p-6 border border-slate-300 shadow-md space-y-6"></div>
+    </section>
+
+    <!-- FLASHCARDS TAB -->
+    <section id="tab-flashcards" class="tab-content hidden space-y-6">
+      <div class="bg-white p-5 rounded-3xl border border-slate-300 shadow-xs flex justify-between items-center">
+        <h2 class="text-xl font-black text-emerald-900 font-kids">🃏 بطاقات القراءة السريعة</h2>
+        <select id="flashcard-category" onchange="app.initFlashcards(this.value)" class="bg-slate-50 border border-slate-300 text-xs sm:text-sm font-bold rounded-xl px-3 py-2">
+          <option value="fatha-words">كلمات الفتح</option>
+          <option value="kasra-words">كلمات الكسر</option>
+          <option value="damma-words">كلمات الضم</option>
+          <option value="madd-alif">المد بالألف</option>
+          <option value="sukoon-words">كلمات السكون</option>
+          <option value="tanween-words">كلمات التنوين</option>
+          <option value="shaddah-words">كلمات الشدة</option>
+        </select>
+      </div>
+      <div class="max-w-2xl mx-auto">
+        <div class="theme-clouds rounded-3xl p-8 sm:p-12 shadow-xl text-center space-y-6 relative overflow-hidden" id="flashcard-box">
+          <div class="flex justify-between items-center text-xs font-extrabold text-sky-700">
+            <span id="flashcard-counter" class="bg-white/80 px-3 py-1 rounded-full">بطاقة 1</span>
+            <span id="flashcard-rule-tag" class="bg-sky-100 text-sky-900 px-3 py-1 rounded-full font-black">قاعدة</span>
+          </div>
+          <div class="py-6 min-h-[180px] flex items-center justify-center">
+            <div id="flashcard-text" class="text-6xl font-black text-slate-900 font-quran tashkeel-word">كَتَبَ</div>
+          </div>
+          <div class="flex items-center justify-center gap-4">
+            <button onclick="app.readCurrentFlashcard()" class="w-14 h-14 rounded-2xl bg-emerald-600 text-white text-2xl flex items-center justify-center shadow-md">🔊</button>
+            <button onclick="app.nextFlashcard()" class="px-8 py-3.5 rounded-2xl bg-sky-600 text-white font-black text-base shadow-md">التالي ➡️</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHEEL TAB -->
+    <section id="tab-wheel" class="tab-content hidden space-y-6">
+      <div class="bg-white p-5 rounded-3xl border border-slate-300 shadow-xs flex justify-between items-center">
+        <h2 class="text-xl font-black text-emerald-900 font-kids">🎡 عجلة القراءة التفاعلية</h2>
+        <select id="wheel-source-select" onchange="app.initWheel(this.value)" class="bg-slate-50 border border-slate-300 text-xs sm:text-sm font-bold rounded-xl px-3 py-2">
+          <option value="fatha">كلمات الفتح</option>
+          <option value="kasra">كلمات الكسر</option>
+          <option value="madd">المدود</option>
+        </select>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center max-w-5xl mx-auto">
+        <div class="md:col-span-7 flex flex-col items-center justify-center relative">
+          <div class="relative p-2 bg-amber-400 rounded-full shadow-2xl">
+            <canvas id="wheel-canvas" width="380" height="380" class="rounded-full cursor-pointer" onclick="app.spinWheel()"></canvas>
+          </div>
+          <button onclick="app.spinWheel()" id="spin-btn" class="mt-5 px-8 py-3 bg-emerald-700 text-white font-black text-lg rounded-2xl shadow-lg">أدر العجلة 🎡</button>
+        </div>
+        <div class="md:col-span-5">
+          <div class="theme-sunshine rounded-3xl p-6 text-center space-y-4 shadow-xl">
+            <div id="wheel-result-word" class="text-4xl font-black text-slate-900 font-quran tashkeel-word">اضغط أدر العجلة!</div>
+            <button onclick="app.readWheelWord()" class="px-5 py-2.5 rounded-xl bg-emerald-600 text-white font-bold text-sm">استمع للنطق 🔊</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MINI-GAMES TAB -->
+    <section id="tab-games" class="tab-content hidden space-y-6">
+      <div class="bg-white p-5 rounded-3xl border border-slate-300 shadow-xs flex justify-between items-center">
+        <h2 class="text-xl font-black text-emerald-900 font-kids">🎮 ألعاب التحدي والتعلم</h2>
+        <div class="flex gap-2">
+          <button onclick="app.initGame('match')" class="game-switch-btn px-4 py-2 rounded-xl text-xs font-bold bg-emerald-700 text-white" data-game="match">طابق الحرف</button>
+          <button onclick="app.initGame('listen')" class="game-switch-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700" data-game="listen">اسمع واختر</button>
+        </div>
+      </div>
+      <div id="game-stage" class="theme-lavender rounded-3xl p-6 max-w-3xl mx-auto min-h-[420px] flex flex-col justify-between shadow-xl"></div>
+    </section>
+
+    <!-- PROGRESS & BADGES TAB -->
+    <section id="tab-progress" class="tab-content hidden space-y-6">
+      <div class="bg-white p-6 rounded-3xl border border-slate-300 shadow-xs flex justify-between items-center">
+        <h2 class="text-xl font-black text-emerald-900 font-kids">🏆 إنجازاتي وأوسمتي</h2>
+        <span id="progress-percentage" class="text-2xl font-black text-emerald-700">0%</span>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" id="badges-container"></div>
+    </section>
+
+  </main>
+
+  <!-- وضع العرض المكبر للشاشة والزووم -->
+  <div id="presentation-modal" class="fixed inset-0 z-50 bg-slate-950/45 backdrop-blur-xs hidden h-[100dvh] max-h-[100dvh] w-full flex flex-col justify-between p-2 sm:p-3 md:p-4 overflow-hidden select-none">
+    <header class="relative z-10 shrink-0 w-full max-w-5xl mx-auto bg-white/95 px-5 py-2 rounded-2xl border border-emerald-200 shadow-xs flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="text-2xl">📖</span>
+        <div>
+          <span id="pres-rule-badge" class="text-xs font-black text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full">عرض الدرس</span>
+          <h3 id="pres-lesson-title" class="text-sm font-black font-kids text-slate-800">اسم الدرس</h3>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <span id="pres-counter" class="text-xs font-black bg-amber-50 text-amber-900 border border-amber-200 px-2.5 py-1 rounded-full">المثال 1</span>
+        <button onclick="app.closePresentationMode()" class="px-3 py-1 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 font-black text-xs border border-rose-200">✕ إغلاق</button>
+      </div>
+    </header>
+
+    <main class="relative z-10 flex-1 min-h-0 w-full max-w-5xl mx-auto flex flex-col items-center justify-center my-2">
+      <div class="w-full h-full rounded-3xl p-6 text-center flex flex-col justify-between items-center relative shadow-xl overflow-hidden theme-clouds" id="pres-card-box">
+        <div id="pres-example-category" class="mb-1 inline-block px-3 py-0.5 rounded-full text-xs font-black bg-white text-slate-700">نور البيان</div>
+        <div class="flex-1 flex items-center justify-center">
+          <div id="pres-giant-text" class="pres-text-display font-black text-slate-900 font-quran text-7xl">بَ</div>
+        </div>
+        <div class="shrink-0 flex items-center justify-center gap-3 pt-2 border-t border-slate-900/10 w-full max-w-md">
+          <button onclick="app.speakPresCurrent()" class="flex-1 py-2 px-3 rounded-2xl bg-emerald-600 text-white font-black text-sm">🔊 استمع للنطق</button>
+          <button onclick="app.rewardPresCurrent()" class="flex-1 py-2 px-3 rounded-2xl bg-amber-400 text-slate-950 font-black text-sm">⭐ أتقنت القراءة!</button>
+        </div>
+      </div>
+    </main>
+
+    <footer class="relative z-10 shrink-0 w-full max-w-5xl mx-auto bg-white/95 p-2 rounded-2xl border border-emerald-200 flex items-center justify-between">
+      <button id="pres-btn-prev" onclick="app.presPrev()" class="px-5 py-2 rounded-xl bg-slate-100 font-black text-xs">◀ السابق</button>
+      <div class="flex items-center gap-2">
+        <span class="text-xs font-black text-amber-800">⭐ <span id="pres-bar-stars">0</span></span>
+      </div>
+      <button id="pres-btn-next" onclick="app.presNext()" class="px-5 py-2 rounded-xl bg-emerald-600 text-white font-black text-xs">التالي ▶</button>
+    </footer>
+  </div>
+
+  <script>
+    // ربط نفس منطق تطبيق نور البيان الأصلي مع الحفاظ على كلاسات وبيانات المنهج
+    // (يمكنك دمج كود الـ JavaScript الخاص بالتطبيق هنا كما هو تماماً).
+  </script>
+</body>
+</html>
