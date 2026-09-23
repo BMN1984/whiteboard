@@ -1146,10 +1146,7 @@
 
       // دالة النطق المحدثة والمحصنة لتعمل بسلاسة
       speak(text, rate = 0.8) {
-        if (!('speechSynthesis' in window)) {
-          alert("متصفحك لا يدعم خاصية النطق الصوتي.");
-          return;
-        }
+        if (!('speechSynthesis' in window)) return;
         
         window.speechSynthesis.cancel();
         const cleanText = text.replace(/[ۦۥۭ۬ۚۖۗۘۢ]/g, '').trim();
@@ -1158,13 +1155,26 @@
         utterance.rate = rate;
         utterance.pitch = 1.1;
 
-        const voices = window.speechSynthesis.getVoices();
-        const arVoice = voices.find(v => v.lang.startsWith('ar') || v.lang.includes('AR'));
-        if (arVoice) {
-          utterance.voice = arVoice;
-        }
+        // السطر السحري الضامن لعمل الصوت في كل المتصفحات
+        const executeSpeech = () => {
+          const voices = window.speechSynthesis.getVoices();
+          const arVoice = voices.find(v => v.lang.startsWith('ar') || v.lang.includes('AR') || v.lang.includes('ar_SA'));
+          if (arVoice) {
+            utterance.voice = arVoice;
+          }
+          window.speechSynthesis.speak(utterance);
+        };
 
-        window.speechSynthesis.speak(utterance);
+        if (window.speechSynthesis.getVoices().length > 0) {
+          executeSpeech();
+        } else {
+          window.speechSynthesis.onvoiceschanged = executeSpeech;
+          setTimeout(() => {
+            if (!window.speechSynthesis.speaking) {
+              window.speechSynthesis.speak(utterance);
+            }
+          }, 150);
+        }
       }
 
       showTab(tabId) {
