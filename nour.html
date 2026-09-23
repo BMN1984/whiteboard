@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>نور البيان التفاعلي | أكاديمية الفتح لعلوم القرآن</title>
+  <title>نور البيان التفاعلي  | أكاديمية الفتح </title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts for Kids & Quranic Typography -->
@@ -45,8 +45,8 @@
     /* Diacritic & letter enhancements */
     .tashkeel-word {
       font-family: 'Amiri', 'Cairo', serif;
-      line-height: 2.2 !important;
-      letter-spacing: 0.03em;
+      line-height: 2 !important;
+      letter-spacing: 0.02em;
       text-rendering: optimizeLegibility;
       font-feature-settings: "kern" 1, "liga" 1;
     }
@@ -74,28 +74,28 @@
 
     /* Dynamic Themes for Presentation Cards */
     .theme-clouds {
-      background: radial-gradient(circle at 15% 20%, #ffffff 0%, #f0fdf4 55%, #dcfce7 100%);
-      border: 2.5px solid #059669;
-      box-shadow: 0 12px 30px -10px rgba(6, 78, 59, 0.18);
+      background: radial-gradient(circle at 15% 20%, #ffffff 0%, #f0f9ff 55%, #e0f2fe 100%);
+      border: 2.5px solid #7dd3fc;
+      box-shadow: 0 12px 30px -10px rgba(14, 165, 233, 0.18);
     }
     .theme-garden {
       background: radial-gradient(circle at 85% 15%, #ffffff 0%, #f0fdf4 55%, #dcfce7 100%);
-      border: 2.5px solid #059669;
-      box-shadow: 0 12px 30px -10px rgba(6, 78, 59, 0.18);
+      border: 2.5px solid #86efac;
+      box-shadow: 0 12px 30px -10px rgba(34, 197, 94, 0.18);
     }
     .theme-sunshine {
       background: radial-gradient(circle at 50% 10%, #ffffff 0%, #fffbeb 55%, #fef3c7 100%);
-      border: 2.5px solid #f59e0b;
-      box-shadow: 0 12px 30px -10px rgba(245, 158, 11, 0.18);
+      border: 2.5px solid #fde047;
+      box-shadow: 0 12px 30px -10px rgba(234, 179, 8, 0.18);
     }
     .theme-lavender {
-      background: radial-gradient(circle at 20% 80%, #ffffff 0%, #f0fdf4 55%, #dcfce7 100%);
-      border: 2.5px solid #059669;
-      box-shadow: 0 12px 30px -10px rgba(6, 78, 59, 0.18);
+      background: radial-gradient(circle at 20% 80%, #ffffff 0%, #faf5ff 55%, #f3e8ff 100%);
+      border: 2.5px solid #d8b4fe;
+      box-shadow: 0 12px 30px -10px rgba(168, 85, 247, 0.18);
     }
     .theme-peach {
       background: radial-gradient(circle at 80% 80%, #ffffff 0%, #fff1f2 55%, #ffe4e6 100%);
-      border: 2.5px solid #059669;
+      border: 2.5px solid #fecdd3;
       box-shadow: 0 12px 30px -10px rgba(244, 63, 94, 0.18);
     }
 
@@ -104,20 +104,6 @@
       display: inline;
       font-weight: 900;
       transition: color 0.2s ease;
-    }
-
-    /* مؤشر ليزر المعلم المتحرك */
-    #laser-pointer {
-      position: fixed;
-      width: 24px;
-      height: 24px;
-      background: radial-gradient(circle, #ef4444 0%, rgba(239,68,68,0.4) 60%, transparent 100%);
-      border-radius: 50%;
-      pointer-events: none;
-      transform: translate(-50%, -50%);
-      z-index: 99999;
-      box-shadow: 0 0 15px #ef4444, 0 0 25px #ef4444;
-      display: none;
     }
 
     /* Floating Balloons Animation */
@@ -147,106 +133,99 @@
     /* Smooth Scrollbar */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: #f8fafc; border-radius: 9999px; }
-    ::-webkit-scrollbar-thumb { background: #059669; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
   </style>
 </head>
-<body class="bg-[#064e3b]/5 min-h-screen text-slate-800 font-sans antialiased selection:bg-amber-200">
+<body class="bg-gradient-to-br from-amber-50 via-emerald-50 to-sky-50 min-h-screen text-slate-800 font-sans antialiased selection:bg-amber-200">
 
-  <div id="laser-pointer"></div>
-
-  <header class="sticky top-0 z-40 bg-[#064e3b] text-white shadow-md border-b-2 border-amber-400">
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b-2 border-emerald-100 shadow-xs transition-all">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-2.5 flex items-center justify-between">
       <!-- Logo & Title -->
       <div class="flex items-center gap-3 cursor-pointer" onclick="app.showTab('home')">
-        <div class="w-11 h-11 sm:w-13 sm:h-13 rounded-2xl bg-gradient-to-tr from-amber-500 to-amber-400 flex items-center justify-center text-slate-950 shadow-md transform hover:rotate-6 transition text-2xl">
-          📖
+        <div class="w-11 h-11 sm:w-13 sm:h-13 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-white shadow-md transform hover:rotate-6 transition">
+          <span class="text-2xl sm:text-3xl">📖</span>
         </div>
         <div>
           <div class="flex items-center gap-2">
-            <h1 class="text-lg sm:text-2xl font-black text-amber-300 font-kids tracking-wide">نُورُ البَيَانِ التَّفَاعُلِي لِلأَطْفَالِ</h1>
+            <h1 class="text-lg sm:text-2xl font-black text-emerald-800 font-kids tracking-wide">نُورُ البَيَانِ التَّفَاعُلِي لِلأَطْفَالِ</h1>
             <span class="bg-amber-100 text-amber-900 text-[11px] px-2 py-0.5 rounded-full font-extrabold border border-amber-300 hidden sm:inline">نُسْخَةُ الكِتَابِ الأَصْلِيَّة 🌟</span>
           </div>
-          <p class="text-xs font-bold text-emerald-200 mt-0.5 flex items-center gap-1.5">
-            <span>👨‍🏫 إِعْدَادُ المُعَلِّم: معاذ السنوسي[cite: 7]| تطوير أكاديمية الفتح</span>
+          <p class="text-xs font-bold text-teal-700 mt-0.5 flex items-center gap-1.5">
+            <span>👨‍🏫 إِعْدَادُ :</span>
+            <span class="text-emerald-900 bg-emerald-100/90 px-2 py-0.5 rounded-md border border-emerald-300">أكاديمية الفتح لعلوم القرآن</span>
           </p>
         </div>
       </div>
 
       <!-- Quick Nav Buttons & Child Color Mode Switch -->
       <div class="flex items-center gap-2 sm:gap-3">
-        <!-- زر ليزر المعلم الجديد -->
-        <button onclick="app.toggleLaserPointer()" id="laser-toggle-btn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold bg-rose-600 hover:bg-rose-500 text-white border border-rose-400 transition shadow-xs active:scale-95" title="تفعيل ليزر الشرح">
-          <span>🔴</span>
-          <span class="hidden sm:inline">لِيزَرُ الشَّرْح:</span>
-          <span id="laser-status" class="bg-rose-900 text-white px-1.5 py-0.2 rounded-md">مُعَطَّل</span>
-        </button>
-
-        <!-- زر العودة للسبورة الرئيسية -->
-        <a href="index.html" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold bg-emerald-800 hover:bg-emerald-700 text-white border border-emerald-600 transition shadow-xs">
-          <span>↩️</span>
-          <span class="hidden sm:inline">السبورة الرئيسية</span>
-        </a>
-
         <!-- Toggle Color Mode -->
-        <button onclick="app.toggleColorLettersMode()" id="color-mode-btn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold bg-white/10 hover:bg-white/20 text-white border border-white/20 transition">
+        <button onclick="app.toggleColorLettersMode()" id="color-mode-btn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold bg-gradient-to-r from-pink-50 to-amber-50 hover:from-pink-100 hover:to-amber-100 text-purple-700 border-2 border-purple-200 transition shadow-xs active:scale-95" title="تفعيل أو إيقاف تلوين الحروف بألوان مميزة">
           <span>🎨</span>
           <span class="hidden sm:inline">أَلْوَانُ الحُرُوفِ:</span>
-          <span id="color-mode-status" class="bg-amber-400 text-slate-950 px-1.5 py-0.2 rounded-md font-black">مُفَعَّل</span>
+          <span id="color-mode-status" class="bg-purple-200 text-purple-900 px-1.5 py-0.2 rounded-md">مُفَعَّل</span>
         </button>
 
         <!-- Stars & Progress badge -->
-        <div onclick="app.showTab('progress')" class="flex items-center gap-1.5 bg-amber-500/25 border border-amber-400/40 px-3 py-1.5 rounded-2xl text-amber-200 font-bold text-xs sm:text-sm cursor-pointer transition">
-          <span class="text-base sm:text-lg">⭐</span>
-          <span id="header-stars-count" class="font-black text-amber-300">0</span>
-          <span class="text-[11px] hidden sm:inline">نجمة</span>
+        <div onclick="app.showTab('progress')" class="flex items-center gap-1.5 bg-amber-50 hover:bg-amber-100 border border-amber-200 px-3 py-1.5 rounded-2xl text-amber-700 font-bold text-xs sm:text-sm shadow-xs cursor-pointer transition transform active:scale-95" title="اضغط لمشاهدة سجل إنجازاتك">
+          <span class="text-base sm:text-lg animate-spin" style="animation-duration: 9s;">⭐</span>
+          <span id="header-stars-count" class="font-black text-amber-800">0</span>
+          <span class="text-[11px] bg-amber-200/80 text-amber-900 px-1.5 py-0.2 rounded-full hidden sm:inline">نجمة</span>
         </div>
+
+        <!-- Presentation mode quick button -->
+        <button onclick="app.startPresentationMode()" title="عرض كبير للحصة والشاشة" class="px-3 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold bg-sky-500 hover:bg-sky-400 text-white transition flex items-center gap-1.5 shadow-sm active:scale-95">
+          <span>📖</span>
+          <span class="hidden sm:inline">عَرْضُ الدَّرْسِ</span>
+        </button>
       </div>
     </div>
 
     <!-- Quick Cheer Motivation Action Bar -->
-    <div class="bg-emerald-900/60 border-t border-emerald-800 px-3 py-1.5 flex items-center justify-between gap-2 text-xs font-bold">
-      <div class="flex items-center gap-1.5 text-emerald-200 text-[11px] sm:text-xs">
-        <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+    <div class="bg-gradient-to-r from-amber-100 via-emerald-100 to-sky-100 border-b border-amber-200 px-3 py-1.5 flex items-center justify-between gap-2 text-xs font-bold shadow-xs">
+      <div class="flex items-center gap-1.5 text-slate-700 text-[11px] sm:text-xs">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
         <span class="hidden sm:inline">شَرِيطُ التَّشْجِيعِ وَالمُكَافَآتِ السَّرِيعَة:</span>
-        <span class="sm:hidden font-extrabold text-amber-300">المُكَافَآت:</span>
+        <span class="sm:hidden font-extrabold text-emerald-800">المُكَافَآت:</span>
       </div>
       <div class="flex items-center gap-1.5 sm:gap-2">
-        <button onclick="app.triggerBalloons()" class="bg-rose-600 hover:bg-rose-500 text-white px-2.5 sm:px-3 py-1 rounded-xl transition flex items-center gap-1">
+        <button onclick="app.triggerBalloons()" class="bg-rose-500 hover:bg-rose-600 active:scale-95 text-white px-2.5 sm:px-3 py-1 rounded-xl shadow-xs transition flex items-center gap-1" title="إطلاق بالونات مبهجة">
           <span>🎈</span> <span>بَالُونَات</span>
         </button>
-        <button onclick="app.triggerApplause()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-2.5 sm:px-3 py-1 rounded-xl transition flex items-center gap-1">
+        <button onclick="app.triggerApplause()" class="bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-2.5 sm:px-3 py-1 rounded-xl shadow-xs transition flex items-center gap-1" title="تصفيق وتشجيع">
           <span>👏</span> <span>تَصْفِيق</span>
         </button>
-        <button onclick="app.triggerCheer()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-black px-2.5 sm:px-3 py-1 rounded-xl transition flex items-center gap-1">
+        <button onclick="app.triggerCheer()" class="bg-amber-500 hover:bg-amber-600 active:scale-95 text-white px-2.5 sm:px-3 py-1 rounded-xl shadow-xs transition flex items-center gap-1" title="رسالة تشجيعية">
           <span>🌟</span> <span>شَجِّعْنِي</span>
         </button>
       </div>
     </div>
 
     <!-- Main Navigation Tabs -->
-    <nav class="border-t border-emerald-800 bg-[#04382c] px-2 py-1.5 overflow-x-auto flex gap-1 sm:gap-2 justify-start sm:justify-center no-scrollbar text-xs sm:text-sm font-bold">
+    <nav class="border-t border-slate-100 bg-emerald-700/5 px-2 py-1.5 overflow-x-auto flex gap-1 sm:gap-2 justify-start sm:justify-center no-scrollbar text-xs sm:text-sm font-bold">
       <button onclick="app.showTab('home')" class="nav-tab px-3.5 py-1.5 rounded-xl transition whitespace-nowrap flex items-center gap-1.5 bg-emerald-600 text-white shadow-xs" data-target="home">
         <span>🏠</span> الرَّئِيسِيَّةُ
       </button>
-      <button onclick="app.showTab('units')" class="nav-tab px-3.5 py-1.5 rounded-xl transition whitespace-nowrap flex items-center gap-1.5 text-emerald-100 hover:bg-emerald-800" data-target="units">
+      <button onclick="app.showTab('units')" class="nav-tab px-3.5 py-1.5 rounded-xl transition whitespace-nowrap flex items-center gap-1.5 text-slate-700 hover:bg-white" data-target="units">
         <span>📚</span> فِهْرِسُ المَنْهَجِ (ص 1-96)
       </button>
-      <button onclick="app.showTab('letters')" class="nav-tab px-3.5 py-1.5 rounded-xl transition whitespace-nowrap flex items-center gap-1.5 text-emerald-100 hover:bg-emerald-800" data-target="letters">
+      <button onclick="app.showTab('letters')" class="nav-tab px-3.5 py-1.5 rounded-xl transition whitespace-nowrap flex items-center gap-1.5 text-slate-700 hover:bg-white" data-target="letters">
         <span>🦁</span> بُسْتَانُ الحُرُوفِ
       </button>
-      <button onclick="app.showTab('tajweed')" class="nav-tab px-3.5 py-1.5 rounded-xl transition whitespace-nowrap flex items-center gap-1.5 text-emerald-100 hover:bg-emerald-800" data-target="tajweed">
+      <button onclick="app.showTab('tajweed')" class="nav-tab px-3.5 py-1.5 rounded-xl transition whitespace-nowrap flex items-center gap-1.5 text-slate-700 hover:bg-white" data-target="tajweed">
         <span>🕌</span> قِسْمُ التَّجْوِيدِ العَمَلِي
       </button>
-      <button onclick="app.showTab('flashcards')" class="nav-tab px-3.5 py-1.5 rounded-xl transition whitespace-nowrap flex items-center gap-1.5 text-emerald-100 hover:bg-emerald-800" data-target="flashcards">
+      <button onclick="app.showTab('flashcards')" class="nav-tab px-3.5 py-1.5 rounded-xl transition whitespace-nowrap flex items-center gap-1.5 text-slate-700 hover:bg-white" data-target="flashcards">
         <span>🃏</span> بِطَاقَاتُ القِرَاءَةِ
       </button>
-      <button onclick="app.showTab('wheel')" class="nav-tab px-3.5 py-1.5 rounded-xl transition whitespace-nowrap flex items-center gap-1.5 text-emerald-100 hover:bg-emerald-800" data-target="wheel">
+      <button onclick="app.showTab('wheel')" class="nav-tab px-3.5 py-1.5 rounded-xl transition whitespace-nowrap flex items-center gap-1.5 text-slate-700 hover:bg-white" data-target="wheel">
         <span>🎡</span> عَجَلَةُ القِرَاءَةِ
       </button>
-      <button onclick="app.showTab('games')" class="nav-tab px-3.5 py-1.5 rounded-xl transition whitespace-nowrap flex items-center gap-1.5 text-emerald-100 hover:bg-emerald-800" data-target="games">
+      <button onclick="app.showTab('games')" class="nav-tab px-3.5 py-1.5 rounded-xl transition whitespace-nowrap flex items-center gap-1.5 text-slate-700 hover:bg-white" data-target="games">
         <span>🎮</span> أَلْعَابُ التَّحَدِّي
       </button>
-      <button onclick="app.showTab('progress')" class="nav-tab px-3.5 py-1.5 rounded-xl transition whitespace-nowrap flex items-center gap-1.5 text-emerald-100 hover:bg-emerald-800" data-target="progress">
+      <button onclick="app.showTab('progress')" class="nav-tab px-3.5 py-1.5 rounded-xl transition whitespace-nowrap flex items-center gap-1.5 text-slate-700 hover:bg-white" data-target="progress">
         <span>🏆</span> إِنْجَازَاتِي
       </button>
     </nav>
@@ -256,167 +235,238 @@
 
     <!-- HOME TAB -->
     <section id="tab-home" class="tab-content space-y-8">
-      <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-emerald-800 via-teal-700 to-emerald-950 text-white p-6 sm:p-10 shadow-xl border border-emerald-600">
+      <!-- Hero Welcome Banner -->
+      <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-emerald-600 via-teal-600 to-sky-600 text-white p-6 sm:p-10 shadow-xl">
         <div class="relative z-10 max-w-2xl space-y-4">
-          <div class="inline-flex items-center gap-2 bg-amber-400 text-slate-950 px-3.5 py-1 rounded-full text-xs sm:text-sm font-black">
-            <span>✨</span> كِتَابُ نُورِ البَيَانِ الأَصْلِي كَامِلاً[cite: 7] | إِعْدَادُ المُعَلِّم: مُعَاذ السَّنُوسِي[cite: 7]
+          <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-3.5 py-1 rounded-full text-xs sm:text-sm font-semibold text-amber-200 border border-white/30">
+            <span>✨</span> كتاب نور البيان | إِعْدَادُ المُعَلِّم: أكاديمية الفتح لعلوم القرآن
           </div>
-          <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black font-kids leading-tight text-amber-300">
+          <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black font-kids leading-tight">
             مَرْحَبًا بِكَ فِي نُورِ البَيَانِ التَّفَاعُلِيّ! 🌟
           </h2>
           <p class="text-sm sm:text-base text-emerald-50 leading-relaxed font-medium">
-            هيا نقرأ لغتنا العربية الجميلة ونرتل القرآن الكريم وفق كتاب نور البيان الأصلي[cite: 7], مع بطاقات قراءة مبهجة وألوان مخصصة للحركات والكلمات!
+            هيا نقرأ لغتنا العربية الجميلة ونرتل القرآن الكريم وفق كتاب نور البيان الأصلي، مع بطاقات قراءة مبهجة وألوان مخصصة للحركات والكلمات!
           </p>
           <div class="pt-2 flex flex-wrap gap-3">
-            <button onclick="app.resumeLastLesson()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black px-6 py-3 rounded-2xl shadow-lg transition flex items-center gap-2 text-sm sm:text-base">
+            <button onclick="app.resumeLastLesson()" class="bg-amber-400 hover:bg-amber-300 text-amber-950 font-black px-6 py-3 rounded-2xl shadow-lg transform active:scale-95 transition flex items-center gap-2 text-sm sm:text-base">
               <span>🚀</span> ابْدَأْ مِنْ حَيْثُ تَوَقَّفْتَ
             </button>
-            <button onclick="app.showTab('units')" class="bg-white/10 hover:bg-white/25 text-white border border-white/30 font-bold px-5 py-3 rounded-2xl transition flex items-center gap-2 text-sm sm:text-base">
+            <button onclick="app.showTab('units')" class="bg-white/20 hover:bg-white/30 text-white border border-white/40 font-bold px-5 py-3 rounded-2xl backdrop-blur-sm transition flex items-center gap-2 text-sm sm:text-base">
               <span>📚</span> فِهْرِسُ الكِتَابِ (96 صَفْحَة)
             </button>
           </div>
         </div>
+
+        <div class="absolute -left-10 -bottom-10 text-9xl opacity-20 pointer-events-none select-none">🕌</div>
+        <div class="absolute right-10 top-4 text-7xl opacity-15 pointer-events-none select-none">⭐</div>
       </div>
 
+      <!-- Quick Metrics -->
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div class="bg-white rounded-2xl p-4 border border-emerald-200 shadow-xs flex items-center gap-3">
-          <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-2xl">📖</div>
-          <div><div class="text-2xl font-black text-slate-800" id="stat-lessons-count">7</div><div class="text-xs text-slate-500 font-semibold">وحدات المنهج كاملة</div></div>
+        <div class="bg-white rounded-2xl p-4 border border-emerald-100 shadow-xs flex items-center gap-3">
+          <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-2xl">📖</div>
+          <div>
+            <div class="text-2xl font-black text-slate-800" id="stat-lessons-count">7</div>
+            <div class="text-xs text-slate-500 font-semibold">وحدات المنهج كاملة</div>
+          </div>
         </div>
-        <div class="bg-white rounded-2xl p-4 border border-amber-200 shadow-xs flex items-center gap-3">
-          <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center text-2xl">⭐</div>
-          <div><div class="text-2xl font-black text-slate-800" id="stat-stars-count">0</div><div class="text-xs text-slate-500 font-semibold">نجمة تشجيعية</div></div>
+        <div class="bg-white rounded-2xl p-4 border border-amber-100 shadow-xs flex items-center gap-3">
+          <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-2xl">⭐</div>
+          <div>
+            <div class="text-2xl font-black text-slate-800" id="stat-stars-count">0</div>
+            <div class="text-xs text-slate-500 font-semibold">نجمة تشجيعية</div>
+          </div>
         </div>
-        <div class="bg-white rounded-2xl p-4 border border-sky-200 shadow-xs flex items-center gap-3">
-          <div class="w-12 h-12 rounded-xl bg-sky-100 text-sky-700 flex items-center justify-center text-2xl">🦁</div>
-          <div><div class="text-2xl font-black text-slate-800">28</div><div class="text-xs text-slate-500 font-semibold">حرفاً بصرياً بصوره</div></div>
+        <div class="bg-white rounded-2xl p-4 border border-sky-100 shadow-xs flex items-center gap-3">
+          <div class="w-12 h-12 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center text-2xl">🦁</div>
+          <div>
+            <div class="text-2xl font-black text-slate-800">28</div>
+            <div class="text-xs text-slate-500 font-semibold">حرفاً بصرياً بصوره</div>
+          </div>
         </div>
-        <div class="bg-white rounded-2xl p-4 border border-purple-200 shadow-xs flex items-center gap-3">
-          <div class="w-12 h-12 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center text-2xl">🏆</div>
-          <div><div class="text-2xl font-black text-slate-800" id="stat-badges-count">1</div><div class="text-xs text-slate-500 font-semibold">أوسمة مكتسبة</div></div>
+        <div class="bg-white rounded-2xl p-4 border border-purple-100 shadow-xs flex items-center gap-3">
+          <div class="w-12 h-12 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center text-2xl">🏆</div>
+          <div>
+            <div class="text-2xl font-black text-slate-800" id="stat-badges-count">1</div>
+            <div class="text-xs text-slate-500 font-semibold">أوسمة مكتسبة</div>
+          </div>
         </div>
       </div>
 
+      <!-- Units Grid -->
       <div>
         <div class="flex items-center justify-between mb-4">
-          <h3 class="text-xl sm:text-2xl font-black text-emerald-900 font-kids flex items-center gap-2"><span>🗺️</span> مَسَارُ نُورِ البَيَانِ الرَّئِيسِيّ</h3>
-          <button onclick="app.showTab('units')" class="text-xs sm:text-sm font-bold text-emerald-700 hover:text-emerald-800">عَرْضُ الفِهْرِسِ الكَامِل ←</button>
+          <h3 class="text-xl sm:text-2xl font-black text-slate-800 font-kids flex items-center gap-2">
+            <span>🗺️</span> مَسَارُ نُورِ البَيَانِ الرَّئِيسِيّ
+          </h3>
+          <button onclick="app.showTab('units')" class="text-xs sm:text-sm font-bold text-emerald-600 hover:text-emerald-700">عَرْضُ الفِهْرِسِ الكَامِل ←</button>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="home-units-grid"></div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="home-units-grid">
+          <!-- Populated by JS -->
+        </div>
       </div>
     </section>
 
     <!-- UNITS & SYLLABUS TAB -->
     <section id="tab-units" class="tab-content hidden space-y-6">
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-5 rounded-3xl border border-emerald-200 shadow-xs">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-5 rounded-3xl border border-emerald-100 shadow-xs">
         <div>
-          <h2 class="text-2xl font-black text-emerald-900 font-kids flex items-center gap-2"><span>📚</span> فِهْرِسُ مَنْهَجِ نُورِ البَيَانِ الكَامِل (ص 1 - 96)</h2>
+          <h2 class="text-2xl font-black text-slate-800 font-kids flex items-center gap-2">
+            <span>📚</span> فِهْرِسُ مَنْهَجِ نُورِ البَيَانِ الكَامِل (ص 1 - 96)
+          </h2>
           <p class="text-xs sm:text-sm text-slate-500 mt-1">كافة الوحدات والدروس مرتبة بنفس تسلسل وأمثلة كتاب نور البيان المعتمدة بدقة تامة.</p>
         </div>
-        <div>
-          <input type="text" oninput="app.filterLessons(this.value)" placeholder="ابحث عن درس أو كلمة..." class="px-4 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-slate-50">
+        <div class="flex items-center gap-2">
+          <input type="text" oninput="app.filterLessons(this.value)" placeholder="ابحث عن درس أو كلمة..." class="px-4 py-2 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-400 bg-slate-50">
         </div>
       </div>
-      <div class="space-y-4" id="syllabus-accordion"></div>
+
+      <div class="space-y-4" id="syllabus-accordion">
+        <!-- Rendered by JS -->
+      </div>
     </section>
 
     <!-- GARDEN OF LETTERS TAB -->
     <section id="tab-letters" class="tab-content hidden space-y-6">
-      <div class="bg-emerald-800 rounded-3xl p-6 text-white shadow-md flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="bg-gradient-to-r from-teal-500 to-emerald-600 rounded-3xl p-6 text-white shadow-md flex flex-col md:flex-row items-center justify-between gap-4">
         <div class="space-y-1">
           <h2 class="text-2xl sm:text-3xl font-black font-kids">🦁 بُسْتَانُ حُرُوفِ الهِجَاءِ (ص 3 - 6)</h2>
-          <p class="text-xs sm:text-sm text-emerald-100">اضغط على أي حرف لسماع اسمه وصوته مع مثاله وصورته المعتمدة في كتاب نور البيان!</p>
+          <p class="text-xs sm:text-sm text-teal-100">اضغط على أي حرف لسماع اسمه وصوته مع مثاله وصورته المعتمدة في كتاب نور البيان!</p>
         </div>
-        <button onclick="app.openPresentationForGarden()" class="bg-amber-400 text-slate-950 font-black px-4 py-2 rounded-2xl text-xs sm:text-sm shadow-md transition"><span>📖</span> عَرْضُ الحُرُوفِ بِالبِطَاقَاتِ</button>
+        <button onclick="app.openPresentationForGarden()" class="bg-amber-400 hover:bg-amber-300 text-amber-950 font-black px-4 py-2 rounded-2xl text-xs sm:text-sm shadow-md transition flex items-center gap-1.5">
+          <span>📖</span> عَرْضُ الحُرُوفِ بِالبِطَاقَاتِ
+        </button>
       </div>
-      <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-7 gap-4" id="letters-grid"></div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-7 gap-4" id="letters-grid">
+        <!-- Rendered by JS -->
+      </div>
     </section>
 
     <!-- LESSON DETAIL TAB -->
     <section id="tab-lesson" class="tab-content hidden space-y-6">
-      <div class="flex flex-wrap items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-300 shadow-xs">
+      <div class="flex flex-wrap items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
         <div class="flex items-center gap-2">
-          <button onclick="app.showTab('units')" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs">← الفهرس</button>
+          <button onclick="app.showTab('units')" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center gap-1 transition">
+            <span>←</span> الفهرس
+          </button>
           <span class="text-slate-300">|</span>
           <span id="lesson-unit-badge" class="px-2.5 py-0.5 rounded-lg text-xs font-bold bg-emerald-100 text-emerald-800">الوحدة</span>
           <h2 id="lesson-title-heading" class="text-lg sm:text-xl font-black text-slate-800 font-kids">اسم الدرس</h2>
           <span id="lesson-source-page" class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full font-bold">ص</span>
         </div>
+
         <div class="flex items-center gap-2">
-          <button onclick="app.openPresentationForCurrentLesson()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 px-4 py-1.5 rounded-xl text-xs sm:text-sm font-black shadow-sm">
-            📖 عَرْضُ أَمْثِلَةِ الدَّرْسِ (مُكَبَّر وَوَاضِح)
+          <button onclick="app.openPresentationForCurrentLesson()" class="bg-amber-500 hover:bg-amber-400 text-amber-950 px-4 py-1.5 rounded-xl text-xs sm:text-sm font-black flex items-center gap-1.5 transition shadow-sm active:scale-95">
+            <span>📖</span> عَرْضُ أَمْثِلَةِ الدَّرْسِ (مُكَبَّر)
           </button>
-          <button onclick="app.triggerCheer()" class="bg-amber-100 hover:bg-amber-200 text-amber-900 px-3 py-1.5 rounded-xl text-xs font-bold"><span>🌟</span> شَجِّعِ الطَّالِبَ</button>
+          <button onclick="app.triggerCheer()" class="bg-amber-100 hover:bg-amber-200 text-amber-800 px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 transition">
+            <span>🌟</span> شَجِّعِ الطَّالِبَ
+          </button>
         </div>
       </div>
 
-      <!-- الحروف والكلمات بحجم كبير جداً وواضح للطلاب -->
-      <div class="bg-white rounded-3xl p-6 sm:p-10 border-2 border-emerald-300 shadow-xl min-h-[480px] flex flex-col justify-between" id="lesson-display-container"></div>
+      <div class="bg-white rounded-3xl p-6 sm:p-8 border-2 border-emerald-100 shadow-lg min-h-[450px] flex flex-col justify-between" id="lesson-display-container">
+        <!-- Rendered Dynamically -->
+      </div>
 
-      <div id="lesson-teacher-note" class="bg-emerald-50 border-r-4 border-emerald-700 p-4 rounded-xl text-xs sm:text-sm text-emerald-950 leading-relaxed shadow-xs"></div>
+      <div id="lesson-teacher-note" class="bg-sky-50 border-r-4 border-sky-500 p-4 rounded-xl text-xs sm:text-sm text-sky-900 leading-relaxed shadow-xs">
+        <!-- Teacher Note from Noor Al-Bayan -->
+      </div>
 
       <div class="flex items-center justify-between pt-2">
-        <button onclick="app.prevLesson()" id="btn-prev-lesson" class="px-5 py-2.5 rounded-2xl bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-bold text-sm">➡️ الدَّرْسُ السَّابِقُ</button>
-        <button onclick="app.markLessonComplete()" class="px-5 py-2.5 rounded-2xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-sm shadow-md">⭐ أَتْقَنْتُ هَذَا الدَّرْسَ!</button>
-        <button onclick="app.nextLesson()" id="btn-next-lesson" class="px-5 py-2.5 rounded-2xl bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-bold text-sm">الدَّرْسُ التَّالِي ⬅️</button>
+        <button onclick="app.prevLesson()" id="btn-prev-lesson" class="px-5 py-2.5 rounded-2xl bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-sm flex items-center gap-2 shadow-xs transition">
+          <span>➡️</span> الدَّرْسُ السَّابِقُ
+        </button>
+        <button onclick="app.markLessonComplete()" class="px-5 py-2.5 rounded-2xl bg-amber-400 hover:bg-amber-300 text-amber-950 font-black text-sm flex items-center gap-2 shadow-md transition">
+          <span>⭐</span> أَتْقَنْتُ هَذَا الدَّرْسَ!
+        </button>
+        <button onclick="app.nextLesson()" id="btn-next-lesson" class="px-5 py-2.5 rounded-2xl bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-sm flex items-center gap-2 shadow-xs transition">
+          <span>الدَّرْسُ التَّالِي</span> <span>⬅️</span>
+        </button>
       </div>
     </section>
 
     <!-- PRACTICAL TAJWEED TAB -->
     <section id="tab-tajweed" class="tab-content hidden space-y-6">
-      <div class="bg-gradient-to-r from-emerald-900 via-teal-800 to-emerald-950 rounded-3xl p-6 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="bg-gradient-to-r from-emerald-800 via-teal-700 to-cyan-800 rounded-3xl p-6 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
         <div>
-          <span class="bg-amber-400 text-slate-950 font-black text-xs px-3 py-1 rounded-full inline-block mb-2">الوحدة السادسة والسابعة (ص 77 - 96)</span>
+          <span class="bg-amber-400 text-amber-950 font-black text-xs px-3 py-1 rounded-full inline-block mb-2">الوحدة السادسة والسابعة (ص 77 - 96)</span>
           <h2 class="text-2xl sm:text-3xl font-black font-kids">📖 قِسْمُ التَّجْوِيدِ العَمَلِيّ لِلأَطْفَالِ</h2>
-          <p class="text-xs sm:text-sm text-emerald-100 mt-1">أمثلة كتاب نور البيان الأصلية بخط كبير وواضح للعرض على البروجيكتور والزووم!</p>
+          <p class="text-xs sm:text-sm text-emerald-100 mt-1">
+            أمثلة كتاب نور البيان الأصلية فقط دون إطالة أو تعقيد نظري! اختر القاعدة، واقرأ المثال فوراً بصوتك أو في وضع العرض المكبر!
+          </p>
         </div>
-        <button onclick="app.openPresentationForCurrentTajweed()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black px-4 py-2.5 rounded-2xl text-xs sm:text-sm shadow-md shrink-0">
-          📖 عَرْضُ أَمْثِلَةِ القَاعِدَةِ (مُكَبَّر)
+        <button onclick="app.openPresentationForCurrentTajweed()" class="bg-amber-400 hover:bg-amber-300 text-amber-950 font-black px-4 py-2.5 rounded-2xl text-xs sm:text-sm shadow-md transition flex items-center gap-1.5 shrink-0 active:scale-95">
+          <span>📖</span> عَرْضُ أَمْثِلَةِ القَاعِدَةِ (مُكَبَّر)
         </button>
       </div>
 
-      <div class="flex flex-wrap gap-2 justify-center" id="tajweed-topic-pills"></div>
-      <div id="tajweed-content-card" class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-300 shadow-md space-y-6"></div>
+      <!-- Tajweed Lessons Selector Pills -->
+      <div class="flex flex-wrap gap-2 justify-center" id="tajweed-topic-pills">
+        <!-- Rendered by JS -->
+      </div>
+
+      <!-- Tajweed Practical Cards View -->
+      <div id="tajweed-content-card" class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-md space-y-6">
+        <!-- Dynamic content -->
+      </div>
     </section>
 
     <!-- FLASHCARDS TAB -->
     <section id="tab-flashcards" class="tab-content hidden space-y-6">
-      <div class="bg-white p-5 rounded-3xl border border-emerald-200 shadow-xs flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="bg-white p-5 rounded-3xl border border-purple-100 shadow-xs flex flex-col md:flex-row items-center justify-between gap-4">
         <div>
-          <h2 class="text-2xl font-black text-emerald-900 font-kids flex items-center gap-2">
-            <span>🃏</span> بِطَاقَاتُ القِرَاءَةِ الكَبِيرَةُ وَتَحَدِّي السُّرْعَةِ
+          <h2 class="text-2xl font-black text-slate-800 font-kids flex items-center gap-2">
+            <span>🃏</span> بِطَاقَاتُ القِرَاءَةِ وَتَحَدِّي السُّرْعَةِ
           </h2>
-          <p class="text-xs sm:text-sm text-slate-500">اختر القاعدة، واقرأ بطاقات الكلمات الواضحة تماماً للأطفال!</p>
+          <p class="text-xs sm:text-sm text-slate-500">اختر القاعدة، واقرأ بطاقات الكلمات المعتمدة في كتاب نور البيان كاملة!</p>
         </div>
-        <select id="flashcard-category" onchange="app.initFlashcards(this.value)" class="bg-slate-50 border border-slate-300 text-xs sm:text-sm font-bold rounded-xl px-3 py-2 text-slate-800">
-          <option value="fatha-letters">الحروف بالفتح</option>
-          <option value="fatha-words">كلمات حركة الفتح</option>
-          <option value="fatha-sentences">جمل حركة الفتح</option>
-          <option value="kasra-words">كلمات حركة الكسر</option>
-          <option value="damma-words">كلمات حركة الضم</option>
-          <option value="madd-alif">المد بالألف</option>
-          <option value="madd-yaa">المد بالياء</option>
-          <option value="madd-waw">المد بالواو</option>
-          <option value="sukoon-words">كلمات السكون</option>
-          <option value="tanween-words">كلمات التنوين</option>
-          <option value="shaddah-words">كلمات الشدة</option>
-        </select>
+        <div class="flex flex-wrap items-center gap-2">
+          <label class="text-xs font-bold text-slate-600">اخْتَرِ القَاعِدَة:</label>
+          <select id="flashcard-category" onchange="app.initFlashcards(this.value)" class="bg-slate-50 border border-slate-300 text-xs sm:text-sm font-bold rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-purple-400">
+            <option value="fatha-letters">الحروف بالفتح</option>
+            <option value="fatha-words">كلمات حركة الفتح</option>
+            <option value="fatha-sentences">جمل حركة الفتح</option>
+            <option value="kasra-words">كلمات حركة الكسر</option>
+            <option value="damma-words">كلمات حركة الضم</option>
+            <option value="madd-alif">المد بالألف</option>
+            <option value="madd-yaa">المد بالياء</option>
+            <option value="madd-waw">المد بالواو</option>
+            <option value="sukoon-words">كلمات السكون</option>
+            <option value="tanween-words">كلمات التنوين</option>
+            <option value="shaddah-words">كلمات الشدة</option>
+            <option value="tajweed-noon">تجويد النون الساكنة والتنوين</option>
+            <option value="tajweed-madd">تجويد أحكام المدود</option>
+          </select>
+        </div>
       </div>
 
-      <div class="max-w-3xl mx-auto">
-        <div class="theme-clouds rounded-3xl p-8 sm:p-14 shadow-2xl text-center space-y-8 relative overflow-hidden" id="flashcard-box">
-          <div class="flex justify-between items-center text-xs font-extrabold text-emerald-800">
-            <span id="flashcard-counter" class="bg-white/90 px-3 py-1 rounded-full border border-emerald-300">بطاقة 1</span>
-            <span id="flashcard-rule-tag" class="bg-emerald-100 text-emerald-900 px-3 py-1 rounded-full font-black">حركة الفتح</span>
+      <div class="max-w-2xl mx-auto">
+        <div class="theme-clouds rounded-3xl p-8 sm:p-12 shadow-xl text-center space-y-6 relative overflow-hidden transition-all duration-300" id="flashcard-box">
+          <div class="flex justify-between items-center text-xs font-extrabold text-sky-700">
+            <span id="flashcard-counter" class="bg-white/80 px-3 py-1 rounded-full border border-sky-200">بطاقة 1 من 30</span>
+            <span id="flashcard-rule-tag" class="bg-sky-100 text-sky-900 px-3 py-1 rounded-full font-black">حركة الفتح</span>
           </div>
 
-          <div class="py-8 min-h-[220px] flex items-center justify-center">
-            <div id="flashcard-text" class="text-7xl sm:text-8xl font-black text-slate-900 font-quran tashkeel-word tracking-wide">كَتَبَ</div>
+          <div class="py-6 min-h-[180px] flex items-center justify-center">
+            <div id="flashcard-text" class="text-6xl sm:text-7xl font-black text-slate-900 font-quran tashkeel-word tracking-wide">
+              كَتَبَ
+            </div>
+          </div>
+
+          <div id="flashcard-breakdown" class="text-xs sm:text-sm font-bold text-sky-900 bg-white/80 py-1.5 px-4 rounded-xl inline-block border border-sky-200">
+            نور البيان | إعداد: أكاديمية الفتح
           </div>
 
           <div class="flex items-center justify-center gap-4 pt-2">
-            <button onclick="app.readCurrentFlashcard()" class="w-16 h-16 rounded-2xl bg-emerald-700 hover:bg-emerald-600 text-white text-3xl flex items-center justify-center shadow-lg transition" title="استمع للنطق">🔊</button>
-            <button onclick="app.nextFlashcard()" class="px-8 py-4 rounded-2xl bg-sky-600 hover:bg-sky-500 text-white font-black text-lg shadow-lg transition flex items-center gap-2"><span>البِطَاقَةُ التَّالِيَة</span> <span>➡️</span></button>
+            <button onclick="app.readCurrentFlashcard()" class="w-14 h-14 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-white text-2xl flex items-center justify-center shadow-md transform active:scale-95 transition" title="استمع للنطق">
+              🔊
+            </button>
+            <button onclick="app.nextFlashcard()" class="px-8 py-3.5 rounded-2xl bg-sky-600 hover:bg-sky-500 text-white font-black text-base shadow-md transform active:scale-95 transition flex items-center gap-2">
+              <span>البِطَاقَةُ التَّالِيَة</span> <span>➡️</span>
+            </button>
           </div>
         </div>
       </div>
@@ -424,37 +474,59 @@
 
     <!-- WHEEL TAB -->
     <section id="tab-wheel" class="tab-content hidden space-y-6">
-      <div class="bg-white p-5 rounded-3xl border border-emerald-200 shadow-xs flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="bg-white p-5 rounded-3xl border border-amber-100 shadow-xs flex flex-col md:flex-row items-center justify-between gap-4">
         <div>
-          <h2 class="text-2xl font-black text-emerald-900 font-kids flex items-center gap-2"><span>🎡</span> عَجَلَةُ القِرَاءَةِ الكَبِيرَةِ</h2>
-          <p class="text-xs sm:text-sm text-slate-500">أدر العجلة واقْرَأ الكلمة الكبيرة الواضحة أمامك!</p>
+          <h2 class="text-2xl font-black text-slate-800 font-kids flex items-center gap-2">
+            <span>🎡</span> عَجَلَةُ القِرَاءَةِ التَّفَاعُلِيَّة
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-500">أدر العجلة واقرأ الكلمة التي يقف عليها السهم بصوتك أولاً!</p>
         </div>
-        <select id="wheel-source-select" onchange="app.initWheel(this.value)" class="bg-slate-50 border border-slate-300 text-xs sm:text-sm font-bold rounded-xl px-3 py-2 text-slate-800">
-          <option value="fatha">كلمات الفتح</option>
-          <option value="kasra">كلمات الكسر</option>
-          <option value="damma">كلمات الضم</option>
-          <option value="madd">المدود</option>
-          <option value="sukoon">السكون</option>
-          <option value="tanween">التنوين</option>
-          <option value="shaddah">الشدة</option>
-        </select>
+        <div class="flex items-center gap-2">
+          <label class="text-xs font-bold text-slate-600">مَصْدَرُ الكَلِمَات:</label>
+          <select id="wheel-source-select" onchange="app.initWheel(this.value)" class="bg-slate-50 border border-slate-300 text-xs sm:text-sm font-bold rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-amber-400">
+            <option value="fatha">عجلة كلمات الفتح</option>
+            <option value="kasra">عجلة كلمات الكسر</option>
+            <option value="damma">عجلة كلمات الضم</option>
+            <option value="madd">عجلة المدود الثلاثة</option>
+            <option value="sukoon">عجلة السكون</option>
+            <option value="tanween">عجلة التنوين</option>
+            <option value="shaddah">عجلة الشدة</option>
+            <option value="tajweed">عجلة أمثلة التجويد</option>
+          </select>
+        </div>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center max-w-5xl mx-auto">
         <div class="md:col-span-7 flex flex-col items-center justify-center relative">
-          <div class="z-20 text-5xl text-rose-600 -mb-4 drop-shadow-lg select-none transform rotate-180 animate-bounce">🔻</div>
+          <div class="z-20 text-4xl text-rose-500 -mb-4 drop-shadow-md select-none transform rotate-180 animate-bounce">
+            🔻
+          </div>
           <div class="relative p-2 bg-gradient-to-tr from-amber-400 to-amber-200 rounded-full shadow-2xl border-4 border-white">
             <canvas id="wheel-canvas" width="380" height="380" class="rounded-full cursor-pointer" onclick="app.spinWheel()"></canvas>
           </div>
-          <button onclick="app.spinWheel()" id="spin-btn" class="mt-5 px-8 py-3.5 bg-emerald-700 hover:bg-emerald-600 text-white font-black text-lg rounded-2xl shadow-lg">أَدِرِ العَجَلَةَ الآن! 🎡</button>
+          <button onclick="app.spinWheel()" id="spin-btn" class="mt-5 px-8 py-3 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-white font-black text-lg rounded-2xl shadow-lg transform active:scale-95 transition flex items-center gap-2">
+            <span>🎡</span> أَدِرِ العَجَلَةَ الآن!
+          </button>
         </div>
+
         <div class="md:col-span-5">
-          <div class="theme-sunshine rounded-3xl p-8 shadow-xl text-center space-y-6">
-            <div class="text-xs font-black text-amber-900 bg-amber-200 px-3 py-1 rounded-full inline-block">🎯 الكلمة المختارة</div>
-            <div class="min-h-[140px] flex items-center justify-center">
-              <div id="wheel-result-word" class="text-5xl sm:text-6xl font-black text-slate-900 font-quran tashkeel-word">اضغط أَدِرِ العَجَلَة!</div>
+          <div class="theme-sunshine rounded-3xl p-6 sm:p-8 shadow-xl text-center space-y-4">
+            <div class="text-xs font-black text-amber-900 bg-amber-200/80 px-3 py-1 rounded-full inline-block">
+              🎯 كَلِمَتُكَ المُمَيَّزَةُ
             </div>
-            <button onclick="app.readWheelWord()" class="px-6 py-3 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-bold text-base shadow-md">استمع للنطق 🔊</button>
+            <div class="min-h-[130px] flex items-center justify-center">
+              <div id="wheel-result-word" class="text-4xl sm:text-5xl font-black text-slate-900 font-quran tashkeel-word">
+                اضغط أَدِرِ العَجَلَة!
+              </div>
+            </div>
+            <div class="flex items-center justify-center gap-3">
+              <button onclick="app.readWheelWord()" class="px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-white font-bold text-xs sm:text-sm shadow-md transition flex items-center gap-1.5">
+                <span>🔊</span> اسْتَمِعْ لِلنُّطْقِ
+              </button>
+              <button onclick="app.rewardWordRead(document.getElementById('wheel-result-word').textContent)" class="px-5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-amber-950 font-black text-xs sm:text-sm shadow-xs transition flex items-center gap-1.5">
+                <span>⭐</span> قَرَأْتُهَا صَحِيحَةً!
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -462,26 +534,63 @@
 
     <!-- MINI-GAMES TAB -->
     <section id="tab-games" class="tab-content hidden space-y-6">
-      <div class="bg-white p-5 rounded-3xl border border-emerald-200 shadow-xs flex flex-col md:flex-row items-center justify-between gap-4">
-        <h2 class="text-2xl font-black text-emerald-900 font-kids">🎮 ألعاب التحدي والتعلم للأطفال</h2>
+      <div class="bg-white p-5 rounded-3xl border border-sky-100 shadow-xs flex flex-col md:flex-row items-center justify-between gap-4">
+        <div>
+          <h2 class="text-2xl font-black text-slate-800 font-kids flex items-center gap-2">
+            <span>🎮</span> مَلْعَبُ أَبْطَالِ نُورِ البَيَانِ
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-500">تمارين مبهجة ومفيدة لتثبيت الحروف بالحركات وأمثلة الكتاب!</p>
+        </div>
         <div class="flex gap-2">
-          <button onclick="app.initGame('match')" class="game-switch-btn px-4 py-2 rounded-xl text-xs font-bold bg-emerald-700 text-white" data-game="match">طابق الحرف</button>
-          <button onclick="app.initGame('listen')" class="game-switch-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700" data-game="listen">اسمع واختر</button>
+          <button onclick="app.initGame('match')" class="game-switch-btn px-4 py-2 rounded-xl text-xs font-bold bg-sky-600 text-white shadow-xs" data-game="match">
+            🦁 طَابِقِ الحَرْفَ مَعَ الصُّورَة
+          </button>
+          <button onclick="app.initGame('listen')" class="game-switch-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200" data-game="listen">
+            🔊 اسْمَعْ وَاخْتَرِ الحَرَكَة
+          </button>
         </div>
       </div>
-      <div id="game-stage" class="theme-lavender rounded-3xl p-8 max-w-3xl mx-auto min-h-[440px] flex flex-col justify-between shadow-xl"></div>
+
+      <div id="game-stage" class="theme-lavender rounded-3xl p-6 sm:p-10 shadow-xl max-w-3xl mx-auto min-h-[420px] flex flex-col justify-between">
+        <!-- Rendered by JS -->
+      </div>
     </section>
 
-    <!-- PROGRESS TAB -->
+    <!-- PROGRESS & BADGES TAB -->
     <section id="tab-progress" class="tab-content hidden space-y-6">
-      <div class="bg-white p-6 rounded-3xl border border-emerald-200 shadow-xs flex justify-between items-center">
-        <h2 class="text-2xl font-black text-emerald-900 font-kids">🏆 سجلي وإنجازاتي</h2>
-        <span class="text-3xl font-black text-emerald-700" id="progress-percentage">0%</span>
+      <div class="bg-white p-6 rounded-3xl border border-amber-100 shadow-xs flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div>
+          <h2 class="text-2xl font-black text-slate-800 font-kids flex items-center gap-2">
+            <span>🏆</span> سِجِلِّ إِتْقَانِي وَأَوْسِمَتِي
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-500">تابع تقدمك في إتقان صفحات ودروس نور البيان (ص 1 - 96)!</p>
+        </div>
+        <button onclick="app.resetProgressConfirm()" class="text-xs text-rose-500 hover:text-rose-700 font-bold px-3 py-1.5 rounded-lg border border-rose-200">
+          إِعَادَةُ ضَبْطِ التَّقَدُّمِ
+        </button>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-xs space-y-4">
-          <h4 class="font-bold text-slate-800">🎖️ الأوسمة المكتسبة</h4>
-          <div class="grid grid-cols-2 gap-3" id="badges-container"></div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-xs text-center space-y-4">
+          <div class="w-32 h-32 mx-auto rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 p-1 flex items-center justify-center shadow-lg">
+            <div class="w-full h-full bg-white rounded-full flex flex-col items-center justify-center">
+              <span class="text-3xl font-black text-emerald-700" id="progress-percentage">15%</span>
+              <span class="text-xs text-slate-400 font-semibold">مكتمل</span>
+            </div>
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-800">معدل إتقان المنهج</h4>
+            <p class="text-xs text-slate-500 mt-1" id="progress-lessons-text">تم إتقان 5 من 35 درساً رئيسياً</p>
+          </div>
+        </div>
+
+        <div class="md:col-span-2 bg-white p-6 rounded-3xl border border-slate-100 shadow-xs space-y-4">
+          <h4 class="font-bold text-slate-800 flex items-center gap-2">
+            <span>🎖️</span> الأوسمة والشارات المكتسبة
+          </h4>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" id="badges-container">
+            <!-- Rendered by JS -->
+          </div>
         </div>
       </div>
     </section>
@@ -489,59 +598,142 @@
   </main>
 
   <!-- ========================================================================= -->
-  <!-- PRESENTATION MODE: وضع العرض المكبر العملاق (تم حل مشكلة عرض الدرس الحالي بدقة) -->
+  <!-- PERFECTLY RESPONSIVE PRESENTATION MODE (وضع عرض الدرس المتناسق مع 100dvh) -->
   <!-- ========================================================================= -->
-  <div id="presentation-modal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-sm hidden h-[100dvh] max-h-[100dvh] w-full flex flex-col justify-between p-2 sm:p-4 overflow-hidden select-none">
+  <div id="presentation-modal" class="fixed inset-0 z-50 bg-slate-950/45 backdrop-blur-xs hidden h-[100dvh] max-h-[100dvh] w-full flex flex-col justify-between p-2 sm:p-3 md:p-4 overflow-hidden select-none transition-all duration-300">
 
-    <header class="relative z-10 shrink-0 w-full max-w-6xl mx-auto bg-white px-6 py-3 rounded-2xl border-2 border-emerald-500 shadow-lg flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <span class="text-3xl">📖</span>
-        <div>
-          <span id="pres-rule-badge" class="text-xs font-black text-emerald-900 bg-emerald-200 px-3 py-1 rounded-full">عرض الدرس</span>
-          <h3 id="pres-lesson-title" class="text-base sm:text-lg font-black font-kids text-slate-900 mt-0.5">اسم الدرس</h3>
+    <!-- 1. TOP BAR: Title, Current Counter, Color letters button, Close -->
+    <header class="relative z-10 shrink-0 w-full max-w-5xl mx-auto bg-white/95 backdrop-blur-md px-3 sm:px-5 py-2 rounded-2xl border border-emerald-200 shadow-xs flex items-center justify-between gap-2">
+      <div class="flex items-center gap-2 min-w-0">
+        <span class="text-xl sm:text-2xl shrink-0" id="pres-modal-icon">📖</span>
+        <div class="min-w-0">
+          <span id="pres-rule-badge" class="text-[10px] sm:text-xs font-black text-emerald-800 bg-emerald-100/90 px-2 py-0.5 rounded-full inline-block truncate max-w-[150px] sm:max-w-xs">
+            عَرْضُ أَمْثِلَةِ الدَّرْسِ
+          </span>
+          <h3 id="pres-lesson-title" class="text-xs sm:text-sm md:text-base font-black font-kids text-slate-800 truncate mt-0.5">
+            اسم الدرس
+          </h3>
         </div>
       </div>
-      <div class="flex items-center gap-3">
-        <button onclick="app.toggleColorLettersMode()" class="px-3 py-1.5 rounded-xl bg-purple-100 text-purple-900 text-xs font-black border border-purple-300">🎨 ألوان الحروف</button>
-        <span id="pres-counter" class="text-sm font-black bg-amber-100 text-amber-950 px-3 py-1 rounded-full border border-amber-300">المثال 1</span>
-        <button onclick="app.closePresentationMode()" class="px-4 py-1.5 rounded-xl bg-rose-600 text-white font-black text-xs shadow-md">✕ إغلاق</button>
+
+      <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+        <!-- Quick Color Letters Toggle in Modal -->
+        <button onclick="app.toggleColorLettersMode()" class="px-2 sm:px-3 py-1 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-700 text-[11px] sm:text-xs font-bold border border-purple-200 flex items-center gap-1 transition active:scale-95">
+          <span>🎨</span>
+          <span class="hidden sm:inline">أَلْوَانُ الحُرُوف</span>
+        </button>
+
+        <!-- Current Example Counter -->
+        <span id="pres-counter" class="text-[11px] sm:text-xs font-black bg-amber-50 text-amber-900 border border-amber-200 px-2.5 py-1 rounded-full whitespace-nowrap">
+          المثال 1 من 1
+        </span>
+
+        <!-- Close Button -->
+        <button onclick="app.closePresentationMode()" class="px-3 py-1 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 font-black text-xs sm:text-sm border border-rose-200 transition flex items-center gap-1 active:scale-95" title="إغلاق وضع العرض">
+          <span>✕</span> <span class="hidden sm:inline">إِغْلَاق</span>
+        </button>
       </div>
     </header>
 
-    <main class="relative z-10 flex-1 min-h-0 w-full max-w-6xl mx-auto flex flex-col items-center justify-center my-2 px-1">
-      <div class="w-full h-full rounded-[40px] p-8 text-center flex flex-col justify-between items-center relative shadow-2xl overflow-hidden theme-clouds" id="pres-card-box">
-        <div id="pres-example-category" class="px-4 py-1 rounded-full text-sm font-black bg-emerald-800 text-white shadow-md">نور البيان لتعليم القراءة</div>
-        <div class="flex-1 min-h-0 w-full flex items-center justify-center px-4 py-2">
-          <div id="pres-giant-text" class="pres-text-display font-black text-slate-950 font-quran text-8xl sm:text-9xl md:text-[10rem] tracking-wider select-text text-center w-full">بَ</div>
+    <!-- 2. CENTER STAGE: Educational Card with Dynamic Kid Themes (Auto-sized, zero vertical overflow) -->
+    <main class="relative z-10 flex-1 min-h-0 w-full max-w-5xl mx-auto flex flex-col items-center justify-center my-1.5 sm:my-2 px-1">
+      <div class="w-full h-full max-h-full rounded-2xl sm:rounded-3xl md:rounded-[36px] p-3 sm:p-5 md:p-6 text-center flex flex-col justify-between items-center relative transition-all duration-300 shadow-xl overflow-hidden" id="pres-card-box">
+
+        <!-- Decorative Kid Stickers on Card Corners -->
+        <div class="absolute top-2.5 right-3.5 sm:top-3.5 sm:right-5 text-2xl sm:text-3xl opacity-85 pointer-events-none select-none animate-pulse" id="pres-sticker-top">
+          ☁️
         </div>
-        <div class="shrink-0 flex items-center justify-center gap-4 pt-4 border-t-2 border-emerald-500/20 w-full max-w-md">
-          <button onclick="app.speakPresCurrent()" class="flex-1 py-3 px-6 rounded-2xl bg-emerald-700 hover:bg-emerald-600 text-white font-black text-base shadow-lg transition">🔊 استمع للنطق</button>
-          <button onclick="app.rewardPresCurrent()" class="flex-1 py-3 px-6 rounded-2xl bg-amber-400 hover:bg-amber-300 text-amber-950 font-black text-base shadow-lg transition">⭐ أتقنت القراءة!</button>
+        <div class="absolute bottom-2.5 left-3.5 sm:bottom-3.5 sm:left-5 text-2xl sm:text-3xl opacity-85 pointer-events-none select-none" id="pres-sticker-bottom">
+          ⭐
         </div>
+
+        <!-- Sub-Badge directly above the example -->
+        <div id="pres-example-category" class="shrink-0 mb-1 inline-block px-3 py-0.5 rounded-full text-[11px] sm:text-xs font-black bg-white/85 text-slate-700 shadow-2xs border border-white">
+          نور البيان لتعليم القراءة
+        </div>
+
+        <!-- Giant Arabic Example: Centered, Scalable, Perfectly Visible Tashkeel -->
+        <div class="flex-1 min-h-0 w-full flex items-center justify-center overflow-visible px-2 py-1">
+          <div id="pres-giant-text" class="pres-text-display font-black text-slate-900 font-quran select-text tracking-normal text-center w-full transition-all">
+            بَ
+          </div>
+        </div>
+
+        <!-- Interactive Voice & Read Master Buttons Inside Card -->
+        <div class="shrink-0 flex items-center justify-center gap-2 sm:gap-3 pt-2 border-t border-slate-900/10 w-full max-w-sm sm:max-w-md z-10">
+          <button onclick="app.speakPresCurrent()" class="flex-1 py-2 sm:py-2.5 px-3 rounded-xl sm:rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-sm transition transform active:scale-95">
+            <span>🔊</span> <span>اسْتَمِعْ لِلنُّطْقِ</span>
+          </button>
+          <button onclick="app.rewardPresCurrent()" class="flex-1 py-2 sm:py-2.5 px-3 rounded-xl sm:rounded-2xl bg-amber-400 hover:bg-amber-300 text-amber-950 font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-sm transition transform active:scale-95">
+            <span>⭐</span> <span>أَتْقَنْتُ القِرَاءَةَ!</span>
+          </button>
+        </div>
+
       </div>
     </main>
 
-    <footer class="relative z-10 shrink-0 w-full max-w-6xl mx-auto bg-white p-3 rounded-2xl border-2 border-emerald-500 shadow-lg flex items-center justify-between">
-      <button id="pres-btn-prev" onclick="app.presPrev()" class="px-6 py-2.5 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 font-black text-sm">◀ المثال السابق</button>
-      <div class="flex items-center gap-2"><span class="text-sm font-black text-amber-900 bg-amber-100 px-4 py-1 rounded-xl">⭐ النجوم: <span id="pres-bar-stars">0</span></span></div>
-      <button id="pres-btn-next" onclick="app.presNext()" class="px-7 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-black text-sm">المثال التالي ▶</button>
-    </footer>
+    <!-- 3. BOTTOM BAR: Always visible Cheering Tools, Live Star Balance, Previous & Next Controls -->
+    <footer class="relative z-10 shrink-0 w-full max-w-5xl mx-auto bg-white/95 backdrop-blur-md p-2 sm:p-2.5 rounded-2xl border border-emerald-200 shadow-xs flex items-center justify-between gap-2">
+      
+      <!-- Previous Button (◀ المثال السابق) -->
+      <button id="pres-btn-prev" onclick="app.presPrev()" class="shrink-0 px-3.5 sm:px-6 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 disabled:opacity-30 disabled:cursor-not-allowed text-xs sm:text-sm font-black flex items-center justify-center gap-1 transition active:scale-95">
+        <span>◀</span>
+        <span class="hidden sm:inline">المِثَالُ</span>
+        <span>السَّابِق</span>
+      </button>
 
+      <!-- Center Cheering & Motivation Center: Balloons, Clapping, Cheer phrases, Live Stars -->
+      <div class="flex items-center justify-center gap-1 sm:gap-2 flex-wrap">
+        <!-- Live Stars Badge in presentation bar -->
+        <div class="flex items-center gap-1 bg-amber-50 border border-amber-200 px-2 sm:px-3 py-1 rounded-xl text-amber-800 text-[11px] sm:text-xs font-black shadow-2xs">
+          <span>⭐</span>
+          <span id="pres-bar-stars">0</span>
+          <span class="hidden md:inline">نجمة</span>
+        </div>
+
+        <!-- Cheering Buttons -->
+        <button onclick="app.triggerBalloons()" class="px-2.5 sm:px-3.5 py-1 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold text-xs border border-rose-200 shadow-2xs transition flex items-center gap-1 active:scale-95" title="إطلاق بالونات">
+          <span>🎈</span> <span class="hidden sm:inline">بَالُونَات</span>
+        </button>
+
+        <button onclick="app.triggerApplause()" class="px-2.5 sm:px-3.5 py-1 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-xs border border-emerald-200 shadow-2xs transition flex items-center gap-1 active:scale-95" title="تشغيل صوت وتأثير التصفيق">
+          <span>👏</span> <span class="hidden sm:inline">تَصْفِيق</span>
+        </button>
+
+        <button onclick="app.triggerCheer()" class="px-2.5 sm:px-3.5 py-1 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 font-bold text-xs border border-amber-200 shadow-2xs transition flex items-center gap-1 active:scale-95" title="رسالة تشجيعية ومكافأة فورية">
+          <span>🌟</span> <span class="hidden sm:inline">شَجِّعْنِي</span>
+        </button>
+      </div>
+
+      <!-- Next Button (المثال التالي ▶) -->
+      <button id="pres-btn-next" onclick="app.presNext()" class="shrink-0 px-4 sm:px-7 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white disabled:bg-slate-300 disabled:cursor-not-allowed text-xs sm:text-sm font-black flex items-center justify-center gap-1 shadow-sm transition active:scale-95">
+        <span class="hidden sm:inline">المِثَالُ</span>
+        <span>التَّالِي</span>
+        <span>▶</span>
+      </button>
+
+    </footer>
   </div>
 
   <!-- Hero Celebration Modal -->
-  <div id="hero-celebration-modal" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs hidden flex items-center justify-center p-4">
-    <div class="bg-gradient-to-b from-amber-50 to-white rounded-3xl p-8 max-w-sm w-full text-center space-y-4 shadow-2xl border-4 border-amber-400 pop-banner">
-      <div class="text-7xl animate-bounce">🏆</div>
-      <h3 id="hero-modal-title" class="text-3xl font-black text-amber-950 font-kids">🎉 أَحْسَنْتَ يَا بَطَل!</h3>
-      <p id="hero-modal-sub" class="text-sm text-slate-700 font-semibold">قِرَاءَةٌ نَمُوذَجِيَّةٌ مُتْقَنَة!</p>
-      <button onclick="app.closeHeroModal()" class="w-full py-3 rounded-xl bg-emerald-700 text-white font-black text-base shadow-lg">مُتَابَعَةُ التَّعَلُّمِ 🚀</button>
+  <div id="hero-celebration-modal" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs hidden flex items-center justify-center p-4 transition-all">
+    <div class="bg-gradient-to-b from-amber-50 to-white rounded-3xl p-6 sm:p-8 max-w-sm w-full text-center space-y-4 shadow-2xl border-4 border-amber-300 pop-banner">
+      <div class="text-6xl animate-bounce">🏆</div>
+      <div>
+        <h3 id="hero-modal-title" class="text-2xl font-black text-amber-900 font-kids">🎉 أَحْسَنْتَ يَا بَطَل!</h3>
+        <p id="hero-modal-sub" class="text-xs sm:text-sm text-slate-600 mt-1 font-semibold">قِرَاءَةٌ نَمُوذَجِيَّةٌ مُتْقَنَة!</p>
+      </div>
+      <div id="hero-modal-stars" class="text-3xl tracking-widest text-amber-400">⭐⭐⭐⭐⭐</div>
+      <button onclick="app.closeHeroModal()" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-sm shadow-md transition active:scale-95">
+        مُتَابَعَةُ التَّعَلُّمِ 🚀
+      </button>
     </div>
   </div>
 
   <script>
     /**
-     * قاعدة بيانات نور البيان الأصلية كاملة بجميع أسطرها وبياناتها (2300+ سطر دون أي نقصان)
+     * Database of Noor Al-Bayan curriculum structured exactly per book pages and authentic examples.
+     * All Tajweed lessons are practical, pure examples taken strictly from Noor Al-Bayan (pages 77-96).
      */
     const NOOR_ALBAYAN_DATA = {
       lettersGarden: [
@@ -821,7 +1013,7 @@
               sourcePage: 71,
               type: "words",
               teacherNote: "اجتماع الشدة مع الضمة والتنوين.",
-              items: ["أَيُّ", "جَدُّ", "حَقُّ", "فَكُّ", "حِجُّ", "عِزُّ", "مَنُّ", "صَمُّواْ", "خَرُّواْ", "صَلُّواْ", "صَبَّ - يَصُبُّ", "دَقَّ - يَدُقُّ", "حَجَّ - يَحُجُّ", "يَوَدُّ", "يَكُفَّ", "يَحِلُّ", "تَرَبُّصُ", "يُدَبِّرُ", "السِّرُّ", "التَّنُّورُ", "كُرْسِيُّهُ", "أَيَّ - أَيًّا", "صَبَّ - صَبًّا", "قَوِيًّا - قَوِيٍّ - قَوِيٌّ", "حَيًّا - حَيٍّ - حَيٌّ", "حَقًّا", "صُمًّا", "فَظًّا", "عُتُوًّا", "مَرَدٍّ", "شَرٍّ", "كُلٌّ", "حَفِيٌّ", "عَفُوًّا", "غِلًّا", "حُبًّا", "عِزًّا", "دُرِّيٌّ", "وَلِيٌّ", "عَرَبِيٌّ"]
+              items: ["أَيُّ", "جَدُّ", "حَقُّ", "فَكُّ", "حِجُّ", "عِزُّ", "مَنُّ", "صَمُّواْ", "خَرُّواْ", "صَلُّواْ", "صَبَّ - يَصُبُّ", "دَقَّ - يَدُقُّ", "حَجَّ - يَحُجُّ", "يَوَدُّ", "يَكُفَّ", "يَحِلُّ", "تَرَبُّصُ", "يُدَبِّرُ", "السِّرُّ", "التَّنُّورُ", "كُرْسِيُّهُ", "أَيَّ - أَيًّا", "صَبَّ - صَبًّا", "قَوِيًّا - قَوِيٍّ - قَوِيٌّ", "حَيًّا - حَيٍّ - حَيٌّ", "حَقًّا", "صُمًّا", "فَظًّا", "عُتُوًّا", "مَرَدٍّ", "شَرٍّ", "كُلٌّ", "حَفِيٌّ", "عَفُوًّا", "غِلًّا", "حُبًّا", "عِزًّا", "دُرِّيٌّ", "وَلِيٌّ", "عَرَبِيٌّ"]
             }
           ]
         },
@@ -995,14 +1187,16 @@
         this.completedLessons = new Set();
         this.wordsReadStreak = 0;
 
+        // Child Mode: Distinct Letter Coloring
         this.isColorLettersMode = true;
-        this.isLaserActive = false;
 
+        // Presentation Stage state
         this.presItems = [];
         this.presIndex = 0;
         this.presCurrentTitle = "";
         this.presCurrentRule = "";
 
+        // Educational Dynamic Themes for Cards
         this.themes = [
           { name: 'theme-clouds', top: '☁️', btm: '⭐' },
           { name: 'theme-garden', top: '🌸', btm: '🌿' },
@@ -1011,10 +1205,12 @@
           { name: 'theme-peach', top: '🍎', btm: '🎨' }
         ];
 
+        // Flashcards state
         this.flashcardList = [];
         this.currentCardIndex = 0;
         this.currentCardRule = "";
 
+        // Wheel state
         this.wheelWords = [];
         this.wheelAngle = 0;
         this.isSpinning = false;
@@ -1034,28 +1230,7 @@
         this.updateStatsUI();
         this.updateColorModeButtonUI();
 
-        window.addEventListener('mousemove', (e) => {
-          if (this.isLaserActive) {
-            const laser = document.getElementById('laser-pointer');
-            if (laser) {
-              laser.style.display = 'block';
-              laser.style.left = e.clientX + 'px';
-              laser.style.top = e.clientY + 'px';
-            }
-          }
-        });
-
-        window.addEventListener('touchmove', (e) => {
-          if (this.isLaserActive && e.touches.length > 0) {
-            const laser = document.getElementById('laser-pointer');
-            if (laser) {
-              laser.style.display = 'block';
-              laser.style.left = e.touches[0].clientX + 'px';
-              laser.style.top = e.touches[0].clientY + 'px';
-            }
-          }
-        }, { passive: true });
-
+        // Keyboard controls in Presentation Mode
         window.addEventListener('keydown', (e) => {
           const modal = document.getElementById('presentation-modal');
           if (modal && !modal.classList.contains('hidden')) {
@@ -1068,32 +1243,6 @@
             }
           }
         });
-      }
-
-      toggleLaserPointer() {
-        this.isLaserActive = !this.isLaserActive;
-        this.playSfx('click');
-        const laser = document.getElementById('laser-pointer');
-        const status = document.getElementById('laser-status');
-        const btn = document.getElementById('laser-toggle-btn');
-
-        if (this.isLaserActive) {
-          if (laser) laser.style.display = 'block';
-          if (status) {
-            status.textContent = 'مُفَعَّل';
-            status.className = 'bg-emerald-900 text-white px-1.5 py-0.2 rounded-md font-black';
-          }
-          if (btn) btn.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold bg-emerald-600 hover:bg-emerald-500 text-white border border-emerald-400 transition shadow-xs active:scale-95";
-          this.showFloatBanner("🔴 تم تفعيل ليزر الشرح للإشارة!", "bg-rose-600");
-        } else {
-          if (laser) laser.style.display = 'none';
-          if (status) {
-            status.textContent = 'مُعَطَّل';
-            status.className = 'bg-rose-900 text-white px-1.5 py-0.2 rounded-md';
-          }
-          if (btn) btn.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold bg-rose-600 hover:bg-rose-500 text-white border border-rose-400 transition shadow-xs active:scale-95";
-          this.showFloatBanner("⚪ تم إيقاف ليزر الشرح", "bg-slate-700");
-        }
       }
 
       initAudioContext() {
@@ -1167,10 +1316,25 @@
       }
 
       colorizeArabicText(text) {
-        if (!this.isColorLettersMode) return text;
-        const letterColors = ['#0284c7', '#16a34a', '#d97706', '#9333ea', '#e11d48', '#0d9488', '#4f46e5'];
+        if (!this.isColorLettersMode) {
+          return text;
+        }
+
+        // Palette of 7 high-contrast, child-friendly colors that preserve harakat visibility
+        const letterColors = [
+          '#0284c7', // Sky Blue
+          '#16a34a', // Emerald Green
+          '#d97706', // Warm Amber
+          '#9333ea', // Royal Purple
+          '#e11d48', // Gentle Rose
+          '#0d9488', // Deep Teal
+          '#4f46e5'  // Indigo
+        ];
+
+        // Regex for Arabic diacritics, sukoons, maddah, dagger alif, and Quranic signs
         const isTashkeel = (char) => /[\u064B-\u065F\u0670\u06D6-\u06ED]/.test(char);
 
+        // Group letters with their respective harakat so diacritics are NEVER detached
         const tokens = [];
         let currentLetter = "";
         let currentHarakat = "";
@@ -1194,10 +1358,14 @@
             currentLetter = char;
           }
         }
-        if (currentLetter) tokens.push({ letter: currentLetter, harakat: currentHarakat });
+        if (currentLetter) {
+          tokens.push({ letter: currentLetter, harakat: currentHarakat });
+        }
 
+        // Render with colored spans.
         let colorIdx = 0;
         let htmlResult = "";
+
         tokens.forEach(tok => {
           if (tok.separator) {
             htmlResult += tok.separator;
@@ -1207,6 +1375,7 @@
             htmlResult += `<span class="colored-char" style="color: ${color};">${tok.letter}${tok.harakat}</span>`;
           }
         });
+
         return htmlResult;
       }
 
@@ -1214,25 +1383,36 @@
         this.isColorLettersMode = !this.isColorLettersMode;
         this.playSfx('click');
         this.updateColorModeButtonUI();
+        
+        // Refresh visible views if open
         const modal = document.getElementById('presentation-modal');
-        if (modal && !modal.classList.contains('hidden')) this.updatePresUI();
+        if (modal && !modal.classList.contains('hidden')) {
+          this.updatePresUI();
+        }
         this.renderFlashcard();
+        this.showFloatBanner(this.isColorLettersMode ? "🎨 تَمَّ تَفْعِيلُ تَلْوِينِ الحُرُوفِ لِلأَطْفَالِ!" : "⚪ عُدْنَا لِلَّوْنِ العَادِي لِلحُرُوفِ", "bg-purple-600");
       }
 
       updateColorModeButtonUI() {
         const statusEl = document.getElementById('color-mode-status');
-        if (statusEl) statusEl.textContent = this.isColorLettersMode ? 'مُفَعَّل' : 'مُعَطَّل';
+        if (statusEl) {
+          statusEl.textContent = this.isColorLettersMode ? 'مُفَعَّل' : 'مُعَطَّل';
+          statusEl.className = this.isColorLettersMode ? 'bg-purple-200 text-purple-900 px-1.5 py-0.2 rounded-md font-black' : 'bg-slate-200 text-slate-700 px-1.5 py-0.2 rounded-md font-bold';
+        }
       }
 
       triggerBalloons() {
         this.playSfx('click');
         const emojis = ['🎈', '🎈', '🎉', '⭐', '🎈'];
+        const colors = ['#ef4444', '#0ea5e9', '#22c55e', '#f59e0b', '#8b5cf6'];
         for (let i = 0; i < 14; i++) {
           const b = document.createElement('div');
           b.className = 'balloon-item text-4xl sm:text-5xl';
           b.textContent = emojis[Math.floor(Math.random() * emojis.length)];
           b.style.left = `${Math.floor(Math.random() * 88) + 5}%`;
           b.style.animationDelay = `${(Math.random() * 0.7).toFixed(2)}s`;
+          b.style.animationDuration = `${(3.2 + Math.random() * 1.1).toFixed(2)}s`;
+          b.style.filter = `drop-shadow(0 4px 6px ${colors[i % colors.length]}55)`;
           document.body.appendChild(b);
           setTimeout(() => b.remove(), 4500);
         }
@@ -1240,16 +1420,27 @@
 
       triggerApplause() {
         this.playSfx('applause');
-        this.showFloatBanner('👏 أَحْسَنْتَ يَا بَطَل!', 'bg-emerald-700');
+        const claps = ['👏 أَحْسَنْتَ يَا بَطَل!', '👏 مُمْتَازٌ جِدًّا!', '👏 قِرَاءَةٌ بَدِيعَة!', '👏 بَارَكَ اللَّهُ فِيكَ!'];
+        const chosen = claps[Math.floor(Math.random() * claps.length)];
+        this.showFloatBanner(chosen, 'bg-emerald-600');
       }
 
       triggerCheer() {
         this.playSfx('success');
+        const phrases = [
+          '🌟 أَحْسَنْتَ يَا بَطَلَ القُرْآن!',
+          '👏 قِرَاءَتُكَ تُفْرِحُ القَلْب!',
+          '⭐ أَنْتَ ذَكِيٌّ وَمُتَفَوِّق!',
+          '🎉 عَمَلٌ مُتْقَنٌ وَمُبْهِر!',
+          '💪 اسْتَمِرَّ، أَنْتَ تَسْتَطِيع!',
+          '🌟 بَارَكَ اللَّهُ فِيكَ!'
+        ];
+        const chosen = phrases[Math.floor(Math.random() * phrases.length)];
         this.addStars(1);
-        this.showFloatBanner('🌟 بَارَكَ اللَّهُ فِيكَ! (+1 ⭐)', 'bg-amber-600');
+        this.showFloatBanner(chosen, 'bg-gradient-to-r from-amber-500 to-amber-600');
       }
 
-      showFloatBanner(text, bgClass = 'bg-emerald-700') {
+      showFloatBanner(text, bgClass = 'bg-emerald-600') {
         const existing = document.getElementById('quick-float-banner');
         if (existing) existing.remove();
 
@@ -1261,7 +1452,9 @@
 
         setTimeout(() => {
           if (banner.parentNode) {
+            banner.style.transition = 'opacity 0.35s, transform 0.35s';
             banner.style.opacity = '0';
+            banner.style.transform = 'translate(-50%, -20px)';
             setTimeout(() => banner.remove(), 350);
           }
         }, 2000);
@@ -1277,8 +1470,16 @@
         this.wordsReadStreak++;
         this.playSfx('success');
         this.speak(word);
-        this.addStars(1);
-        this.showFloatBanner(`⭐ ${word} (+1 ⭐)`, 'bg-emerald-700');
+
+        if (this.wordsReadStreak % 10 === 0) {
+          this.addStars(5);
+          this.triggerBalloons();
+          this.triggerApplause();
+          this.showFloatBanner(`🎉 رَائِع! 10 كَلِمَاتٍ مُتَتَالِيَة! (+5 نجوم ⭐⭐⭐⭐⭐)`, 'bg-emerald-700');
+        } else {
+          this.addStars(1);
+          this.showFloatBanner(`⭐ أَحْسَنْتَ: ${word} (+1 ⭐)`, 'bg-teal-600');
+        }
       }
 
       speak(text, rate = 0.8) {
@@ -1290,21 +1491,11 @@
         utterance.rate = rate;
         utterance.pitch = 1.1;
 
-        const executeSpeech = () => {
-          const voices = window.speechSynthesis.getVoices();
-          const arVoice = voices.find(v => v.lang.startsWith('ar') || v.lang.includes('AR') || v.lang.includes('ar_SA'));
-          if (arVoice) utterance.voice = arVoice;
-          window.speechSynthesis.speak(utterance);
-        };
+        const voices = window.speechSynthesis.getVoices();
+        const arVoice = voices.find(v => v.lang.startsWith('ar'));
+        if (arVoice) utterance.voice = arVoice;
 
-        if (window.speechSynthesis.getVoices().length > 0) {
-          executeSpeech();
-        } else {
-          window.speechSynthesis.onvoiceschanged = executeSpeech;
-          setTimeout(() => {
-            if (!window.speechSynthesis.speaking) window.speechSynthesis.speak(utterance);
-          }, 150);
-        }
+        window.speechSynthesis.speak(utterance);
       }
 
       showTab(tabId) {
@@ -1331,13 +1522,20 @@
           <div onclick="app.openUnitByIndex(${uIdx})" class="kid-card bg-white p-5 rounded-3xl border border-slate-200 shadow-xs cursor-pointer hover:border-emerald-300 relative overflow-hidden flex flex-col justify-between">
             <div class="space-y-2">
               <div class="flex items-center justify-between">
-                <span class="w-10 h-10 rounded-2xl bg-gradient-to-tr ${unit.color} text-white flex items-center justify-center text-xl shadow-md">${unit.icon}</span>
-                <span class="text-xs font-bold bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full">${unit.lessons.length} دروس</span>
+                <span class="w-10 h-10 rounded-2xl bg-gradient-to-tr ${unit.color} text-white flex items-center justify-center text-xl shadow-md">
+                  ${unit.icon}
+                </span>
+                <span class="text-xs font-bold bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full">
+                  ${unit.lessons.length} دروس
+                </span>
               </div>
               <h4 class="font-black text-slate-800 text-lg font-kids mt-2">${unit.title}</h4>
               <p class="text-xs text-slate-500 line-clamp-2 leading-relaxed">${unit.desc}</p>
             </div>
-            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-emerald-600"><span>تَصَفَّحِ الوَحْدَة</span><span>←</span></div>
+            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-emerald-600">
+              <span>تَصَفَّحِ الوَحْدَة</span>
+              <span>←</span>
+            </div>
           </div>
         `).join('');
       }
@@ -1355,8 +1553,11 @@
                   <p class="text-xs text-slate-500">${unit.desc}</p>
                 </div>
               </div>
-              <span class="text-xs font-bold bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full">${unit.lessons.length} دروس</span>
+              <span class="text-xs font-bold bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full">
+                ${unit.lessons.length} دروس
+              </span>
             </div>
+
             <div class="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               ${unit.lessons.map((lesson, lIdx) => {
                 const isDone = this.completedLessons.has(lesson.id);
@@ -1366,7 +1567,7 @@
                       <span class="text-base">${isDone ? '⭐' : '📖'}</span>
                       <div class="truncate">
                         <h5 class="text-sm font-bold text-slate-800 truncate">${lesson.title}</h5>
-                        <span class="text-[11px] text-slate-400">ص ${lesson.sourcePage}</span>
+                        <span class="text-[11px] text-slate-400">ص ${lesson.sourcePage} في الكتاب</span>
                       </div>
                     </div>
                     <span class="text-xs font-black text-emerald-600 bg-emerald-50 px-2 py-1 rounded-lg">ابدأ</span>
@@ -1383,10 +1584,18 @@
         if (!grid) return;
         grid.innerHTML = NOOR_ALBAYAN_DATA.lettersGarden.map(item => `
           <div onclick="app.speakLetterCard('${item.char}', '${item.name}', '${item.word}')" class="kid-card bg-white p-4 rounded-3xl border-2 border-emerald-100 hover:border-emerald-400 shadow-xs cursor-pointer text-center space-y-2 group">
-            <div class="text-5xl font-black text-emerald-700 font-quran tashkeel-word group-hover:scale-110 transition">${item.char}</div>
-            <div class="text-3xl select-none">${item.emoji}</div>
-            <div class="text-base font-black text-slate-800 font-quran">${item.word}</div>
-            <div class="text-[11px] font-bold text-slate-400 bg-slate-50 rounded-lg py-0.5">${item.name}</div>
+            <div class="text-5xl font-black text-emerald-700 font-quran tashkeel-word group-hover:scale-110 transition">
+              ${item.char}
+            </div>
+            <div class="text-3xl filter drop-shadow-sm select-none">
+              ${item.emoji}
+            </div>
+            <div class="text-base font-black text-slate-800 font-quran">
+              ${item.word}
+            </div>
+            <div class="text-[11px] font-bold text-slate-400 bg-slate-50 rounded-lg py-0.5">
+              ${item.name}
+            </div>
           </div>
         `).join('');
       }
@@ -1395,7 +1604,7 @@
         this.playSfx('click');
         this.speak(`${char}... ${name}... ${word}`);
         this.addStars(1);
-        this.showFloatBanner(`🌟 ${char} - ${word} (+1 ⭐)`, 'bg-emerald-600');
+        this.showFloatBanner(`🌟 بَطَل الحُرُوف: ${char} - ${word} (+1 ⭐)`, 'bg-emerald-600');
       }
 
       openUnitByIndex(uIdx) {
@@ -1412,12 +1621,13 @@
         document.getElementById('lesson-title-heading').textContent = lesson.title;
         document.getElementById('lesson-source-page').textContent = `ص ${lesson.sourcePage}`;
 
+        // Teacher guideline
         const noteEl = document.getElementById('lesson-teacher-note');
         noteEl.innerHTML = `
-          <div class="flex items-center gap-2 font-black mb-1 text-emerald-950">
-            <span>👨‍🏫</span> <span>إِرْشَادُ المُعَلِّمِ (صفحة ${lesson.sourcePage}):</span>
+          <div class="flex items-center gap-2 font-black mb-1 text-sky-950">
+            <span>👨‍🏫</span> <span> (نور البيان صفحة تعليمات للمعلم  ${lesson.sourcePage}):</span>
           </div>
-          <p class="text-xs sm:text-sm text-emerald-900 leading-relaxed font-medium">${lesson.teacherNote}</p>
+          <p class="text-xs sm:text-sm text-sky-900 leading-relaxed font-medium">${lesson.teacherNote}</p>
         `;
 
         const display = document.getElementById('lesson-display-container');
@@ -1425,11 +1635,11 @@
 
         if (lesson.type === 'letters' || lesson.type === 'letters_tashkeel' || lesson.type === 'positions') {
           display.innerHTML = `
-            <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-4">
+            <div class="grid grid-cols-3 sm:grid-cols-6 md:grid-cols-7 gap-3">
               ${lesson.items.map(char => `
-                <button onclick="app.rewardWordRead('${char}')" class="p-6 rounded-3xl bg-slate-50 hover:bg-emerald-50 border-2 border-emerald-200 hover:border-emerald-500 font-quran text-6xl sm:text-7xl font-black text-slate-900 transition shadow-md flex flex-col items-center justify-center gap-2 group kid-card">
+                <button onclick="app.rewardWordRead('${char}')" class="p-4 rounded-2xl bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 font-quran text-3xl sm:text-5xl font-black text-slate-800 transition shadow-xs flex flex-col items-center justify-center gap-1 group kid-card">
                   <span class="tashkeel-word group-hover:scale-110 transition">${this.colorizeArabicText(char)}</span>
-                  <span class="text-xs text-emerald-800 font-bold font-sans bg-emerald-100 px-3 py-0.5 rounded-full">🔊 استمع ونطق</span>
+                  <span class="text-[10px] text-slate-400 group-hover:text-emerald-600 font-sans">🔊 استمع وتدرب</span>
                 </button>
               `).join('')}
             </div>
@@ -1437,15 +1647,15 @@
         } else if (lesson.type === 'words') {
           display.innerHTML = `
             <div class="space-y-4">
-              <div class="flex items-center justify-between text-xs sm:text-sm text-emerald-900 font-bold bg-emerald-50 p-3.5 rounded-2xl border border-emerald-200">
-                <span>⭐ اضغط على أي كارت لكبر حجمه واستماع نطقه الفصيح!</span>
-                <span>عدد الكلمات: ${lesson.items.length}</span>
+              <div class="flex items-center justify-between text-xs text-slate-500 font-bold bg-slate-50 p-3 rounded-2xl border border-slate-200">
+                <span>اضغط على أي كلمة للاستماع للنطق الفصيح وكسب نجمة جديدة ⭐</span>
+                <span>إجمالي الكلمات: ${lesson.items.length}</span>
               </div>
-              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 max-h-[580px] overflow-y-auto p-2">
+              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 max-h-[520px] overflow-y-auto p-1">
                 ${lesson.items.map(word => `
-                  <button onclick="app.rewardWordRead('${word}')" class="p-6 rounded-3xl bg-white hover:bg-emerald-50 border-2 border-emerald-200 hover:border-emerald-500 font-quran text-4xl sm:text-5xl font-black text-slate-900 transition shadow-md flex flex-col items-center justify-center gap-2 group kid-card">
+                  <button onclick="app.rewardWordRead('${word}')" class="p-3.5 rounded-2xl bg-white hover:bg-emerald-50 border-2 border-slate-100 hover:border-emerald-300 font-quran text-2xl sm:text-3xl font-black text-slate-800 hover:text-emerald-900 transition shadow-xs flex flex-col items-center justify-center gap-1 group kid-card">
                     <span class="tashkeel-word">${this.colorizeArabicText(word)}</span>
-                    <span class="text-xs text-emerald-800 font-bold font-sans bg-emerald-100 px-3 py-0.5 rounded-full">🔊 قراءة ⭐</span>
+                    <span class="text-[10px] text-slate-400 group-hover:text-emerald-600 font-sans">🔊 قراءة ونجمة ⭐</span>
                   </button>
                 `).join('')}
               </div>
@@ -1453,15 +1663,15 @@
           `;
         } else if (lesson.type === 'sentences') {
           display.innerHTML = `
-            <div class="space-y-4 max-h-[560px] overflow-y-auto p-2">
+            <div class="space-y-3 max-h-[540px] overflow-y-auto p-1">
               ${lesson.items.map((sent, i) => `
-                <div onclick="app.rewardWordRead('${sent}')" class="p-5 rounded-3xl bg-slate-50 hover:bg-emerald-50 border-2 border-emerald-200 hover:border-emerald-500 transition cursor-pointer flex items-center justify-between gap-4 group kid-card shadow-sm">
-                  <div class="flex items-center gap-4">
-                    <span class="w-9 h-9 rounded-2xl bg-emerald-700 text-white text-sm font-black flex items-center justify-center shrink-0 shadow-xs">${i + 1}</span>
-                    <p class="font-quran text-2xl sm:text-3xl font-black text-slate-900 group-hover:text-emerald-950 leading-relaxed tashkeel-word">${this.colorizeArabicText(sent)}</p>
+                <div onclick="app.rewardWordRead('${sent}')" class="p-4 rounded-2xl bg-slate-50 hover:bg-emerald-50/70 border border-slate-200 hover:border-emerald-300 transition cursor-pointer flex items-center justify-between gap-4 group">
+                  <div class="flex items-center gap-3">
+                    <span class="w-7 h-7 rounded-full bg-emerald-100 text-emerald-700 text-xs font-black flex items-center justify-center shrink-0">${i + 1}</span>
+                    <p class="font-quran text-xl sm:text-2xl font-black text-slate-800 group-hover:text-emerald-900 leading-relaxed tashkeel-word">${this.colorizeArabicText(sent)}</p>
                   </div>
-                  <button class="shrink-0 text-xs sm:text-sm font-bold bg-emerald-700 text-white px-4 py-2 rounded-2xl shadow-sm transition">
-                    🔊 اسْتَمِعْ ⭐
+                  <button class="shrink-0 text-emerald-600 text-xs sm:text-sm font-bold bg-white px-3 py-1.5 rounded-xl border border-slate-200 group-hover:bg-emerald-600 group-hover:text-white transition">
+                    🔊 قراءة ⭐
                   </button>
                 </div>
               `).join('')}
@@ -1471,10 +1681,10 @@
 
         localStorage.setItem('noor_last_u', uIdx);
         localStorage.setItem('noor_last_l', lIdx);
+
         this.showTab('lesson');
       }
 
-      /* 🧠 الحل الهندسي الدقيق لربط زر العرض المكبر بالدرس النشط حالياً 100% */
       openPresentationForCurrentLesson() {
         const unit = NOOR_ALBAYAN_DATA.units[this.currentUnitIndex];
         const lesson = unit.lessons[this.currentLessonIndex];
@@ -1516,7 +1726,7 @@
         const lesson = unit.lessons[this.currentLessonIndex];
         this.completedLessons.add(lesson.id);
         this.addStars(5);
-        this.openHeroCelebration(`🎉 أَتْقَنْتَ دَرْسَ: ${lesson.title}`, "أنجزت الدرس بنجاح تام!", 5);
+        this.openHeroCelebration(`🎉 أَتْقَنْتَ دَرْسَ: ${lesson.title}`, "لَقَدْ أَكْمَلْتَ هَذَا الدَّرْسَ بِنَجَاحٍ مُبْهِر!", 5);
         this.renderSyllabus();
       }
 
@@ -1530,31 +1740,52 @@
         const tajweedLessons = NOOR_ALBAYAN_DATA.units[5].lessons;
         const pills = document.getElementById('tajweed-topic-pills');
         if (!pills) return;
+
         pills.innerHTML = tajweedLessons.map((l, idx) => `
-          <button onclick="app.displayTajweedTopic(${idx})" class="tajweed-pill px-4 py-2 rounded-xl text-xs sm:text-sm font-bold ${idx === 0 ? 'bg-emerald-700 text-white shadow-xs' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'} transition">
+          <button onclick="app.displayTajweedTopic(${idx})" class="tajweed-pill px-3.5 py-1.5 rounded-xl text-xs font-bold ${idx === 0 ? 'bg-emerald-700 text-white shadow-xs' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'} transition">
             ${l.title.split('(')[0]}
           </button>
         `).join('');
+
         this.displayTajweedTopic(0);
       }
 
       displayTajweedTopic(idx) {
         this.currentTajweedLessonIndex = idx;
-        const lesson = NOOR_ALBAYAN_DATA.units[5].lessons[idx];
+        const tajweedLessons = NOOR_ALBAYAN_DATA.units[5].lessons;
+        const lesson = tajweedLessons[idx];
+
+        document.querySelectorAll('.tajweed-pill').forEach((btn, i) => {
+          if (i === idx) {
+            btn.className = 'tajweed-pill px-3.5 py-1.5 rounded-xl text-xs font-black bg-emerald-700 text-white shadow-xs';
+          } else {
+            btn.className = 'tajweed-pill px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200';
+          }
+        });
+
         const card = document.getElementById('tajweed-content-card');
         card.innerHTML = `
-          <div class="border-b border-slate-100 pb-3 flex justify-between items-center">
+          <div class="border-b border-slate-100 pb-3 flex flex-wrap items-center justify-between gap-3">
             <div>
-              <span class="text-xs font-black text-emerald-800 bg-emerald-100 px-3 py-1 rounded-full">${lesson.ruleTag || 'أحكام التجويد'} - ص ${lesson.sourcePage}</span>
-              <h3 class="text-xl font-black text-slate-900 font-kids mt-1.5">${lesson.title}</h3>
+              <span class="text-xs font-black text-emerald-700 bg-emerald-100 px-3 py-0.5 rounded-full">${lesson.ruleTag || 'أحكام التجويد'} - ص ${lesson.sourcePage}</span>
+              <h3 class="text-lg sm:text-xl font-black text-slate-800 font-kids mt-1">${lesson.title}</h3>
             </div>
-            <button onclick="app.openPresentationForCurrentTajweed()" class="bg-amber-400 text-slate-950 font-black px-4 py-2 rounded-xl text-xs">عرض مكبر</button>
+            <button onclick="app.openPresentationForCurrentTajweed()" class="bg-amber-400 hover:bg-amber-300 text-amber-950 font-black px-4 py-2 rounded-xl text-xs sm:text-sm shadow-sm transition flex items-center gap-1.5 active:scale-95">
+              <span>📖</span> عَرْضُ أَمْثِلَةِ القَاعِدَةِ (مُكَبَّر)
+            </button>
           </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[520px] overflow-y-auto p-2">
+
+          <!-- Pure, Authentic Book Examples with High-Clarity Colorful Child Typography -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 max-h-[500px] overflow-y-auto p-1">
             ${lesson.items.map((item, i) => `
-              <div onclick="app.rewardWordRead('${item}')" class="p-5 rounded-3xl bg-slate-50 border-2 border-emerald-200 hover:border-emerald-500 transition flex items-center justify-between cursor-pointer kid-card shadow-sm">
-                <p class="font-quran text-3xl font-black text-slate-900 tashkeel-word">${this.colorizeArabicText(item)}</p>
-                <span class="text-xs bg-emerald-700 text-white px-3 py-2 rounded-xl font-bold">🔊 اسْتَمِعْ</span>
+              <div onclick="app.rewardWordRead('${item}')" class="p-4 rounded-2xl bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 transition flex items-center justify-between gap-3 cursor-pointer kid-card">
+                <div class="flex items-center gap-2.5">
+                  <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 text-xs font-black flex items-center justify-center shrink-0">${i + 1}</span>
+                  <p class="font-quran text-2xl font-black text-slate-800 tashkeel-word">${this.colorizeArabicText(item)}</p>
+                </div>
+                <button class="shrink-0 text-xs bg-emerald-600 hover:bg-emerald-500 text-white px-2.5 py-1.5 rounded-xl font-bold transition">
+                  🔊
+                </button>
               </div>
             `).join('')}
           </div>
@@ -1572,12 +1803,21 @@
       }
 
       startPresentationMode() {
-        if (!this.presItems || !this.presItems.length) return;
+        if (!this.presItems || !this.presItems.length) {
+          const unit = NOOR_ALBAYAN_DATA.units[this.currentUnitIndex] || NOOR_ALBAYAN_DATA.units[0];
+          const lesson = unit.lessons[this.currentLessonIndex] || unit.lessons[1];
+          this.presItems = lesson.items;
+          this.presIndex = 0;
+          this.presCurrentTitle = lesson.title;
+          this.presCurrentRule = unit.title.split(':')[0];
+        }
+
         const modal = document.getElementById('presentation-modal');
         if (modal) modal.classList.remove('hidden');
 
         document.getElementById('pres-lesson-title').textContent = this.presCurrentTitle;
         document.getElementById('pres-rule-badge').textContent = this.presCurrentRule;
+
         this.updatePresUI();
       }
 
@@ -1588,14 +1828,67 @@
 
       updatePresUI() {
         if (!this.presItems || !this.presItems.length) return;
+
         const rawItem = this.presItems[this.presIndex];
-        document.getElementById('pres-giant-text').innerHTML = this.colorizeArabicText(rawItem);
-        document.getElementById('pres-counter').textContent = `المثال ${this.presIndex + 1} من ${this.presItems.length}`;
-        document.getElementById('pres-bar-stars').textContent = this.stars;
+        const textEl = document.getElementById('pres-giant-text');
+        const counterEl = document.getElementById('pres-counter');
+        const btnPrev = document.getElementById('pres-btn-prev');
+        const btnNext = document.getElementById('pres-btn-next');
+        const cardBox = document.getElementById('pres-card-box');
+        const categoryBadge = document.getElementById('pres-example-category');
+        const stickerTop = document.getElementById('pres-sticker-top');
+        const stickerBtm = document.getElementById('pres-sticker-bottom');
+        const presBarStars = document.getElementById('pres-bar-stars');
+
+        if (presBarStars) {
+          presBarStars.textContent = this.stars;
+        }
+
+        // Cycle through dynamic, pleasant child themes
+        const theme = this.themes[this.presIndex % this.themes.length];
+        cardBox.className = `w-full h-full max-h-full rounded-2xl sm:rounded-3xl md:rounded-[36px] p-3 sm:p-5 md:p-6 text-center flex flex-col justify-between items-center relative transition-all duration-300 shadow-xl overflow-hidden ${theme.name}`;
+        stickerTop.textContent = theme.top;
+        stickerBtm.textContent = theme.btm;
+
+        if (categoryBadge) {
+          categoryBadge.textContent = this.presCurrentRule || "نور البيان لتعليم القراءة";
+        }
+
+        // Dynamic and perfectly responsive font size calibrated for 100dvh viewport height
+        const cleanLength = rawItem.replace(/[\u064B-\u065F\u0670\s]/g, '').length;
+        textEl.className = 'pres-text-display font-black text-slate-900 font-quran select-text tracking-normal text-center w-full transition-all';
+
+        if (cleanLength <= 3) {
+          textEl.classList.add('text-6xl', 'sm:text-7xl', 'md:text-8xl', 'lg:text-9xl');
+        } else if (cleanLength <= 8) {
+          textEl.classList.add('text-5xl', 'sm:text-6xl', 'md:text-7xl', 'lg:text-8xl');
+        } else if (cleanLength <= 16) {
+          textEl.classList.add('text-3xl', 'sm:text-4xl', 'md:text-5xl', 'lg:text-6xl');
+        } else {
+          textEl.classList.add('text-xl', 'sm:text-2xl', 'md:text-3xl', 'lg:text-4xl');
+        }
+
+        // Render with colored letters or plain based on child mode
+        textEl.innerHTML = this.colorizeArabicText(rawItem);
+
+        if (counterEl) {
+          counterEl.textContent = `المثال ${this.presIndex + 1} من ${this.presItems.length}`;
+        }
+
+        // Previous button state
+        if (btnPrev) {
+          btnPrev.disabled = (this.presIndex <= 0);
+        }
+
+        // Next button state
+        if (btnNext) {
+          btnNext.disabled = (this.presIndex >= this.presItems.length - 1);
+        }
       }
 
       presNext() {
         if (this.presIndex < this.presItems.length - 1) {
+          this.playSfx('click');
           this.presIndex++;
           this.updatePresUI();
         }
@@ -1603,46 +1896,132 @@
 
       presPrev() {
         if (this.presIndex > 0) {
+          this.playSfx('click');
           this.presIndex--;
           this.updatePresUI();
         }
       }
 
       speakPresCurrent() {
-        if (this.presItems[this.presIndex]) this.speak(this.presItems[this.presIndex]);
+        if (this.presItems && this.presItems[this.presIndex]) {
+          this.speak(this.presItems[this.presIndex]);
+        }
       }
 
       rewardPresCurrent() {
-        if (this.presItems[this.presIndex]) {
-          this.rewardWordRead(this.presItems[this.presIndex]);
-          if (this.presIndex < this.presItems.length - 1) setTimeout(() => this.presNext(), 900);
+        if (this.presItems && this.presItems[this.presIndex]) {
+          const item = this.presItems[this.presIndex];
+          this.rewardWordRead(item);
+          const presBarStars = document.getElementById('pres-bar-stars');
+          if (presBarStars) presBarStars.textContent = this.stars;
+
+          if (this.presIndex < this.presItems.length - 1) {
+            setTimeout(() => this.presNext(), 1000);
+          }
         }
       }
 
       initFlashcards(category) {
-        let items = NOOR_ALBAYAN_DATA.units[0].lessons[3].items;
+        let items = [];
+        let ruleName = "";
+
+        if (category === 'fatha-letters') {
+          items = NOOR_ALBAYAN_DATA.units[0].lessons[1].items;
+          ruleName = "الحروف بالفتح";
+        } else if (category === 'fatha-words') {
+          items = NOOR_ALBAYAN_DATA.units[0].lessons[3].items;
+          ruleName = "كلمات الفتح";
+        } else if (category === 'fatha-sentences') {
+          items = NOOR_ALBAYAN_DATA.units[0].lessons[5].items;
+          ruleName = "جمل الفتح";
+        } else if (category === 'kasra-words') {
+          items = NOOR_ALBAYAN_DATA.units[0].lessons[6].items;
+          ruleName = "كلمات الكسر";
+        } else if (category === 'damma-words') {
+          items = NOOR_ALBAYAN_DATA.units[0].lessons[8].items;
+          ruleName = "كلمات الضم";
+        } else if (category === 'madd-alif') {
+          items = NOOR_ALBAYAN_DATA.units[1].lessons[1].items;
+          ruleName = "المد بالألف";
+        } else if (category === 'madd-yaa') {
+          items = NOOR_ALBAYAN_DATA.units[1].lessons[3].items;
+          ruleName = "المد بالياء";
+        } else if (category === 'madd-waw') {
+          items = NOOR_ALBAYAN_DATA.units[1].lessons[4].items;
+          ruleName = "المد بالواو";
+        } else if (category === 'sukoon-words') {
+          items = NOOR_ALBAYAN_DATA.units[2].lessons[1].items;
+          ruleName = "السكون";
+        } else if (category === 'tanween-words') {
+          items = NOOR_ALBAYAN_DATA.units[3].lessons[0].items;
+          ruleName = "التنوين";
+        } else if (category === 'shaddah-words') {
+          items = NOOR_ALBAYAN_DATA.units[4].lessons[0].items;
+          ruleName = "الشدة";
+        } else if (category === 'tajweed-noon') {
+          items = NOOR_ALBAYAN_DATA.units[5].lessons[4].items.concat(NOOR_ALBAYAN_DATA.units[5].lessons[5].items);
+          ruleName = "تجويد النون والتنوين";
+        } else if (category === 'tajweed-madd') {
+          items = NOOR_ALBAYAN_DATA.units[5].lessons[0].items.concat(NOOR_ALBAYAN_DATA.units[5].lessons[1].items);
+          ruleName = "تجويد أحكام المدود";
+        }
+
         this.flashcardList = items;
         this.currentCardIndex = 0;
+        this.currentCardRule = ruleName;
         this.renderFlashcard();
       }
 
       renderFlashcard() {
         if (!this.flashcardList.length) return;
-        document.getElementById('flashcard-text').innerHTML = this.colorizeArabicText(this.flashcardList[this.currentCardIndex]);
+        const currentItem = this.flashcardList[this.currentCardIndex];
+        document.getElementById('flashcard-counter').textContent = `بطاقة ${this.currentCardIndex + 1} من ${this.flashcardList.length}`;
+        document.getElementById('flashcard-rule-tag').textContent = this.currentCardRule;
+        
+        const cardBox = document.getElementById('flashcard-box');
+        const theme = this.themes[this.currentCardIndex % this.themes.length];
+        cardBox.className = `${theme.name} rounded-3xl p-8 sm:p-12 shadow-xl text-center space-y-6 relative overflow-hidden transition-all duration-300`;
+
+        document.getElementById('flashcard-text').innerHTML = this.colorizeArabicText(currentItem);
       }
 
       nextFlashcard() {
-        if (this.currentCardIndex < this.flashcardList.length - 1) this.currentCardIndex++;
-        else this.currentCardIndex = 0;
+        this.playSfx('click');
+        if (this.currentCardIndex < this.flashcardList.length - 1) {
+          this.currentCardIndex++;
+        } else {
+          this.currentCardIndex = 0;
+          this.openHeroCelebration("🎉 بَطَلُ البِطَاقَاتِ!", "أَنْهَيْتَ مَجْمُوعَةَ البِطَاقَاتِ كَامِلَةً!", 5);
+        }
         this.renderFlashcard();
       }
 
       readCurrentFlashcard() {
-        this.rewardWordRead(this.flashcardList[this.currentCardIndex]);
+        const text = this.flashcardList[this.currentCardIndex];
+        this.rewardWordRead(text);
       }
 
       initWheel(category) {
-        this.wheelWords = ["كَتَبَ", "قَرَأَ", "سَجَدَ", "رَكَعَ", "شَرِبَ", "لَعِبَ", "ضَحِكَ", "قَامَ", "عَادَ"];
+        let words = [];
+        if (category === 'fatha') {
+          words = ["كَتَبَ", "قَرَأَ", "سَجَدَ", "رَكَعَ", "حَصَدَ", "دَخَلَ", "جَلَسَ", "زَرَعَ", "غَفَرَ", "خَلَقَ", "شَكَرَ", "عَبَدَ"];
+        } else if (category === 'kasra') {
+          words = ["شَرِبَ", "لَعِبَ", "ضَحِكَ", "فَرِحَ", "سَمِعَ", "حَفِظَ", "عَلِمَ", "رَحِمَ", "رَكِبَ", "شَبِعَ", "صَبَرَ", "حَمِدَ"];
+        } else if (category === 'damma') {
+          words = ["كُتِبَ", "خُلِقَ", "قُتِلَ", "جُمِعَ", "فُتِحَ", "شُرِبَ", "رُزِقَ", "ذُكِرَ", "وُجِدَ", "بُعِثَ", "غُلِبَ", "هُدِيَ"];
+        } else if (category === 'madd') {
+          words = ["قَامَ", "عَادَ", "صَامَ", "قِيلَ", "بِيعَ", "نَعِيمُ", "يَقُولُ", "تُوبُوا", "رَسُولُ", "نُوحِيهَا", "صُومِي", "هَاجَرَ"];
+        } else if (category === 'sukoon') {
+          words = ["يَهْبِطُ", "نَعْبُدُ", "يَشْرَحُ", "أَقْسَمَ", "أَنْعَمَ", "يَدْخُلْ", "أَرْسَلَ", "يَمْحَقُ", "يَصْنَعُ", "أَسْرَفَ", "أَذْهَبَ", "يَغْفِرُ"];
+        } else if (category === 'tanween') {
+          words = ["أَحَدًا", "قَرِيبًا", "عَرْضًا", "بَيْتٍ", "جُوعٍ", "عَلَقَةٍ", "عَرْشٌ", "فُرَاتٌ", "شَيْخٌ", "كَرِيمًا", "رِجَالٌ", "أُمَمٌ"];
+        } else if (category === 'shaddah') {
+          words = ["قَدَّرَ", "نَزَّلَ", "صَلَّى", "عَلَّمَ", "يَصُبُّ", "يَدُقُّ", "عَدُوٌّ", "حَقًّا", "حَبَّا", "غَشَّا", "وَصَّى", "أُمِّي"];
+        } else if (category === 'tajweed') {
+          words = ["حُنَفَآءَ", "أُوْلَٰٓئِكَ", "مَنْ ءَامَنَ", "مَن يَقُولُ", "مَن رَّحِمَ", "مِنۢ بَعْدِ", "مَن صَلَحَ", "الضَّآلِّينَ", "هُم بِهِۦ", "اقْتَرَبَ", "رِزْقًا", "أَنَا۠"];
+        }
+
+        this.wheelWords = words;
         this.drawWheel();
       }
 
@@ -1652,10 +2031,11 @@
         const ctx = canvas.getContext('2d');
         const numSlices = this.wheelWords.length;
         const arc = (2 * Math.PI) / numSlices;
-        const colors = ["#059669", "#0ea5e9", "#f59e0b", "#ec4899", "#8b5cf6", "#14b8a6", "#f97316", "#6366f1"];
+        const colors = ["#22c55e", "#0ea5e9", "#f59e0b", "#ec4899", "#8b5cf6", "#14b8a6", "#f97316", "#6366f1", "#10b981", "#3b82f6", "#eab308", "#a855f7"];
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         const radius = canvas.width / 2;
+
         ctx.save();
         ctx.translate(radius, radius);
 
@@ -1674,10 +2054,19 @@
           ctx.rotate(angle + arc / 2);
           ctx.textAlign = 'right';
           ctx.fillStyle = '#ffffff';
-          ctx.font = 'bold 24px Amiri, Cairo, sans-serif';
+          ctx.font = 'bold 22px Amiri, Cairo, sans-serif';
           ctx.fillText(this.wheelWords[i], radius - 25, 8);
           ctx.restore();
         }
+
+        ctx.beginPath();
+        ctx.fillStyle = '#ffffff';
+        ctx.arc(0, 0, 30, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.fillStyle = '#10b981';
+        ctx.arc(0, 0, 18, 0, 2 * Math.PI);
+        ctx.fill();
+
         ctx.restore();
       }
 
@@ -1685,43 +2074,175 @@
         if (this.isSpinning) return;
         this.isSpinning = true;
         this.playSfx('click');
-        const randomIndex = Math.floor(Math.random() * this.wheelWords.length);
-        this.wheelAngle += 1800 + (randomIndex * 40);
-        document.getElementById('wheel-canvas').style.transform = `rotate(${this.wheelAngle}deg)`;
+
+        const btn = document.getElementById('spin-btn');
+        btn.disabled = true;
+        btn.classList.add('opacity-50');
+
+        const numSlices = this.wheelWords.length;
+        const randomSpins = 5 + Math.floor(Math.random() * 4);
+        const randomIndex = Math.floor(Math.random() * numSlices);
+        const degreesPerSlice = 360 / numSlices;
+
+        const targetDeg = (randomSpins * 360) + (360 - (randomIndex * degreesPerSlice) - (degreesPerSlice / 2) + 270) % 360;
+        this.wheelAngle += targetDeg;
+
+        const canvas = document.getElementById('wheel-canvas');
+        canvas.style.transform = `rotate(${this.wheelAngle}deg)`;
 
         setTimeout(() => {
           this.isSpinning = false;
+          btn.disabled = false;
+          btn.classList.remove('opacity-50');
+
           const pickedWord = this.wheelWords[randomIndex];
           document.getElementById('wheel-result-word').innerHTML = this.colorizeArabicText(pickedWord);
           this.playSfx('success');
           this.addStars(1);
+          this.showFloatBanner(`🎯 كَلِمَتُكَ: ${pickedWord}! اقْرَأْهَا ثُمَّ تَحَقَّقْ!`, 'bg-amber-600');
         }, 4100);
       }
 
       readWheelWord() {
         const text = document.getElementById('wheel-result-word').textContent.trim();
-        if (text) this.speak(text);
+        if (text && !text.includes('اضغط')) {
+          this.speak(text);
+        }
       }
 
       initGame(type) {
-        document.getElementById('game-stage').innerHTML = `
+        document.querySelectorAll('.game-switch-btn').forEach(b => {
+          if (b.dataset.game === type) {
+            b.className = 'game-switch-btn px-4 py-2 rounded-xl text-xs font-black bg-sky-600 text-white shadow-xs';
+          } else {
+            b.className = 'game-switch-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200';
+          }
+        });
+
+        const stage = document.getElementById('game-stage');
+        if (type === 'match') {
+          this.renderMatchGame(stage);
+        } else if (type === 'listen') {
+          this.renderListenGame(stage);
+        }
+      }
+
+      renderMatchGame(stage) {
+        const letters = NOOR_ALBAYAN_DATA.lettersGarden;
+        const target = letters[Math.floor(Math.random() * letters.length)];
+        const wrongAnswers = letters.filter(l => l.char !== target.char).sort(() => 0.5 - Math.random()).slice(0, 2);
+        const options = [target, ...wrongAnswers].sort(() => 0.5 - Math.random());
+
+        stage.innerHTML = `
           <div class="text-center space-y-4">
-            <h3 class="text-2xl font-black text-slate-900 font-kids">اختبر قراءتك:</h3>
-            <div class="text-7xl font-black text-emerald-800 font-quran my-4">بَ</div>
-            <button onclick="app.rewardWordRead('بَ')" class="px-6 py-3 bg-emerald-700 text-white font-bold rounded-2xl">اضغط للاستماع 🔊</button>
+            <div class="inline-block bg-white text-purple-900 text-xs font-black px-3.5 py-1 rounded-full shadow-2xs">
+              تَحَدِّي المُطَابَقَةِ البَصَرِيَّة
+            </div>
+            <h3 class="text-2xl font-black text-slate-900 font-kids">
+              مَا هِيَ الصُّورَةُ المُنَاسِبَةُ لِحَرْفِ:
+            </h3>
+            <div class="text-8xl font-black text-purple-700 font-quran tashkeel-word my-3 animate-bounce">
+              ${target.char}
+            </div>
           </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 my-6">
+            ${options.map(opt => `
+              <button onclick="app.checkMatchAnswer('${opt.char}', '${target.char}', '${target.word}')" class="p-5 rounded-3xl border-2 border-purple-200 hover:border-purple-400 bg-white hover:bg-purple-50 transition text-center space-y-2 kid-card group shadow-sm">
+                <span class="text-5xl block group-hover:scale-110 transition">${opt.emoji}</span>
+                <span class="font-black text-slate-800 text-xl block font-quran">${this.colorizeArabicText(opt.word)}</span>
+              </button>
+            `).join('')}
+          </div>
+
+          <div id="game-feedback" class="text-center text-sm font-bold min-h-[24px]"></div>
         `;
       }
 
+      checkMatchAnswer(selected, correct, word) {
+        const feedback = document.getElementById('game-feedback');
+        if (selected === correct) {
+          this.playSfx('success');
+          this.triggerBalloons();
+          this.addStars(2);
+          feedback.innerHTML = `<span class="text-emerald-700 font-black">🎉 أَحْسَنْتَ يَا بَطَل! نَعَم، ${word}! (+2 نجوم ⭐⭐)</span>`;
+          this.speak(`أحسنت! ${word}`);
+          setTimeout(() => this.renderMatchGame(document.getElementById('game-stage')), 2000);
+        } else {
+          this.playSfx('wrong');
+          feedback.innerHTML = `<span class="text-rose-600 font-bold">❌ حَاوِلْ مَرَّةً أُخْرَى، رَكِّزْ فِي الحَرْفِ جَيِّدًا!</span>`;
+        }
+      }
+
+      renderListenGame(stage) {
+        const items = ["بَ", "بِ", "بُ", "تَ", "تِ", "تُ", "ثَ", "ثِ", "ثُ", "جَ", "جِ", "جُ", "حَ", "حِ", "حُ"];
+        const target = items[Math.floor(Math.random() * items.length)];
+        const root = target[0];
+        const options = [`${root}َ`, `${root}ِ`, `${root}ُ`].sort(() => 0.5 - Math.random());
+
+        stage.innerHTML = `
+          <div class="text-center space-y-4">
+            <div class="inline-block bg-white text-purple-900 text-xs font-black px-3.5 py-1 rounded-full shadow-2xs">
+              تَدْرِيبُ السَّمَاعِ وَالحَرَكَات
+            </div>
+            <h3 class="text-2xl font-black text-slate-900 font-kids">
+              اسْتَمِعْ إِلَى الصَّوْتِ وَاخْتَرِ التَّشْكِيلَ الصَّحِيح:
+            </h3>
+            <button onclick="app.speak('${target}')" class="w-20 h-20 rounded-full bg-emerald-500 hover:bg-emerald-400 text-white text-3xl mx-auto flex items-center justify-center shadow-lg transition active:scale-95 animate-pulse">
+              🔊
+            </button>
+            <p class="text-xs text-slate-500">اضغط للاستماع مجدداً</p>
+          </div>
+
+          <div class="grid grid-cols-3 gap-4 my-6 max-w-md mx-auto">
+            ${options.map(opt => `
+              <button onclick="app.checkListenAnswer('${opt}', '${target}')" class="p-6 rounded-3xl border-2 border-purple-200 hover:border-purple-400 bg-white hover:bg-purple-50 transition text-center text-5xl font-black font-quran tashkeel-word text-slate-800 kid-card shadow-sm">
+                ${this.colorizeArabicText(opt)}
+              </button>
+            `).join('')}
+          </div>
+
+          <div id="game-feedback" class="text-center text-sm font-bold min-h-[24px]"></div>
+        `;
+
+        setTimeout(() => this.speak(target), 400);
+      }
+
+      checkListenAnswer(selected, correct) {
+        const feedback = document.getElementById('game-feedback');
+        if (selected === correct) {
+          this.playSfx('success');
+          this.triggerBalloons();
+          this.addStars(2);
+          feedback.innerHTML = `<span class="text-emerald-700 font-black">🎉 إِجَابَةٌ صَحِيحَةٌ وَرَائِعَة! (+2 نجوم ⭐⭐)</span>`;
+          setTimeout(() => this.renderListenGame(document.getElementById('game-stage')), 2000);
+        } else {
+          this.playSfx('wrong');
+          feedback.innerHTML = `<span class="text-rose-600 font-bold">❌ اسْتَمِعْ جَيِّدًا ثُمَّ جَرِّبْ!</span>`;
+          this.speak(correct);
+        }
+      }
+
       openHeroCelebration(title, sub, starsCount = 5) {
+        const modal = document.getElementById('hero-celebration-modal');
+        if (!modal) return;
         document.getElementById('hero-modal-title').textContent = title;
         document.getElementById('hero-modal-sub').textContent = sub;
-        document.getElementById('hero-celebration-modal').classList.remove('hidden');
+        document.getElementById('hero-modal-stars').textContent = '⭐'.repeat(starsCount);
+        modal.classList.remove('hidden');
+
         this.triggerBalloons();
+        this.triggerApplause();
+        if (typeof confetti === 'function') {
+          confetti({ particleCount: 90, spread: 80, origin: { y: 0.6 } });
+        }
+
+        setTimeout(() => this.closeHeroModal(), 3600);
       }
 
       closeHeroModal() {
-        document.getElementById('hero-celebration-modal').classList.add('hidden');
+        const modal = document.getElementById('hero-celebration-modal');
+        if (modal) modal.classList.add('hidden');
       }
 
       saveProgress() {
@@ -1732,24 +2253,82 @@
       loadProgress() {
         this.stars = parseInt(localStorage.getItem('noor_stars') || '0', 10);
         const savedDone = localStorage.getItem('noor_done_lessons');
-        if (savedDone) this.completedLessons = new Set(JSON.parse(savedDone));
+        if (savedDone) {
+          this.completedLessons = new Set(JSON.parse(savedDone));
+        }
       }
 
       updateStatsUI() {
         const hStars = document.getElementById('header-stars-count');
         if (hStars) hStars.textContent = this.stars;
+        const sStars = document.getElementById('stat-stars-count');
+        if (sStars) sStars.textContent = this.stars;
+        const presBarStars = document.getElementById('pres-bar-stars');
+        if (presBarStars) presBarStars.textContent = this.stars;
+
+        let totalLessonsCount = 0;
+        NOOR_ALBAYAN_DATA.units.forEach(u => totalLessonsCount += u.lessons.length);
+        const doneCount = this.completedLessons.size;
+        const pct = Math.round((doneCount / totalLessonsCount) * 100);
+
         const pctEl = document.getElementById('progress-percentage');
-        if (pctEl) pctEl.textContent = `${Math.round((this.completedLessons.size / 35) * 100)}%`;
+        if (pctEl) pctEl.textContent = `${pct}%`;
+
+        const txtEl = document.getElementById('progress-lessons-text');
+        if (txtEl) txtEl.textContent = `تم إتقان ${doneCount} من ${totalLessonsCount} درساً`;
+
+        const badgesContainer = document.getElementById('badges-container');
+        if (badgesContainer) {
+          const badges = [
+            { title: "بطل الحروف", emoji: "🦁", earned: doneCount >= 1 || this.stars >= 5 },
+            { title: "نجم الفتح", emoji: "⭐", earned: doneCount >= 3 || this.stars >= 15 },
+            { title: "متقن الكسر", emoji: "💎", earned: doneCount >= 6 || this.stars >= 30 },
+            { title: "فارس الضم", emoji: "🛡️", earned: doneCount >= 9 || this.stars >= 50 },
+            { title: "بطل المدود", emoji: "🌊", earned: doneCount >= 13 || this.stars >= 75 },
+            { title: "حارس السكون", emoji: "🌙", earned: doneCount >= 17 || this.stars >= 100 },
+            { title: "أمير الشدة", emoji: "⚡", earned: doneCount >= 22 || this.stars >= 140 },
+            { title: "مرتل القرآن", emoji: "🕌", earned: doneCount >= 28 || this.stars >= 200 }
+          ];
+
+          badgesContainer.innerHTML = badges.map(b => `
+            <div class="p-3.5 rounded-2xl border ${b.earned ? 'border-amber-300 bg-amber-50 shadow-2xs' : 'border-slate-200 bg-slate-50 opacity-40'} text-center space-y-1">
+              <span class="text-3xl block">${b.emoji}</span>
+              <h5 class="text-xs font-bold text-slate-800">${b.title}</h5>
+              <span class="text-[10px] ${b.earned ? 'text-amber-800 font-black' : 'text-slate-400'} block">
+                ${b.earned ? 'مُكْتَسَب' : 'قيد التعلم'}
+              </span>
+            </div>
+          `).join('');
+
+          const earnedCount = badges.filter(b => b.earned).length;
+          document.getElementById('stat-badges-count').textContent = earnedCount;
+        }
+      }
+
+      resetProgressConfirm() {
+        this.stars = 0;
+        this.completedLessons.clear();
+        this.wordsReadStreak = 0;
+        this.saveProgress();
+        this.updateStatsUI();
+        this.renderSyllabus();
+        this.showFloatBanner("تمت إعادة ضبط التقدم والنجوم بنجاح", "bg-slate-800");
       }
 
       filterLessons(keyword) {
         const kw = keyword.trim().toLowerCase();
-        document.querySelectorAll('#syllabus-accordion .kid-card').forEach(card => {
-          card.style.display = card.textContent.toLowerCase().includes(kw) ? 'flex' : 'none';
+        const cards = document.querySelectorAll('#syllabus-accordion .kid-card');
+        cards.forEach(card => {
+          if (card.textContent.toLowerCase().includes(kw)) {
+            card.style.display = 'flex';
+          } else {
+            card.style.display = 'none';
+          }
         });
       }
     }
 
+    // Launch App
     let app;
     window.onload = () => {
       app = new NoorAcademyApp();
