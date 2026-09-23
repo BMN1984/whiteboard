@@ -1,0 +1,2471 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>نور البيان التفاعلي للأطفال | إعداد: أكاديمية الفتح لعلوم القرآن</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts for Kids & Quranic Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700;800&family=Zain:wght@400;700;800;900&display=swap" rel="stylesheet">
+  <!-- Canvas Confetti for Celebration -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Cairo', 'Tajawal', 'sans-serif'],
+            quran: ['Amiri', 'serif'],
+            kids: ['Zain', 'Cairo', 'sans-serif']
+          },
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              amber: '#f59e0b',
+              sky: '#0ea5e9',
+              coral: '#f43f5e',
+              purple: '#8b5cf6',
+              gold: '#eab308'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    .tashkeel-word {
+      font-family: 'Amiri', 'Cairo', serif;
+      line-height: 2 !important;
+      letter-spacing: 0.02em;
+      text-rendering: optimizeLegibility;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+
+    .pres-text-display {
+      font-family: 'Amiri', 'Cairo', serif;
+      line-height: 1.85 !important;
+      overflow: visible !important;
+      text-rendering: optimizeLegibility;
+      font-feature-settings: "kern" 1, "liga" 1;
+      letter-spacing: 0.015em;
+      font-size: clamp(3rem, 12vw, 19rem);
+    }
+
+    .kid-card {
+      transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .kid-card:hover {
+      transform: translateY(-4px) scale(1.015);
+    }
+    .kid-card:active {
+      transform: translateY(2px) scale(0.98);
+    }
+
+    /* Dynamic Themes for Presentation Cards (خلفيات فاتحة ونقية وواضحة جداً للعين) */
+    .theme-clouds {
+      background: radial-gradient(circle at 15% 20%, #ffffff 0%, #f0f9ff 55%, #e0f2fe 100%);
+      border: 3px solid #0ea5e9;
+      box-shadow: 0 12px 30px -10px rgba(14, 165, 233, 0.25);
+    }
+    .theme-garden {
+      background: radial-gradient(circle at 85% 15%, #ffffff 0%, #f0fdf4 55%, #dcfce7 100%);
+      border: 3px solid #22c55e;
+      box-shadow: 0 12px 30px -10px rgba(34, 197, 94, 0.25);
+    }
+    .theme-sunshine {
+      background: radial-gradient(circle at 50% 10%, #ffffff 0%, #fffbeb 55%, #fef3c7 100%);
+      border: 3px solid #eab308;
+      box-shadow: 0 12px 30px -10px rgba(234, 179, 8, 0.25);
+    }
+    .theme-lavender {
+      background: radial-gradient(circle at 20% 80%, #ffffff 0%, #faf5ff 55%, #f3e8ff 100%);
+      border: 3px solid #a855f7;
+      box-shadow: 0 12px 30px -10px rgba(168, 85, 247, 0.25);
+    }
+    .theme-peach {
+      background: radial-gradient(circle at 80% 80%, #ffffff 0%, #fff1f2 55%, #ffe4e6 100%);
+      border: 3px solid #ef4444;
+      box-shadow: 0 12px 30px -10px rgba(239, 68, 68, 0.25);
+    }
+
+    /* الألوان الأصلية المبهجة للحروف والتشكيل */
+    .colored-char {
+      display: inline;
+      font-weight: 900;
+      transition: color 0.2s ease, filter 0.2s ease;
+    }
+    .colored-char.highlighted-speech {
+      filter: drop-shadow(0 0 8px #f59e0b);
+      transform: scale(1.1);
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(105vh) scale(0.7) rotate(0deg); opacity: 0; }
+      10% { opacity: 0.95; }
+      90% { opacity: 0.95; }
+      100% { transform: translateY(-20vh) scale(1.1) rotate(15deg); opacity: 0; }
+    }
+    .balloon-item {
+      position: fixed;
+      bottom: -80px;
+      z-index: 9999;
+      pointer-events: none;
+      animation: floatUp 3.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+
+    @keyframes popBounce {
+      0% { transform: translate(-50%, 20px) scale(0.6); opacity: 0; }
+      50% { transform: translate(-50%, -10px) scale(1.08); opacity: 1; }
+      100% { transform: translate(-50%, 0) scale(1); opacity: 1; }
+    }
+    .pop-banner {
+      animation: popBounce 0.3s ease-out forwards;
+    }
+
+    /* Laser Pointer Dot */
+    #laser-pointer-dot {
+      position: fixed;
+      width: 28px;
+      height: 28px;
+      background: radial-gradient(circle, #ff0000 0%, rgba(255,0,0,0.7) 50%, transparent 85%);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 999999;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 15px 6px #ff0000;
+      display: none;
+    }
+
+    @keyframes maddFill {
+      0% { width: 0%; }
+      100% { width: 100%; }
+    }
+    .madd-timer-animation {
+      animation: maddFill 1.2s ease-in-out infinite;
+    }
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #f8fafc; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-amber-50 via-emerald-50 to-sky-50 min-h-screen text-slate-800 font-sans antialiased selection:bg-amber-200">
+
+  <!-- Interactive Laser Pointer Element -->
+  <div id="laser-pointer-dot"></div>
+
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b-2 border-emerald-100 shadow-xs transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-2.5 flex items-center justify-between">
+      <!-- Logo & Title -->
+      <div class="flex items-center gap-3 cursor-pointer" onclick="app.showTab('home')">
+        <div class="w-11 h-11 sm:w-13 sm:h-13 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-white shadow-md transform hover:rotate-6 transition">
+          <span class="text-2xl sm:text-3xl">📖</span>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-lg sm:text-2xl font-black text-emerald-900 font-kids tracking-wide">نُورُ البَيَانِ التَّفَاعُلِي لِلأَطْفَالِ</h1>
+            <span class="bg-amber-100 text-amber-900 text-[11px] px-2 py-0.5 rounded-full font-extrabold border border-amber-300 hidden sm:inline">أَكَادِيمِيَّةُ الفَتْحِ 🌟</span>
+          </div>
+          <p class="text-xs font-bold text-teal-700 mt-0.5 flex items-center gap-1.5">
+            <span>🏫 إِعْدَاد:</span>
+            <span class="text-emerald-900 bg-emerald-100/90 px-2 py-0.5 rounded-md border border-emerald-300">أَكَادِيمِيَّةُ الفَتْحِ لِعُلُومِ القُرْآنِ</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Quick Nav Buttons & Child Color Mode Switch -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Laser Pointer Toggle Button -->
+        <button onclick="app.toggleLaserPointer()" id="laser-toggle-btn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold bg-rose-50 hover:bg-rose-100 text-rose-700 border-2 border-rose-300 transition shadow-xs active:scale-95" title="تفعيل مؤشر الليزر الأحمر">
+          <span>🔴</span>
+          <span class="hidden sm:inline">مُؤَشِّرُ اللَّيْزَر</span>
+        </button>
+
+        <!-- Toggle Color Mode -->
+        <button onclick="app.toggleColorLettersMode()" id="color-mode-btn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold bg-gradient-to-r from-pink-50 to-amber-50 hover:from-pink-100 hover:to-amber-100 text-purple-700 border-2 border-purple-200 transition shadow-xs active:scale-95" title="تفعيل أو إيقاف تلوين الحروف">
+          <span>🎨</span>
+          <span class="hidden sm:inline">أَلْوَانُ الحُرُوفِ:</span>
+          <span id="color-mode-status" class="bg-purple-200 text-purple-900 px-1.5 py-0.2 rounded-md">مُفَعَّل</span>
+        </button>
+
+        <!-- Stars & Progress badge -->
+        <div onclick="app.showTab('progress')" class="flex items-center gap-1.5 bg-amber-50 hover:bg-amber-100 border border-amber-200 px-3 py-1.5 rounded-2xl text-amber-700 font-bold text-xs sm:text-sm shadow-xs cursor-pointer transition transform active:scale-95" title="اضغط لمشاهدة سجل إنجازاتك">
+          <span class="text-base sm:text-lg animate-spin" style="animation-duration: 9s;">⭐</span>
+          <span id="header-stars-count" class="font-black text-amber-800">0</span>
+          <span class="text-[11px] bg-amber-200/80 text-amber-900 px-1.5 py-0.2 rounded-full hidden sm:inline">نجمة</span>
+        </div>
+
+        <!-- Presentation mode quick button -->
+        <button onclick="app.startPresentationMode()" title="عرض كبير للحصة والشاشة" class="px-3 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold bg-sky-500 hover:bg-sky-400 text-white transition flex items-center gap-1.5 shadow-sm active:scale-95">
+          <span>📖</span>
+          <span class="hidden sm:inline">عَرْضُ الدَّرْسِ</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Quick Cheer Motivation Action Bar -->
+    <div class="bg-gradient-to-r from-amber-100 via-emerald-100 to-sky-100 border-b border-amber-200 px-3 py-1.5 flex items-center justify-between gap-2 text-xs font-bold shadow-xs">
+      <div class="flex items-center gap-1.5 text-slate-700 text-[11px] sm:text-xs">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span class="hidden sm:inline">شَرِيطُ التَّشْجِيعِ وَالمُكَافَآتِ السَّرِيعَة:</span>
+        <span class="sm:hidden font-extrabold text-emerald-800">المُكَافَآت:</span>
+      </div>
+      <div class="flex items-center gap-1.5 sm:gap-2">
+        <button onclick="app.triggerBalloons()" class="bg-rose-500 hover:bg-rose-600 active:scale-95 text-white px-2.5 sm:px-3 py-1 rounded-xl shadow-xs transition flex items-center gap-1" title="إطلاق بالونات مبهجة">
+          <span>🎈</span> <span>بَالُونَات</span>
+        </button>
+        <button onclick="app.triggerApplause()" class="bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-2.5 sm:px-3 py-1 rounded-xl shadow-xs transition flex items-center gap-1" title="تصفيق وتشجيع">
+          <span>👏</span> <span>تَصْفِيق</span>
+        </button>
+        <button onclick="app.triggerCheer()" class="bg-amber-500 hover:bg-amber-600 active:scale-95 text-white px-2.5 sm:px-3 py-1 rounded-xl shadow-xs transition flex items-center gap-1" title="رسالة تشجيعية">
+          <span>🌟</span> <span>شَجِّعْنِي</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Navigation Tabs -->
+    <nav class="border-t border-slate-100 bg-emerald-700/5 px-2 py-1.5 overflow-x-auto flex gap-1 sm:gap-2 justify-start sm:justify-center no-scrollbar text-xs sm:text-sm font-bold">
+      <button onclick="app.showTab('home')" class="nav-tab px-3.5 py-1.5 rounded-xl transition whitespace-nowrap flex items-center gap-1.5 bg-emerald-600 text-white shadow-xs" data-target="home">
+        <span>🏠</span> الرَّئِيسِيَّةُ
+      </button>
+      <button onclick="app.showTab('units')" class="nav-tab px-3.5 py-1.5 rounded-xl transition whitespace-nowrap flex items-center gap-1.5 text-slate-700 hover:bg-white" data-target="units">
+        <span>📚</span> فِهْرِسُ المَنْهَجِ (ص 1-96)
+      </button>
+      <button onclick="app.showTab('letters')" class="nav-tab px-3.5 py-1.5 rounded-xl transition whitespace-nowrap flex items-center gap-1.5 text-slate-700 hover:bg-white" data-target="letters">
+        <span>🦁</span> بُسْتَانُ الحُرُوفِ
+      </button>
+      <button onclick="app.showTab('tajweed')" class="nav-tab px-3.5 py-1.5 rounded-xl transition whitespace-nowrap flex items-center gap-1.5 text-slate-700 hover:bg-white" data-target="tajweed">
+        <span>🕌</span> قِسْمُ التَّجْوِيدِ العَمَلِي
+      </button>
+      <button onclick="app.showTab('flashcards')" class="nav-tab px-3.5 py-1.5 rounded-xl transition whitespace-nowrap flex items-center gap-1.5 text-slate-700 hover:bg-white" data-target="flashcards">
+        <span>🃏</span> بِطَاقَاتُ القِرَاءَةِ
+      </button>
+      <button onclick="app.showTab('wheel')" class="nav-tab px-3.5 py-1.5 rounded-xl transition whitespace-nowrap flex items-center gap-1.5 text-slate-700 hover:bg-white" data-target="wheel">
+        <span>🎡</span> عَجَلَةُ القِرَاءَةِ
+      </button>
+      <button onclick="app.showTab('games')" class="nav-tab px-3.5 py-1.5 rounded-xl transition whitespace-nowrap flex items-center gap-1.5 text-slate-700 hover:bg-white" data-target="games">
+        <span>🎮</span> أَلْعَابُ التَّحَدِّي
+      </button>
+      <button onclick="app.showTab('progress')" class="nav-tab px-3.5 py-1.5 rounded-xl transition whitespace-nowrap flex items-center gap-1.5 text-slate-700 hover:bg-white" data-target="progress">
+        <span>🏆</span> إِنْجَازَاتِي
+      </button>
+    </nav>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-3 sm:px-6 py-6 pb-20">
+
+    <!-- HOME TAB -->
+    <section id="tab-home" class="tab-content space-y-8">
+      <!-- Hero Welcome Banner -->
+      <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-emerald-600 via-teal-600 to-sky-600 text-white p-6 sm:p-10 shadow-xl">
+        <div class="relative z-10 max-w-2xl space-y-4">
+          <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-3.5 py-1 rounded-full text-xs sm:text-sm font-semibold text-amber-200 border border-white/30">
+            <span>✨</span> كِتَابُ نُورِ البَيَانِ الأَصْلِي كَامِلاً | إِعْدَاد: أَكَادِيمِيَّةُ الفَتْحِ
+          </div>
+          <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black font-kids leading-tight">
+            مَرْحَبًا بِكَ فِي نُورِ البَيَانِ التَّفَاعُلِيّ! 🌟
+          </h2>
+          <p class="text-sm sm:text-base text-emerald-50 leading-relaxed font-medium">
+            هيا نقرأ لغتنا العربية الجميلة ونرتل القرآن الكريم وفق كتاب نور البيان الأصلي، مع بطاقات قراءة مبهجة وألوان مخصصة للحركات والكلمات!
+          </p>
+          <div class="pt-2 flex flex-wrap gap-3">
+            <button onclick="app.resumeLastLesson()" class="bg-amber-400 hover:bg-amber-300 text-amber-950 font-black px-6 py-3 rounded-2xl shadow-lg transform active:scale-95 transition flex items-center gap-2 text-sm sm:text-base">
+              <span>🚀</span> ابْدَأْ مِنْ حَيْثُ تَوَقَّفْتَ
+            </button>
+            <button onclick="app.showTab('units')" class="bg-white/20 hover:bg-white/30 text-white border border-white/40 font-bold px-5 py-3 rounded-2xl backdrop-blur-sm transition flex items-center gap-2 text-sm sm:text-base">
+              <span>📚</span> فِهْرِسُ الكِتَابِ (96 صَفْحَة)
+            </button>
+          </div>
+        </div>
+
+        <div class="absolute -left-10 -bottom-10 text-9xl opacity-20 pointer-events-none select-none">🕌</div>
+        <div class="absolute right-10 top-4 text-7xl opacity-15 pointer-events-none select-none">⭐</div>
+      </div>
+
+      <!-- Quick Metrics -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div class="bg-white rounded-2xl p-4 border border-emerald-100 shadow-xs flex items-center gap-3">
+          <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-2xl">📖</div>
+          <div>
+            <div class="text-2xl font-black text-slate-800" id="stat-lessons-count">7</div>
+            <div class="text-xs text-slate-500 font-semibold">وحدات المنهج كاملة</div>
+          </div>
+        </div>
+        <div class="bg-white rounded-2xl p-4 border border-amber-100 shadow-xs flex items-center gap-3">
+          <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-2xl">⭐</div>
+          <div>
+            <div class="text-2xl font-black text-slate-800" id="stat-stars-count">0</div>
+            <div class="text-xs text-slate-500 font-semibold">نجمة تشجيعية</div>
+          </div>
+        </div>
+        <div class="bg-white rounded-2xl p-4 border border-sky-100 shadow-xs flex items-center gap-3">
+          <div class="w-12 h-12 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center text-2xl">🦁</div>
+          <div>
+            <div class="text-2xl font-black text-slate-800">28</div>
+            <div class="text-xs text-slate-500 font-semibold">حرفاً بصرياً بصوره</div>
+          </div>
+        </div>
+        <div class="bg-white rounded-2xl p-4 border border-purple-100 shadow-xs flex items-center gap-3">
+          <div class="w-12 h-12 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center text-2xl">🏆</div>
+          <div>
+            <div class="text-2xl font-black text-slate-800" id="stat-badges-count">1</div>
+            <div class="text-xs text-slate-500 font-semibold">أوسمة مكتسبة</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Units Grid -->
+      <div>
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-xl sm:text-2xl font-black text-slate-800 font-kids flex items-center gap-2">
+            <span>🗺️</span> مَسَارُ نُورِ البَيَانِ الرَّئِيسِيّ
+          </h3>
+          <button onclick="app.showTab('units')" class="text-xs sm:text-sm font-bold text-emerald-600 hover:text-emerald-700">عَرْضُ الفِهْرِسِ الكَامِل ←</button>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="home-units-grid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- UNITS & SYLLABUS TAB -->
+    <section id="tab-units" class="tab-content hidden space-y-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-5 rounded-3xl border border-emerald-100 shadow-xs">
+        <div>
+          <h2 class="text-2xl font-black text-slate-800 font-kids flex items-center gap-2">
+            <span>📚</span> فِهْرِسُ مَنْهَجِ نُورِ البَيَانِ الكَامِل (ص 1 - 96)
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">كافة الوحدات والدروس مرتبة بنفس تسلسل وأمثلة كتاب نور البيان المعتمدة بدقة تامة.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <input type="text" oninput="app.filterLessons(this.value)" placeholder="ابحث عن درس أو كلمة..." class="px-4 py-2 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-400 bg-slate-50">
+        </div>
+      </div>
+
+      <div class="space-y-4" id="syllabus-accordion">
+        <!-- Rendered by JS -->
+      </div>
+    </section>
+
+    <!-- GARDEN OF LETTERS TAB -->
+    <section id="tab-letters" class="tab-content hidden space-y-6">
+      <div class="bg-gradient-to-r from-teal-500 to-emerald-600 rounded-3xl p-6 text-white shadow-md flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="space-y-1">
+          <h2 class="text-2xl sm:text-3xl font-black font-kids">🦁 بُسْتَانُ حُرُوفِ الهِجَاءِ (ص 3 - 6)</h2>
+          <p class="text-xs sm:text-sm text-teal-100">اضغط على أي حرف لسماع اسمه وصوته مع مثاله وصورته المعتمدة في كتاب نور البيان!</p>
+        </div>
+        <button onclick="app.openPresentationForGarden()" class="bg-amber-400 hover:bg-amber-300 text-amber-950 font-black px-4 py-2 rounded-2xl text-xs sm:text-sm shadow-md transition flex items-center gap-1.5">
+          <span>📖</span> عَرْضُ الحُرُوفِ بِالبِطَاقَاتِ
+        </button>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-7 gap-4" id="letters-grid">
+        <!-- Rendered by JS -->
+      </div>
+    </section>
+
+    <!-- LESSON DETAIL TAB -->
+    <section id="tab-lesson" class="tab-content hidden space-y-6">
+      <div class="flex flex-wrap items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
+        <div class="flex items-center gap-2">
+          <button onclick="app.showTab('units')" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center gap-1 transition">
+            <span>←</span> الفهرس
+          </button>
+          <span class="text-slate-300">|</span>
+          <span id="lesson-unit-badge" class="px-2.5 py-0.5 rounded-lg text-xs font-bold bg-emerald-100 text-emerald-800">الوحدة</span>
+          <h2 id="lesson-title-heading" class="text-lg sm:text-xl font-black text-slate-800 font-kids">اسم الدرس</h2>
+          <span id="lesson-source-page" class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full font-bold">ص</span>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button onclick="app.openPresentationForCurrentLesson()" class="bg-amber-500 hover:bg-amber-400 text-amber-950 px-4 py-1.5 rounded-xl text-xs sm:text-sm font-black flex items-center gap-1.5 transition shadow-sm active:scale-95">
+            <span>📖</span> عَرْضُ أَمْثِلَةِ الدَّرْسِ (مُكَبَّر)
+          </button>
+          <button onclick="app.triggerCheer()" class="bg-amber-100 hover:bg-amber-200 text-amber-800 px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 transition">
+            <span>🌟</span> شَجِّعِ الطَّالِبَ
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-3xl p-6 sm:p-8 border-2 border-emerald-100 shadow-lg min-h-[450px] flex flex-col justify-between" id="lesson-display-container">
+        <!-- Rendered Dynamically -->
+      </div>
+
+      <div id="lesson-teacher-note" class="bg-sky-50 border-r-4 border-sky-500 p-4 rounded-xl text-xs sm:text-sm text-sky-900 leading-relaxed shadow-xs">
+        <!-- Teacher Note from Noor Al-Bayan -->
+      </div>
+
+      <div class="flex items-center justify-between pt-2">
+        <button onclick="app.prevLesson()" id="btn-prev-lesson" class="px-5 py-2.5 rounded-2xl bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-sm flex items-center gap-2 shadow-xs transition">
+          <span>➡️</span> الدَّرْسُ السَّابِقُ
+        </button>
+        <button onclick="app.markLessonComplete()" class="px-5 py-2.5 rounded-2xl bg-amber-400 hover:bg-amber-300 text-amber-950 font-black text-sm flex items-center gap-2 shadow-md transition">
+          <span>⭐</span> أَتْقَنْتُ هَذَا الدَّرْسَ!
+        </button>
+        <button onclick="app.nextLesson()" id="btn-next-lesson" class="px-5 py-2.5 rounded-2xl bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-sm flex items-center gap-2 shadow-xs transition">
+          <span>الدَّرْسُ التَّالِي</span> <span>⬅️</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- PRACTICAL TAJWEED TAB -->
+    <section id="tab-tajweed" class="tab-content hidden space-y-6">
+      <div class="bg-gradient-to-r from-emerald-800 via-teal-700 to-cyan-800 rounded-3xl p-6 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
+        <div>
+          <span class="bg-amber-400 text-amber-950 font-black text-xs px-3 py-1 rounded-full inline-block mb-2">الوحدة السادسة والسابعة (ص 77 - 96)</span>
+          <h2 class="text-2xl sm:text-3xl font-black font-kids">📖 قِسْمُ التَّجْوِيدِ العَمَلِيّ لِلأَطْفَالِ</h2>
+          <p class="text-xs sm:text-sm text-emerald-100 mt-1">
+            أمثلة كتاب نور البيان الأصلية فقط دون إطالة أو تعقيد نظري! اختر القاعدة، واقرأ المثال فوراً بصوتك أو في وضع العرض المكبر!
+          </p>
+        </div>
+        <button onclick="app.openPresentationForCurrentTajweed()" class="bg-amber-400 hover:bg-amber-300 text-amber-950 font-black px-4 py-2.5 rounded-2xl text-xs sm:text-sm shadow-md transition flex items-center gap-1.5 shrink-0 active:scale-95">
+          <span>📖</span> عَرْضُ أَمْثِلَةِ القَاعِدَةِ (مُكَبَّر)
+        </button>
+      </div>
+
+      <!-- Tajweed Lessons Selector Pills -->
+      <div class="flex flex-wrap gap-2 justify-center" id="tajweed-topic-pills">
+        <!-- Rendered by JS -->
+      </div>
+
+      <!-- Tajweed Practical Cards View -->
+      <div id="tajweed-content-card" class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-md space-y-6">
+        <!-- Dynamic content -->
+      </div>
+    </section>
+
+    <!-- FLASHCARDS TAB -->
+    <section id="tab-flashcards" class="tab-content hidden space-y-6">
+      <div class="bg-white p-5 rounded-3xl border border-purple-100 shadow-xs flex flex-col md:flex-row items-center justify-between gap-4">
+        <div>
+          <h2 class="text-2xl font-black text-slate-800 font-kids flex items-center gap-2">
+            <span>🃏</span> بِطَاقَاتُ القِرَاءَةِ وَتَحَدِّي السُّرْعَةِ
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-500">اختر القاعدة، واقرأ بطاقات الكلمات المعتمدة في كتاب نور البيان كاملة!</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <label class="text-xs font-bold text-slate-600">اخْتَرِ القَاعِدَة:</label>
+          <select id="flashcard-category" onchange="app.initFlashcards(this.value)" class="bg-slate-50 border border-slate-300 text-xs sm:text-sm font-bold rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-purple-400">
+            <option value="fatha-letters">الحروف بالفتح</option>
+            <option value="fatha-words">كلمات حركة الفتح</option>
+            <option value="fatha-sentences">جمل حركة الفتح</option>
+            <option value="kasra-words">كلمات حركة الكسر</option>
+            <option value="damma-words">كلمات حركة الضم</option>
+            <option value="madd-alif">المد بالألف</option>
+            <option value="madd-yaa">المد بالياء</option>
+            <option value="madd-waw">المد بالواو</option>
+            <option value="sukoon-words">كلمات السكون</option>
+            <option value="tanween-words">كلمات التنوين</option>
+            <option value="shaddah-words">كلمات الشدة</option>
+            <option value="tajweed-noon">تجويد النون الساكنة والتنوين</option>
+            <option value="tajweed-madd">تجويد أحكام المدود</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="max-w-4xl mx-auto">
+        <div class="theme-clouds rounded-3xl p-10 sm:p-16 shadow-xl text-center space-y-8 relative overflow-hidden transition-all duration-300" id="flashcard-box">
+          <div class="flex justify-between items-center text-xs sm:text-sm font-extrabold text-slate-700">
+            <span id="flashcard-counter" class="bg-white/80 px-4 py-1.5 rounded-full border border-sky-200">بطاقة 1 من 30</span>
+            <span id="flashcard-rule-tag" class="bg-sky-100 text-sky-900 px-4 py-1.5 rounded-full font-black">حركة الفتح</span>
+          </div>
+
+          <div class="py-10 min-h-[240px] flex items-center justify-center">
+            <div id="flashcard-text" class="text-7xl sm:text-8xl md:text-9xl font-black text-slate-900 font-quran tashkeel-word tracking-wide drop-shadow-sm">
+              كَتَبَ
+            </div>
+          </div>
+
+          <div id="flashcard-breakdown" class="text-sm sm:text-base font-bold text-sky-900 bg-white/80 py-2 px-6 rounded-2xl inline-block border border-sky-200">
+            نور البيان | إعداد: أكاديمية الفتح لعلوم القرآن
+          </div>
+
+          <div class="flex items-center justify-center gap-5 pt-4">
+            <button onclick="app.readCurrentFlashcard()" class="w-16 h-16 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-white text-3xl flex items-center justify-center shadow-lg transform active:scale-95 transition" title="استمع للنطق">
+              🔊
+            </button>
+            <button onclick="app.nextFlashcard()" class="px-10 py-4 rounded-2xl bg-sky-600 hover:bg-sky-500 text-white font-black text-lg shadow-lg transform active:scale-95 transition flex items-center gap-2">
+              <span>البِطَاقَةُ التَّالِيَة</span> <span>➡️</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHEEL TAB -->
+    <section id="tab-wheel" class="tab-content hidden space-y-6">
+      <div class="bg-white p-5 rounded-3xl border border-amber-100 shadow-xs flex flex-col md:flex-row items-center justify-between gap-4">
+        <div>
+          <h2 class="text-2xl font-black text-slate-800 font-kids flex items-center gap-2">
+            <span>🎡</span> عَجَلَةُ القِرَاءَةِ التَّفَاعُلِيَّة
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-500">أدر العجلة واقرأ الكلمة التي يقف عليها السهم بصوتك أولاً!</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <label class="text-xs font-bold text-slate-600">مَصْدَرُ الكَلِمَات:</label>
+          <select id="wheel-source-select" onchange="app.initWheel(this.value)" class="bg-slate-50 border border-slate-300 text-xs sm:text-sm font-bold rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-amber-400">
+            <option value="fatha">عجلة كلمات الفتح</option>
+            <option value="kasra">عجلة كلمات الكسر</option>
+            <option value="damma">عجلة كلمات الضم</option>
+            <option value="madd">عجلة المدود الثلاثة</option>
+            <option value="sukoon">عجلة السكون</option>
+            <option value="tanween">عجلة التنوين</option>
+            <option value="shaddah">عجلة الشدة</option>
+            <option value="tajweed">عجلة أمثلة التجويد</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center max-w-6xl mx-auto">
+        <div class="md:col-span-7 flex flex-col items-center justify-center relative">
+          <div class="z-20 text-5xl text-rose-500 -mb-5 drop-shadow-md select-none transform rotate-180 animate-bounce">
+            🔻
+          </div>
+          <div class="relative p-3 bg-gradient-to-tr from-amber-400 to-amber-200 rounded-full shadow-2xl border-4 border-white">
+            <canvas id="wheel-canvas" width="420" height="420" class="rounded-full cursor-pointer" onclick="app.spinWheel()"></canvas>
+          </div>
+          <button onclick="app.spinWheel()" id="spin-btn" class="mt-6 px-10 py-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-white font-black text-xl rounded-2xl shadow-lg transform active:scale-95 transition flex items-center gap-2">
+            <span>🎡</span> أَدِرِ العَجَلَةَ الآن!
+          </button>
+        </div>
+
+        <div class="md:col-span-5">
+          <div class="theme-sunshine rounded-3xl p-8 sm:p-10 shadow-xl text-center space-y-6">
+            <div class="text-xs font-black text-amber-900 bg-amber-200/80 px-4 py-1.5 rounded-full inline-block">
+              🎯 كَلِمَتُكَ المُمَيَّزَةُ
+            </div>
+            <div class="min-h-[160px] flex items-center justify-center">
+              <div id="wheel-result-word" class="text-5xl sm:text-6xl font-black text-slate-900 font-quran tashkeel-word">
+                اضغط أَدِرِ العَجَلَة!
+              </div>
+            </div>
+            <div class="flex items-center justify-center gap-3">
+              <button onclick="app.readWheelWord()" class="px-6 py-3 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-white font-bold text-sm shadow-md transition flex items-center gap-1.5">
+                <span>🔊</span> اسْتَمِعْ لِلنُّطْقِ
+              </button>
+              <button onclick="app.rewardWordRead(document.getElementById('wheel-result-word').textContent)" class="px-6 py-3 rounded-2xl bg-amber-400 hover:bg-amber-300 text-amber-950 font-black text-sm shadow-xs transition flex items-center gap-1.5">
+                <span>⭐</span> قَرَأْتُهَا صَحِيحَةً!
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MINI-GAMES TAB -->
+    <section id="tab-games" class="tab-content hidden space-y-6">
+      <div class="bg-white p-5 rounded-3xl border border-sky-100 shadow-xs flex flex-col md:flex-row items-center justify-between gap-4">
+        <div>
+          <h2 class="text-2xl font-black text-slate-800 font-kids flex items-center gap-2">
+            <span>🎮</span> مَلْعَبُ أَبْطَالِ نُورِ البَيَانِ
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-500">تمارين مبهجة ومفيدة لتثبيت الحروف بالحركات وأمثلة الكتاب!</p>
+        </div>
+        <div class="flex gap-2">
+          <button onclick="app.initGame('match')" class="game-switch-btn px-4 py-2 rounded-xl text-xs font-bold bg-sky-600 text-white shadow-xs" data-game="match">
+            🦁 طَابِقِ الحَرْفَ مَعَ الصُّورَة
+          </button>
+          <button onclick="app.initGame('listen')" class="game-switch-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200" data-game="listen">
+            🔊 اسْمَعْ وَاخْتَرِ الحَرَكَة
+          </button>
+        </div>
+      </div>
+
+      <div id="game-stage" class="theme-lavender rounded-3xl p-6 sm:p-10 shadow-xl max-w-4xl mx-auto min-h-[440px] flex flex-col justify-between">
+        <!-- Rendered by JS -->
+      </div>
+    </section>
+
+    <!-- PROGRESS & BADGES TAB -->
+    <section id="tab-progress" class="tab-content hidden space-y-6">
+      <div class="bg-white p-6 rounded-3xl border border-amber-100 shadow-xs flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div>
+          <h2 class="text-2xl font-black text-slate-800 font-kids flex items-center gap-2">
+            <span>🏆</span> سِجِلِّ إِتْقَانِي وَأَوْسِمَتِي
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-500">تابع تقدمك في إتقان صفحات ودروس نور البيان (ص 1 - 96)!</p>
+        </div>
+        <button onclick="app.resetProgressConfirm()" class="text-xs text-rose-500 hover:text-rose-700 font-bold px-3 py-1.5 rounded-lg border border-rose-200">
+          إِعَادَةُ ضَبْطِ التَّقَدُّمِ
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-xs text-center space-y-4">
+          <div class="w-32 h-32 mx-auto rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 p-1 flex items-center justify-center shadow-lg">
+            <div class="w-full h-full bg-white rounded-full flex flex-col items-center justify-center">
+              <span class="text-3xl font-black text-emerald-700" id="progress-percentage">15%</span>
+              <span class="text-xs text-slate-400 font-semibold">مكتمل</span>
+            </div>
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-800">معدل إتقان المنهج</h4>
+            <p class="text-xs text-slate-500 mt-1" id="progress-lessons-text">تم إتقان 5 من 35 درساً رئيسياً</p>
+          </div>
+        </div>
+
+        <div class="md:col-span-2 bg-white p-6 rounded-3xl border border-slate-100 shadow-xs space-y-4">
+          <h4 class="font-bold text-slate-800 flex items-center gap-2">
+            <span>🎖️</span> الأوسمة والشارات المكتسبة
+          </h4>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" id="badges-container">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- PERFECTLY RESPONSIVE PRESENTATION MODE (وضع عرض الدرس المتناسق مع 100dvh) -->
+  <!-- ========================================================================= -->
+  <div id="presentation-modal" class="fixed inset-0 z-50 bg-slate-950/45 backdrop-blur-xs hidden h-[100dvh] max-h-[100dvh] w-full flex flex-col justify-between p-2 sm:p-3 md:p-4 overflow-hidden select-none transition-all duration-300">
+
+    <!-- 1. TOP BAR: Title, Current Counter, Color letters button, Close -->
+    <header class="relative z-10 shrink-0 w-full max-w-7xl mx-auto bg-white/95 backdrop-blur-md px-3 sm:px-5 py-2 rounded-2xl border border-emerald-200 shadow-xs flex items-center justify-between gap-2">
+      <div class="flex items-center gap-2 min-w-0">
+        <span class="text-xl sm:text-2xl shrink-0" id="pres-modal-icon">📖</span>
+        <div class="min-w-0">
+          <span id="pres-rule-badge" class="text-[10px] sm:text-xs font-black text-emerald-800 bg-emerald-100/90 px-2 py-0.5 rounded-full inline-block truncate max-w-[150px] sm:max-w-xs">
+            عَرْضُ أَمْثِلَةِ الدَّرْسِ
+          </span>
+          <h3 id="pres-lesson-title" class="text-xs sm:text-sm md:text-base font-black font-kids text-slate-800 truncate mt-0.5">
+            اسم الدرس
+          </h3>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+        <!-- Laser Pointer Toggle in Modal -->
+        <button onclick="app.toggleLaserPointer()" class="px-2 sm:px-3 py-1 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 text-[11px] sm:text-xs font-bold border border-rose-200 flex items-center gap-1 transition active:scale-95">
+          <span>🔴</span>
+          <span class="hidden sm:inline">الليزر</span>
+        </button>
+
+        <!-- Quick Color Letters Toggle in Modal -->
+        <button onclick="app.toggleColorLettersMode()" class="px-2 sm:px-3 py-1 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-700 text-[11px] sm:text-xs font-bold border border-purple-200 flex items-center gap-1 transition active:scale-95">
+          <span>🎨</span>
+          <span class="hidden sm:inline">أَلْوَانُ الحُرُوف</span>
+        </button>
+
+        <!-- Current Example Counter -->
+        <span id="pres-counter" class="text-[11px] sm:text-xs font-black bg-amber-50 text-amber-900 border border-amber-200 px-2.5 py-1 rounded-full whitespace-nowrap">
+          المثال 1 من 1
+        </span>
+
+        <!-- Close Button -->
+        <button onclick="app.closePresentationMode()" class="px-3 py-1 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 font-black text-xs sm:text-sm border border-rose-200 transition flex items-center gap-1 active:scale-95" title="إغلاق وضع العرض">
+          <span>✕</span> <span class="hidden sm:inline">إِغْلَاق</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- 2. CENTER STAGE: Educational Card with Dynamic Kid Themes & Visual Madd Timer -->
+    <main class="relative z-10 flex-1 min-h-0 w-full max-w-7xl mx-auto flex flex-col items-center justify-center my-1.5 sm:my-2 px-1">
+      <div class="w-full h-full max-h-full rounded-2xl sm:rounded-3xl md:rounded-[36px] p-4 sm:p-6 md:p-8 text-center flex flex-col justify-between items-center relative transition-all duration-300 shadow-xl overflow-hidden theme-clouds" id="pres-card-box">
+
+        <!-- Decorative Kid Stickers on Card Corners -->
+        <div class="absolute top-3 right-4 sm:top-4 sm:right-6 text-3xl sm:text-4xl opacity-85 pointer-events-none select-none animate-pulse" id="pres-sticker-top">
+          ☁️
+        </div>
+        <div class="absolute bottom-3 left-4 sm:bottom-4 sm:left-6 text-3xl sm:text-4xl opacity-85 pointer-events-none select-none" id="pres-sticker-bottom">
+          ⭐
+        </div>
+
+        <!-- Sub-Badge directly above the example -->
+        <div id="pres-example-category" class="shrink-0 mb-1 inline-block px-4 py-1 rounded-full text-xs sm:text-sm font-black bg-white/85 text-slate-700 shadow-2xs border border-white">
+          نور البيان لتعليم القراءة
+        </div>
+
+        <!-- Visual Madd Timer Indicator (مؤقت بصري لزمن المد - حركتين) -->
+        <div id="pres-madd-timer-container" class="shrink-0 hidden w-64 max-w-full bg-white/80 rounded-full p-1 border border-amber-300 mb-2 shadow-2xs">
+          <div class="flex items-center justify-between text-[11px] text-amber-900 font-bold px-2 mb-0.5">
+            <span>⏱️ مؤقت زمن المد (حركتين):</span>
+            <span class="animate-pulse">تمد الصوت</span>
+          </div>
+          <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+            <div class="bg-amber-500 h-full rounded-full madd-timer-animation"></div>
+          </div>
+        </div>
+
+        <!-- Giant Arabic Example: Centered, Scalable, Perfectly Visible Tashkeel -->
+        <div class="flex-1 min-h-0 w-full flex items-center justify-center overflow-visible px-2 py-2">
+          <div id="pres-giant-text" class="pres-text-display font-black text-slate-900 font-quran select-text tracking-normal text-center w-full transition-all">
+            بَ
+          </div>
+        </div>
+
+        <!-- Interactive Voice & Read Master Buttons Inside Card -->
+        <div class="shrink-0 flex items-center justify-center gap-3 sm:gap-4 pt-3 border-t border-slate-900/10 w-full max-w-md sm:max-w-lg z-10">
+          <button onclick="app.speakPresCurrent()" class="flex-1 py-2.5 sm:py-3 px-4 rounded-xl sm:rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-sm sm:text-base flex items-center justify-center gap-2 shadow-sm transition transform active:scale-95">
+            <span>🔊</span> <span>اسْتَمِعْ لِلنُّطْقِ</span>
+          </button>
+          <button onclick="app.rewardPresCurrent()" class="flex-1 py-2.5 sm:py-3 px-4 rounded-xl sm:rounded-2xl bg-amber-400 hover:bg-amber-300 text-amber-950 font-black text-sm sm:text-base flex items-center justify-center gap-2 shadow-sm transition transform active:scale-95">
+            <span>⭐</span> <span>أَتْقَنْتُ القِرَاءَةَ!</span>
+          </button>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- 3. BOTTOM BAR: Always visible Cheering Tools, Live Star Balance, Previous & Next Controls -->
+    <footer class="relative z-10 shrink-0 w-full max-w-7xl mx-auto bg-white/95 backdrop-blur-md p-2 sm:p-2.5 rounded-2xl border border-emerald-200 shadow-xs flex items-center justify-between gap-2">
+      
+      <!-- Previous Button -->
+      <button id="pres-btn-prev" onclick="app.presPrev()" class="shrink-0 px-4 sm:px-7 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 disabled:opacity-30 disabled:cursor-not-allowed text-xs sm:text-sm font-black flex items-center justify-center gap-1 transition active:scale-95">
+        <span>◀</span>
+        <span class="hidden sm:inline">المِثَالُ</span>
+        <span>السَّابِق</span>
+      </button>
+
+      <!-- Center Cheering & Motivation Center: Balloons, Clapping, Cheer phrases, Live Stars -->
+      <div class="flex items-center justify-center gap-1 sm:gap-2 flex-wrap">
+        <div class="flex items-center gap-1 bg-amber-50 border border-amber-200 px-2.5 sm:px-3.5 py-1.5 rounded-xl text-amber-800 text-[11px] sm:text-xs font-black shadow-2xs">
+          <span>⭐</span>
+          <span id="pres-bar-stars">0</span>
+          <span class="hidden md:inline">نجمة</span>
+        </div>
+
+        <button onclick="app.triggerBalloons()" class="px-2.5 sm:px-3.5 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold text-xs border border-rose-200 shadow-2xs transition flex items-center gap-1 active:scale-95" title="إطلاق بالونات">
+          <span>🎈</span> <span class="hidden sm:inline">بَالُونَات</span>
+        </button>
+
+        <button onclick="app.triggerApplause()" class="px-2.5 sm:px-3.5 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-xs border border-emerald-200 shadow-2xs transition flex items-center gap-1 active:scale-95" title="تشغيل صوت وتأثير التصفيق">
+          <span>👏</span> <span class="hidden sm:inline">تَصْفِيق</span>
+        </button>
+
+        <button onclick="app.triggerCheer()" class="px-2.5 sm:px-3.5 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 font-bold text-xs border border-amber-200 shadow-2xs transition flex items-center gap-1 active:scale-95" title="رسالة تشجيعية ومكافأة فورية">
+          <span>🌟</span> <span class="hidden sm:inline">شَجِّعْنِي</span>
+        </button>
+      </div>
+
+      <!-- Next Button (ذهبي متطابق مع سبورة الفتح) -->
+      <button id="pres-btn-next" onclick="app.presNext()" class="shrink-0 px-5 sm:px-8 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-amber-950 disabled:bg-slate-300 disabled:cursor-not-allowed text-xs sm:text-sm font-black flex items-center justify-center gap-1 shadow-sm transition active:scale-95">
+        <span class="hidden sm:inline">المِثَالُ</span>
+        <span>التَّالِي</span>
+        <span>▶</span>
+      </button>
+
+    </footer>
+  </div>
+
+  <!-- Hero Celebration Modal -->
+  <div id="hero-celebration-modal" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs hidden flex items-center justify-center p-4 transition-all">
+    <div class="bg-gradient-to-b from-amber-50 to-white rounded-3xl p-6 sm:p-8 max-w-sm w-full text-center space-y-4 shadow-2xl border-4 border-amber-300 pop-banner">
+      <div class="text-6xl animate-bounce">🏆</div>
+      <div>
+        <h3 id="hero-modal-title" class="text-2xl font-black text-amber-900 font-kids">🎉 أَحْسَنْتَ يَا بَطَل!</h3>
+        <p id="hero-modal-sub" class="text-xs sm:text-sm text-slate-600 mt-1 font-semibold">قِرَاءَةٌ نَمُوذَجِيَّةٌ مُتْقَنَة!</p>
+      </div>
+      <div id="hero-modal-stars" class="text-3xl tracking-widest text-amber-400">⭐⭐⭐⭐⭐</div>
+      <button onclick="app.closeHeroModal()" class="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-sm shadow-md transition active:scale-95">
+        مُتَابَعَةُ التَّعَلُّمِ 🚀
+      </button>
+    </div>
+  </div>
+
+  <script>
+    /**
+     * Database of Noor Al-Bayan curriculum structured exactly per book pages and authentic examples.
+     * Prepared by: أكاديمية الفتح لعلوم القرآن
+     */
+    const NOOR_ALBAYAN_DATA = {
+      lettersGarden: [
+        { char: "أ", name: "أَلِف", word: "أَسَد", emoji: "🦁", page: 4 },
+        { char: "ب", name: "بَاء", word: "بَيْت", emoji: "🏠", page: 4 },
+        { char: "ت", name: "تَاء", word: "تَمْر", emoji: "🌴", page: 4 },
+        { char: "ث", name: "ثَاء", word: "ثَلَّاجَة", emoji: "🧊", page: 4 },
+        { char: "ج", name: "جِيم", word: "جَمَل", emoji: "🐫", page: 4 },
+        { char: "ح", name: "حَاء", word: "حَمَامَة", emoji: "🕊️", page: 4 },
+        { char: "خ", name: "خَاء", word: "خَرُوف", emoji: "🐑", page: 4 },
+        { char: "د", name: "دَال", word: "دَائِرَة", emoji: "⭕", page: 4 },
+        { char: "ذ", name: "ذَال", word: "ذَيْل", emoji: "🦊", page: 4 },
+        { char: "ر", name: "رَاء", word: "رَغِيف", emoji: "🫓", page: 5 },
+        { char: "ز", name: "زَاي", word: "زَرَافَة", emoji: "🦒", page: 5 },
+        { char: "س", name: "سِين", word: "سَمَكَة", emoji: "🐟", page: 5 },
+        { char: "ش", name: "شِين", word: "شَمْعَة", emoji: "🕯️", page: 5 },
+        { char: "ص", name: "صَاد", word: "صَارُوخ", emoji: "🚀", page: 5 },
+        { char: "ض", name: "ضَاد", word: "ضَابِط", emoji: "👮", page: 5 },
+        { char: "ط", name: "طَاء", word: "طَائِرَة", emoji: "✈️", page: 5 },
+        { char: "ظ", name: "ظَاء", word: "ظَرْف", emoji: "✉️", page: 5 },
+        { char: "ع", name: "عَيْن", word: "عَلَم", emoji: "🚩", page: 5 },
+        { char: "غ", name: "غَيْن", word: "غَسَّالَة", emoji: "🧼", page: 6 },
+        { char: "ف", name: "فَاء", word: "فَرَاشَة", emoji: "🦋", page: 6 },
+        { char: "ق", name: "قَاف", word: "قَلَم", emoji: "✏️", page: 6 },
+        { char: "ك", name: "كَاف", word: "كَعْبَة", emoji: "🕋", page: 6 },
+        { char: "ل", name: "لَام", word: "لَيْمُون", emoji: "🍋", page: 6 },
+        { char: "م", name: "مِيم", word: "مَوْز", emoji: "🍌", page: 6 },
+        { char: "ن", name: "نُون", word: "نَخْلَة", emoji: "🌴", page: 6 },
+        { char: "هـ", name: "هَاء", word: "هَرَم", emoji: "🔺", page: 6 },
+        { char: "و", name: "وَاو", word: "وَرْدَة", emoji: "🌹", page: 6 },
+        { char: "ي", name: "يَاء", word: "يَد", emoji: "✋", page: 6 }
+      ],
+
+      units: [
+        {
+          id: "u1",
+          title: "الوحدة الأولى: الحَرَكَاتُ (الفتح، الكسر، الضم)",
+          desc: "دراسة الحروف بأصوات الحركات الثلاث وكلماتها وتدريباتها وجملها",
+          icon: "🌱",
+          color: "from-emerald-500 to-teal-600",
+          pageStart: 1,
+          pageEnd: 24,
+          lessons: [
+            {
+              id: "l_hijaa",
+              title: "حروف الهجاء مجردة",
+              sourcePage: 3,
+              type: "letters",
+              teacherNote: "الحروف تقرأ في هذا الدرس فقط للتعرف عليها ولا تحفظ، ونبدأ حفظ الحروف بأصواتها بحركة الفتح في الدرس القادم.",
+              items: ["ا", "ب", "ت", "ث", "ج", "ح", "خ", "د", "ذ", "ر", "ز", "س", "ش", "ص", "ض", "ط", "ظ", "ع", "غ", "ف", "ق", "ك", "ل", "م", "ن", "هـ", "و", "ء", "ي"]
+            },
+            {
+              id: "l_fatha_letters",
+              title: "الحروف بحركة الفتح (صوت الحرف)",
+              sourcePage: 4,
+              type: "letters_tashkeel",
+              teacherNote: "الحروف تقرأ بالفتح صوت الحرف، ويعرف المتعلم معنى الفتح: أي نفتح الفم عند النطق بالحرف، والفتحة خط صغير فوق الحرف.",
+              items: ["أَ", "بَ", "تَ", "ثَ", "جَ", "حَ", "خَ", "دَ", "ذَ", "رَ", "زَ", "سَ", "شَ", "صَ", "ضَ", "طَ", "ظَ", "عَ", "غَ", "فَ", "قَ", "كَ", "لَ", "مَ", "نَ", "هَـ", "وَ", "يَ"]
+            },
+            {
+              id: "l_letter_positions",
+              title: "مواضع الحروف (أول ووسط وآخر الكلمة)",
+              sourcePage: 7,
+              type: "positions",
+              teacherNote: "توضيح شكل الحرف في أول ووسط وآخر الكلمة مع بقاء صوته كما هو.",
+              items: ["بَـ", "ـبَـ", "ـبَ", "تَـ", "ـتَـ", "ـتَ", "ثَـ", "ـثَـ", "ـثَ", "جَـ", "ـجَـ", "ـجَ", "حَـ", "ـحَـ", "ـحَ", "خَـ", "ـخَـ", "ـخَ", "سَـ", "ـسَـ", "ـسَ", "شَـ", "ـشَـ", "ـشَ", "صَـ", "ـصَـ", "ـصَ", "ضَـ", "ـضَـ", "ـضَ", "طَـ", "ـطَـ", "ـطَ", "ظَـ", "ـظَـ", "ـظَ", "عَـ", "ـعَـ", "ـعَ", "غَـ", "ـغَـ", "ـغَ", "فَـ", "ـفَـ", "ـفَ", "قَـ", "ـقَـ", "ـقَ", "كَـ", "ـكَـ", "ـكَ", "لَـ", "ـلَـ", "ـلَ", "مَـ", "ـمَـ", "ـمَ", "نَـ", "ـنَـ", "ـنَ", "يَـ", "ـيَـ", "ـيَ"]
+            },
+            {
+              id: "l_fatha_words_1",
+              title: "كلمات بحركة الفتح (ص 9 - 10)",
+              sourcePage: 9,
+              type: "words",
+              teacherNote: "الكلمات تقرأ بالهجاء أولاً ثم تجميع الكلمة بسرعة.",
+              items: ["أَمَرَ", "سَأَلَ", "لَجَأَ", "بَطَشَ", "نَبَذَ", "ثَقَبَ", "كَتَبَ", "تَجَرَ", "ثَبَتَ", "ثَرَدَ", "نَشَرَ", "بَعَثَ", "جَلَسَ", "سَجَدَ", "حَبَسَ", "نَسَجَ", "طَحَنَ", "مَسَحَ", "خَضَعَ", "دَخَرَ", "نَسَخَ", "صَدَعَ", "دَفَنَ", "قَعَدَ", "ذَهَبَ", "لَذَعَ", "أَخَذَ", "رَزَقَ", "رَكَعَ", "قَرَأَ", "غَسَلَ", "نَصَرَ", "وَعَظَ", "حَرَثَ", "أَكَلَ", "ضَجَعَ", "قَرَضَ", "ظَهَرَ", "زَحَفَ", "لَزَقَ", "غَمَزَ", "سَكَبَ", "عَبَسَ", "شَرَعَ", "خَشَعَ", "خَمَشَ", "صَدَقَ", "بَصَمَ", "فَحَصَ", "ضَرَبَ", "هَضَمَ", "غَمَضَ", "طَلَعَ", "خَطَبَ", "غَبَطَ", "ظَلَمَ", "نَظَرَ", "لَحَظَ", "عَكَفَ", "سَعَلَ", "قَدَعَ", "غَفَرَ", "ضَغَطَ"]
+            },
+            {
+              id: "l_fatha_words_2",
+              title: "كلمات بحركة الفتح (ص 11 - 12)",
+              sourcePage: 11,
+              type: "words",
+              teacherNote: "تقرأ الكلمات تجميعاً بدون تقطيع للحروف مع إبراز مخارج الحروف.",
+              items: ["صَعَدَ", "وَلَهَ", "فَطَمَ", "شَغَفَ", "نَفَخَ", "شَفَعَ", "شَرَحَ", "مَضَغَ", "قَنَتَ", "سَقَطَ", "خَلَقَ", "كَسَرَ", "مَلَكَ", "لَطَمَ", "حَلَفَ", "شَكَرَ", "قَفَلَ", "مَلَأَ", "مَنَحَ", "سَكَنَ", "نَشَأَ", "نَهَبَ", "نَدَبَ", "يَفَعَ", "وَعَزَ", "هَتَفَ", "صَمَدَ", "هَمَسَ", "هَجَمَ", "صَنَعَ", "سَمَحَ", "نَهَرَ", "وَلَجَ", "عَرَضَ", "خَلَدَ", "قَنَصَ", "صَهَرَ", "صَدَرَ", "مَقَتَ", "طَلَقَ", "نَبَضَ", "لَقَطَ", "فَتَنَ", "نَصَفَ", "نَسَفَ", "فَطَرَ", "شَمَخَ", "طَرَقَ", "تَرَكَ", "رَقَدَ", "فَقَدَ", "رَكَضَ", "لَمَسَ", "هَمَزَ", "حَسَدَ", "عَثَرَ", "جَثَمَ", "وَلَدَ", "وَرَدَ", "بَسَطَ", "بَصَعَ", "نَكَصَ", "نَقَصَ", "نَثَرَ", "نَفَثَ", "لَفَحَ"]
+            },
+            {
+              id: "l_fatha_sentences",
+              title: "جُمَل بحركة الفتح (ص 13)",
+              sourcePage: 13,
+              type: "sentences",
+              teacherNote: "قراءة الكلمة الأولى ثم الثانية ثم الجمع بينهما بطلاقة.",
+              items: ["رَكَعَ وَسَجَدَ", "دَخَلَ وَجَلَسَ", "مَسَكَ فَنَظَرَ", "قَنَتَ فَذَكَرَ", "زَرَعَ وَحَصَدَ", "عَرَفَ وَكَتَمَ", "حَلَفَ فَصَدَقَ", "سَأَلَ فَعَرَفَ", "غَرَسَ فَنَبَتَ", "خَلَقَ فَرَزَقَ", "بَسَطَ فَوَهَبَ", "عَبَدَ فَشَكَرَ", "قَفَزَ فَوَقَعَ", "عَبَسَ وَبَسَرَ", "قَرَأَ وَكَتَبَ فَنَجَحَ", "حَكَمَ وَعَدَلَ فَصَدَقَ", "قَطَعَ وَنَشَرَ فَصَنَعَ", "طَحَنَ وَنَخَلَ فَعَجَنَ"]
+            },
+            {
+              id: "l_kasra_words",
+              title: "كلمات بحركة الكسر (ص 15 - 17)",
+              sourcePage: 15,
+              type: "words",
+              teacherNote: "خفض الشفة السفلى عند نطق الحرف المكسور دون تمطيط.",
+              items: ["يَئِسَ", "حَبِطَ", "عَتِهَ", "وَثِقَ", "وَجِلَ", "رَحِمَ", "بَخِلَ", "قَدِمَ", "حَذِرَ", "حَرِصَ", "حَزِنَ", "أَسِفَ", "خَشِيَ", "نَصِبَ", "رَضِيَ", "خَطِفَ", "حَظِيَ", "لَعِبَ", "نَعِمَ", "سَفِهَ", "حَفِظَ", "بَقِيَ", "بَكِمَ", "عَلِمَ", "عَهِدَ", "ظَفِرَ", "شَرِبَ", "سَعِدَ", "رَكِبَ", "ضَحِكَ", "مَرِحَ", "عَمِلَ", "عَقِلَ", "غَضِبَ", "خَجِلَ", "جَهِلَ", "أَذِنَ", "أَلِفَ", "صَحِبَ", "عَنِتَ", "كَرِهَ", "نَضِجَ", "سَمِعَ", "نَشِطَ", "حَمِدَ", "بَرِقَ", "إِرَمَ", "فِئَةَ", "مِئَةَ", "هِبَةَ", "صِفَةَ", "صَحِبَكَ", "بِيَدِكَ", "قِبَلَكَ", "فَطَفِقَ", "تَبِعَكَ", "وَوَرِثَ", "بِيَدِهِ", "وَرَثَةِ", "عَقِبِهِ", "قَدَمِكَ"]
+            },
+            {
+              id: "l_kasra_sentences",
+              title: "جمل بحركة الكسر والفتح (ص 18)",
+              sourcePage: 18,
+              type: "sentences",
+              teacherNote: "تدريب المتعلم على طلاقة قراءة الجمل المشتملة على الفتح والكسر.",
+              items: ["عَطَسَ فَحَمِدَ", "رَكِبَ وَرَدِفَ", "بَرِئَ فَشَكَرَ", "سَكَتَ فَسَلِمَ", "ذَكَرَ فَخَشِيَ", "فَهِمَ وَعَلِمَ", "كَرِهَ وَسَخِطَ", "رَكَضَ فَتَعِبَ", "مَرِضَ فَصَبَرَ", "حَفِظَ فَقَوِيَ", "عَمِلَ فَرَبِحَ", "طَعِمَ فَشَبِعَ", "فَرِحَ فَضَحِكَ", "نَعِمَ وَأَمِنَ", "سَهِرَ فَتَعِبَ", "قَعَدَ وَشَهِدَ", "صَدَقَ فَرَبِحَ", "كَذَبَ فَخَسِرَ", "وَلِيَ فَعَدَلَ فَأَمِنَ", "عَلِمَ بِكَ فَأَذِنَ لَكَ"]
+            },
+            {
+              id: "l_damma_words",
+              title: "كلمات بحركة الضم (ص 20 - 22)",
+              sourcePage: 20,
+              type: "words",
+              teacherNote: "ضم الشفتين عند النطق بالحرف المضموم.",
+              items: ["أُذِنَ", "بُهِتَ", "تُلِيَ", "ثُقِبَ", "جُمِعَ", "حُمِدَ", "خُلِقَ", "دُعِيَ", "ذُكِرَ", "رُفِعَ", "زُجِرَ", "سُئِلَ", "شُكِرَ", "صُعِقَ", "ضُرِبَ", "طُرِحَ", "ظُلِمَ", "عُصِرَ", "غُلِبَ", "فُعِلَ", "قُتِلَ", "كُتِبَ", "لُعِنَ", "مُنِعَ", "نُسِيَ", "هُدِيَ", "وُجِدَ", "وُضِعَ", "شُرِبَ", "رُسِمَ", "فُتِحَ", "دُبِغَ", "بُسِطَ", "وُزِنَ", "سُكِنَ", "خُبِزَ", "أُسِرَ", "بُذِلَ", "ثُبِتَ", "تُرِكَ", "شُرِحَ", "صُلِبَ", "ضُبِطَ", "عُهِدَ", "لُبِسَ", "مُحِصَ", "فَصُحَ", "زَمَنُ", "غُسِلَ", "أُكِلَ", "حُشِرَ", "نُقِلَ", "فُرَصُ", "غُرَفُ", "عُقَدُ", "حُجَرُ", "سُبُلُ", "رُسُلُ", "أُفُقُ", "نُظُمُ", "فَقُطِعَ", "عُمُرِكَ", "يَعِدُهُ", "نَبَؤُهُ", "خُمُسَهُ", "سُدُسَهُ", "فَبُهِتَ", "كَلِمَتُهُ", "عُنُقِكَ"]
+            },
+            {
+              id: "l_harakat_revision",
+              title: "جمل وتدريبات الحركات الثلاث (ص 23 - 24)",
+              sourcePage: 23,
+              type: "sentences",
+              teacherNote: "قراءة نصوص وجمل تجمع الحركات الثلاث بطلاقة.",
+              items: ["سَجَدَ فَخَشَعَ", "قَرَأَ كُتُبَهُ", "تُلِيَ فَفُهِمَ", "قُرِئَ وَكُتِبَ", "وَقَفَ وَيَقِفُ", "لُبِسَ وَخُلِعَ", "جُرِحَ وَشُفِيَ", "جُمِعَ وَقُسِمَ", "بُعِثَ وَحُشِرَ", "قُطِعَ فَوَصَلَ", "رُزِقَ فَحَمِدَ", "رَضِيَ وَفَرِحَ", "كُتِبَ وَرَقُكَ", "حَسُنَ عَمَلُكَ", "خَلُصَ عَسَلُكَ", "أُكِلَ بَلَحُكَ", "شَكَرَ وَشُكِرَ", "نَظُفَ جَسَدُكَ", "جَمُلَ ثَمَرُكَ", "قُطِفَ عِنَبُكَ فَأُكِلَ", "شَرِبَ عُمَرُ لَبَنَهُ", "خَرَجَ عُمَرُ وَدَخَلَ وَبَسَطَ فُرُشَهُ فَقَعَدَ", "شَرِبَ فَذَهَبَ ظَمَؤُهُ", "مَرِضَ فَضَعُفَ بَدَنُهُ", "رَكِبَ جَمَلَهُ لِيَصِلَ رَحِمَهُ", "كَتَبَ وَرَقَهُ بِقَلَمِهِ وَقَرَأَ كُتُبَهُ فَعَلِمَ", "ظُلِمَ فَصَبَرَ فَنُصِرَ", "كَمُلَ أَدَبُهُ فَحَسُنَ خُلُقُهُ"]
+            }
+          ]
+        },
+
+        {
+          id: "u2",
+          title: "الوحدة الثانية: المَدُودُ (الألف، الياء، الواو)",
+          desc: "دراسة المدود الطبيعية والمدود الصغيرة في الرسم القرآني والإملائي",
+          icon: "🌊",
+          color: "from-sky-500 to-blue-600",
+          pageStart: 25,
+          pageEnd: 38,
+          lessons: [
+            {
+              id: "l_madd_alif",
+              title: "المد بالألف والمقارنة بين القصير والطويل (ص 25)",
+              sourcePage: 25,
+              type: "words",
+              isMadd: true,
+              teacherNote: "بيان الفرق الزمني بين الحركة القصيرة (بَ) والحركة الطويلة الممدودة (بَا).",
+              items: ["قَمَ - قَامَ", "عَدَ - عَادَ", "سَدَ - سَادَ", "مَلَ - مَالَ", "فَقَ - فَاقَ", "نَمَ - نَامَ", "جَدَ - جَادَ", "كَتَبَ - كَاتِبُ", "ذَهَبَ - ذَاهِبُ", "بَسَطَ - بَاسِطُ", "عَبَدَ - عَابِدُ", "ثَبَتَ - ثَابِتُ", "سَمِعَ - سَامِعُ"]
+            },
+            {
+              id: "l_madd_alif_words",
+              title: "كلمات وجمل المد بالألف (ص 26 - 27)",
+              sourcePage: 26,
+              type: "words",
+              isMadd: true,
+              teacherNote: "تحقيق زمن المد الطبيعي بمقدار حركتين.",
+              items: ["ءَادَمُ", "هَاجَرَ", "طَاقَةَ", "نَاقَةُ", "غَالِبَ", "ظَالِمُ", "حَارَبَ", "جَامِعُ", "ثَالِثُ", "دَابِرُ", "ثَانِيَ", "خَالِقُ", "بَادِيَ", "فَاطِرِ", "دَاعِيَ", "يَخَافُ", "يَزَالُ", "يُغَاثُ", "يُطَافُ", "يُحَاسَبُ", "مَشَارِبُ", "مَغَانِمُ", "لَيَالِيَ", "مَفَاتِحُ", "هُنَالِكَ", "دَعَانَا", "قَالَتَا", "مَاذَا", "طَعَامِكَ", "مِزَاجُهَا", "تَابَ وَأَنَابَ", "هَاجَرَ وَجَاهَدَ", "أَقَامَ صَلَاتَهُ", "رَجَاهُ فَهَدَاهُ", "أَجَابَهُ فَدَعَاهُ"]
+            },
+            {
+              id: "l_alif_saghirah",
+              title: "الألف المدية الصغيرة في المصحف (ص 28)",
+              sourcePage: 28,
+              type: "words",
+              isMadd: true,
+              teacherNote: "الألف الخنجرية تنطق مداً طبيعياً كالألف الكبيرة تماماً.",
+              items: ["مَٰلِكِ", "صِرَٰطَ", "هَٰذَا", "ذَٰلِكَ", "إِلَىٰ", "بَنَىٰهَا", "هَٰذَانِ", "سَعَىٰ", "يُرَىٰ", "مَتَٰعُ", "يُجَٰهِدُ", "نَصَٰرَىٰ", "فَحَشَرَ فَنَادَىٰ", "هُنَالِكَ دَعَا", "وَأَرِنَا مَنَاسِكَنَا", "كَذَٰلِكَ قَالَ", "تَابَ وَءَامَنَ", "فَتَعَاطَىٰ فَعَقَرَ", "قَالَ لَا تَخَافَا", "إِذَا تَلَىٰهَا"]
+            },
+            {
+              id: "l_madd_yaa",
+              title: "المد بالياء والياء الصغيرة (ص 29 - 32)",
+              sourcePage: 29,
+              type: "words",
+              isMadd: true,
+              teacherNote: "مد الصوت بالكسرة مع الياء بمقدار حركتين.",
+              items: ["قِلَ - قِيلَ", "بِعَ - بِيعَ", "رِحَ - رِيحَ", "غِبَ - غِيبَ", "سَمِعَ - سَمِيعُ", "شَهِدَ - شَهِيدُ", "نَعِمَ - نَعِيمُ", "عَلِمَ - عَلِيمُ", "أَمِنَ - أَمِينُ", "أَخِي", "أَبِي", "كُلِي", "حِينَ", "دِينَ", "فِيمَ", "تَبِيدَ", "رَفِيعُ", "مَقَامِي", "بَنَاتِي", "عِبَادِي", "مِيعَادُ", "فِيهَا", "تُثِيرُ", "يُصِيبُ", "يَزِيغُ", "يُقِيمَا", "سَبِيلِي", "أَبَابِيلَ", "خَامِدِينَ", "بِهِۦ", "عَمَلِهِۦ فَرَعَاهُ", "وَصَاحِبَتِهِۦ وَبَنِيهِ", "هَٰذِهِۦ نَاقَةُ", "سَنُعِيدُهَا سِيرَتَهَا", "فِيهَا مَنَافِعُ وَمَشَارِبُ"]
+            },
+            {
+              id: "l_madd_waw",
+              title: "المد بالواو والواو الصغيرة (ص 33 - 36)",
+              sourcePage: 33,
+              type: "words",
+              isMadd: true,
+              teacherNote: "ضم الشفتين ومدهما بمقدار حركتين عند الواو المدية.",
+              items: ["صُمِ - صُومِي", "قُلِ - قُولِي", "كُنِ - كُونِي", "يُحِ - يُوحِي", "شُهِدَ - شُوهِدَ", "أُوتِيَ", "مُوهِنُ", "يُولِجُ", "طُوبَىٰ", "نُودِيَ", "شُورَىٰ", "دُونِ", "تُوبُواْ", "رَسُولُ", "يَقُولُ", "يَحُورَ", "يَغُوثَ", "حُدُودُ", "هَٰرُونَ", "أَخُوكَ", "نُورِثُ", "تَمُورُ", "يُوسُفُ", "أَكُونَ", "صُدُورِ", "طَالُوتُ", "سَاهُونَ", "أَبُوهُمَا", "قُلُوبُنَا", "قُطُوفُهَا", "دَاوُۥدُ", "لَهُۥ مَا فِي", "مَعَهُۥ فِي", "خَلَقَهُۥ وَبَدَأَ", "قَالَ لَهُۥ صَاحِبُهُۥ", "مَالُهُۥ وَوَلَدُهُۥ"]
+            }
+          ]
+        },
+
+        {
+          id: "u3",
+          title: "الوحدة الثالثة: السُّكُونُ ( ْ ) وَاللَّامُ القَمَرِيَّة",
+          desc: "السكون القرآني والإملائي وهمزة الوصل واللام القمرية وتدريباتهما",
+          icon: "🌙",
+          color: "from-indigo-500 to-purple-600",
+          pageStart: 39,
+          pageEnd: 50,
+          lessons: [
+            {
+              id: "l_sukoon_rule",
+              title: "مقاطع السكون الثنائية (ص 39)",
+              sourcePage: 39,
+              type: "words",
+              teacherNote: "الحرف الساكن لا ينطق منفرداً بل يُقرأ مع الحرف المتحرك قبله.",
+              items: ["أَنْ", "هَبْ", "قَدْ", "بَسْ", "صَهْ", "صِلْ", "سِرْ", "إِذْ", "عِظْ", "هِمْ", "ذُقْ", "شُدْ", "رُجْ", "فُزْ", "كُلْ", "رَكْ", "عِشْ", "صُغْ", "لَوْ", "كَيْ", "بَحْ", "أَخْ", "أَلْ", "أَجْ", "أَتْ", "حَلْ", "طِبْ", "مِنْ", "صِفْ", "بِعْ", "قُلْ"]
+            },
+            {
+              id: "l_sukoon_quran_words",
+              title: "كلمات السكون القرآنية (ص 40 - 42)",
+              sourcePage: 40,
+              type: "words",
+              teacherNote: "تقطيع الكلمة إلى مقطع ساكن ومتحرك ثم نطقها كاملة.",
+              items: ["شِئْتَ", "يَهْبِطُ", "نَعْبُدُ", "يَغْفِرُ", "أَجْدَرُ", "يَشْرَحُ", "تَكْسِبُ", "أُقْسِمُ", "يَصْنَعُ", "أَنْعَمَ", "نَلْعَبُ", "أَضْحَكَ", "أَطْمَعُ", "فَأَخْرَجَ", "يُظْهِرُ", "أَسْرَفُ", "أَتْقَنَ", "يَدْخُلْ", "أَلْقَىٰ", "مَثْنَىٰ", "أَبْصِرْ", "أَذْهَبَ", "أَرْسَلَ", "فَرَغْتَ", "كَيْدُ", "أَوْهَنَ", "يَهْدِي", "يَخْطَفُ", "يَمْحَقُ", "يُثْبِتُ", "رِحْلَةَ", "إِطْعَامُ", "يَتْلُونَ", "يَلْمِزُكَ", "مُمْسِكُ", "يَشْرَبُ", "خَمْسِينَ", "أَهْلَكْنَا", "عَلَيْهِ", "يُعْطِيكَ", "مَبْعُوثُونَ", "يُوَسْوِسُ"]
+            },
+            {
+              id: "l_lam_qamariyyah",
+              title: "اللام القمرية (الْـ) بعد همزة الوصل (ص 43)",
+              sourcePage: 43,
+              type: "words",
+              teacherNote: "اللام القمرية مظاهرة عليها سكون وحروفها (ابغ حجك وخف عقيمه).",
+              items: ["الْأَذْقَانِ", "الْبُرُوجِ", "الْغَاوُونَ", "الْحَرُورُ", "الْجَمْعَانِ", "الْكَبِيرُ", "الْوَدُودُ", "الْخَالِقُ", "الْفُؤَادَ", "الْعَاكِفُ", "الْقَارِعَةُ", "الْمَالُ", "الْهَوَىٰ", "الْيَهُودُ", "الْيَوْمُ", "الْخَوْفُ", "الْوَاقِعَةُ", "الْمَلِكُ", "الْجَحِيمُ", "الْكَرِيمُ", "وَهَٰذَا الْبَلَدِ الْأَمِينِ", "ذَٰلِكَ هُوَ الْفَوْزُ الْعَظِيمُ"]
+            }
+          ]
+        },
+
+        {
+          id: "u4",
+          title: "الوحدة الرابعة: التَّنْوِينُ (الفتح، الكسر، الضم)",
+          desc: "التنوين بالفتح والكسر والضّم وتدريباتها القرآنية والإملائية",
+          icon: "🔔",
+          color: "from-amber-500 to-orange-600",
+          pageStart: 51,
+          pageEnd: 62,
+          lessons: [
+            {
+              id: "l_tanween_fath",
+              title: "تنوين الفتح (ص 51 - 53)",
+              sourcePage: 51,
+              type: "words",
+              teacherNote: "التنوين نون ساكنة تنطق ولا تكتب في آخر الاسم.",
+              items: ["وَطَنًا", "قَرِيبًا", "قَانِتًا", "أَحَدًا", "حَرَجًا", "كَدْحًا", "شُيُوخًا", "أَبَدًا", "أَثَثًا", "جُرُزًا", "شَمْسًا", "مَعَاشًا", "قَصَصًا", "عَرْضًا", "بِسَاطًا", "غَلِيظًا", "سُوَاعًا", "بَلَغًا", "صُحُفًا", "رِكْزًا", "دَرَكًا", "وَكِيلًا", "ثِقَالًا", "مَلُومًا", "لَبَنًا", "وَجِيهًا", "لَهْوًا", "سَعْيًا", "بِطَانَةً", "وَبِيلًا", "حَيَوٰةً", "كُفُوًا", "طُوًى", "إِلَٰهًا", "وَٰحِدًا", "سَمِيعًا", "شَاكِرًا", "غَفُورًا"]
+            },
+            {
+              id: "l_tanween_kasr",
+              title: "تنوين الكسر (ص 54 - 56)",
+              sourcePage: 54,
+              type: "words",
+              teacherNote: "نطق الكسرتين كصوت (ـِـنْ).",
+              items: ["نَبَإٍ", "حَمَإٍ", "شُعَبٍ", "بَيْتٍ", "مُكْثٍ", "بَهِيجٍ", "حِلْيَةٍ", "أَيْدٍ", "حَنِيذٍ", "سُورٍ", "زَنِيمٍ", "أُنَاسٍ", "غَوَاشٍ", "وَزْنٍ", "حَفِيظٍ", "جُوعٍ", "سَبَبٍ", "جُرُفٍ", "عَلَقَةٍ", "مَدَدٍ", "ظَلِيلٍ", "مَعْرُوفٍ", "تَدْمِيرٍ", "كَاهِنٍ", "حَدِيثٍ", "عَالِيَةٍ", "لِيَوْمٍ", "سَمِينٍ", "حِسَانٍ", "جُدُرٍ", "قِطْمِيرٍ", "دَافِقٍ"]
+            },
+            {
+              id: "l_tanween_damm",
+              title: "تنوين الضم وتدريبات التنوين (ص 57 - 60)",
+              sourcePage: 57,
+              type: "words",
+              teacherNote: "نطق الضمتين كصوت (ـُـنْ).",
+              items: ["ظَمَأٌ", "خُشُبٌ", "فُرَاتٌ", "ثَابِتٌ", "حَرَجٌ", "كَادِحٌ", "شَيْخٌ", "عَابِدٌ", "شَاكِرٌ", "عَرْشٌ", "قِصَاصٌ", "مَتَاعٌ", "عَاصِفٌ", "زَاهِقٌ", "رِجَالٌ", "أُمَمٌ", "ذَلُولٌ", "عُمْيٌ", "وَازِرَةٌ", "جُدَدٌ", "قُلُوبٌ", "شَفَعَةٌ", "مِلْحٌ", "أُجَاجٌ", "حُمُرٌ", "حُرُمٌ", "مُبَارَكٌ", "رِجْسٌ", "خَافِيَةٌ", "خَالِصَةٌ", "رَهِينَةٌ"]
+            }
+          ]
+        },
+
+        {
+          id: "u5",
+          title: "الوحدة الخامسة: الشَّدَّةُ (الفتح، الكسر، الضم، والتنوين)",
+          desc: "الحرف المشدد وتفكيكه، اللام الشمسية، وتدريبات الشدة مع الحركات والتنوين",
+          icon: "⚡",
+          color: "from-rose-500 to-red-600",
+          pageStart: 63,
+          pageEnd: 76,
+          lessons: [
+            {
+              id: "l_shaddah_fatha",
+              title: "الشدة مع حركة الفتح (ص 63 - 64)",
+              sourcePage: 63,
+              type: "words",
+              teacherNote: "الحرف المشدد حرفان: الأول ساكن والثاني متحرك.",
+              items: ["رَدَّ", "حَجَّ", "حَيَّ", "بَثَّ", "هَشَّ", "سَنَّ", "هَبَّا", "غَطَّا", "حَلَّا", "حَقًّا", "غَشَّا", "قَطَعَ - قَطَّعَ", "جَمَعَ - جَمَّعَ", "فَتَحَ - فَتَّحَ", "دَرَسَ - دَرَّسَ", "نَجَرَ - نَجَّارُ", "بَحَرَ - بَحَّارُ", "حَمَلَ - حَمَّالُ", "وَصَّىٰ", "صَلَّىٰ", "قَدَّرَ", "نَزَّلَ", "وَدَّ", "ذَرَّةٍ", "عَمَّ", "لَمَّا", "فَكَّرَ", "أَحَسَّ", "أُحِلَّ", "سَحَّارٍ", "فَعَّالُ", "وَهَّاجًا"]
+            },
+            {
+              id: "l_lam_shamsiyyah",
+              title: "اللام الشمسية (الـ) بعد همزة الوصل (ص 65)",
+              sourcePage: 65,
+              type: "words",
+              teacherNote: "اللام الشمسية تكتب ولا تنطق ويكون الحرف بعدها مشدداً.",
+              items: ["الطَّارِقِ", "الثَّوَابُ", "الصَّاعِقَةُ", "الرَّأْسُ", "التَّقْوَىٰ", "التَّرَاقِيَ", "اللَّطِيفُ", "الذُّبَابُ", "الزَّبَدُ", "السَّاجِدُونَ", "الرَّاجِفَةُ", "الدَّهْرُ", "النَّاسَ", "لِلزَّكَوٰةِ", "لِلصَّلَوٰةِ", "الضَّأْنِ", "الثَّقَلَانِ", "الصَّرْحَ", "الظَّالِمِينَ", "هُوَ التَّوَّابُ الرَّحِيمُ"]
+            },
+            {
+              id: "l_shaddah_kasra",
+              title: "الشدة مع الكسرة والمد بالياء (ص 67 - 70)",
+              sourcePage: 67,
+              type: "words",
+              teacherNote: "الشدة مع الكسرة تأتي الكسرة تحت الشدة.",
+              items: ["صَلِّ", "مَكِّ", "رَبِّ", "قَطِّ", "قَرِّ", "حَقِّ", "بُثِّ", "فُضِّ", "هُزِّي", "أُمِّي", "جَدِّي", "عَنِّي", "فَصَّلَ - فُصِّلَ", "عَلَّمَ - عُلِّمَ", "قَدَّرَ - قُدِّرَ", "بَشَّرَ - بُشِّرَ", "فُزِّعَ", "شُبِّهَ", "حُصِّلَ", "نُزِّلَ", "حَرِّضِ", "زُيِّنَ", "كُلِّمَ", "بُنِيَّ", "إِيَّاكَ", "سِجِّيلٍ", "الْفَتَّاحُ", "ثُلَّةٌ", "قَيِّمَةٌ", "قَوَّامِينَ", "سِتِّينَ", "يُكَلِّفُ"]
+            },
+            {
+              id: "l_shaddah_damma_tanween",
+              title: "الشدة مع الضمة وتنوين الشدة (ص 71 - 75)",
+              sourcePage: 71,
+              type: "words",
+              teacherNote: "اجتماع الشدة مع الضمة والتنوين.",
+              items: ["أَيُّ", "جَدُّ", "حَقُّ", "فَكُّ", "حِجُّ", "عِزُّ", "مَنُّ", "صَمُّواْ", "خَرُّواْ", "صَلُّواْ", "صَبَّ - يَصُبُّ", "دَقَّ - يَدُقُّ", "حَجَّ - يَحُجُّ", "يَوَدُّ", "يَكُفَّ", "يَحِلُّ", "تَرَبُّصُ", "يُدَبِّرُ", "السِّرُّ", "التَّنُّورُ", "كُرْسِيُّهُ", "أَيَّ - أَيًّا", "صَبَّ - صَبًّا", "قَوِيًّا - قَوِيٍّ - قَوِيٌّ", "حَيًّا - حَيٍّ - حَيٌّ", "حَقًّا", "صُمًّا", "فَظًّا", "عُتُوًّا", "مَرَدٍّ", "شَرٍّ", "كُلٌّ", "حَفِيٌّ", "عَفُوًّا", "غِلًّا", "حُبًّا", "عِزًّا", "دُرِّيٌّ", "وَلِيٌّ", "عَرَبِيٌّ"]
+            }
+          ]
+        },
+
+        {
+          id: "u6",
+          title: "الوحدة السادسة: أَحْكَامُ تَرْتِيلِ القُرْآنِ (التجويد العملي)",
+          desc: "أمثلة أحكام التجويد المعتمدة نصاً في كتاب نور البيان (ص 77 - 89)",
+          icon: "🕌",
+          color: "from-teal-600 to-emerald-800",
+          pageStart: 77,
+          pageEnd: 89,
+          lessons: [
+            {
+              id: "tj_madd_muttasil",
+              title: "1. المد الواجب المتصل (4 أو 5 حركات)",
+              sourcePage: 78,
+              type: "words",
+              isMadd: true,
+              ruleTag: "مد واجب متصل",
+              teacherNote: "المد المتصل: أن يأتي حرف المد وبعده همزة في نفس الكلمة ويمد 4 أو 5 حركات.",
+              items: ["حُنَفَآءَ", "جَآءَتْهُمُ", "هَآؤُمُ", "أُوْلَٰٓئِكَ", "خَطِيٓئَتُهُۥ", "السُّوٓءُ", "جِيٓءَ", "سُوٓءَ"]
+            },
+            {
+              id: "tj_madd_munfasil",
+              title: "2. المد الجائز المنفصل (حركتان أو 4 حركات)",
+              sourcePage: 78,
+              type: "words",
+              isMadd: true,
+              ruleTag: "مد جائز منفصل",
+              teacherNote: "المد المنفصل: أن يأتي حرف المد في آخر الكلمة وهمزة القطع في أول الكلمة التي تليها.",
+              items: ["إِذَآ أَصَابَتْهُم", "وَمَآ أُمِرُوٓاْ", "إِلَّا أَن", "لَمْ يَلْبَثُوٓاْ إِلَّا", "إِنِّيٓ ءَانَسْتُ", "وَمَآ أَدْرَىٰكَ", "قُوٓاْ أَنفُسَكُمْ", "فِيٓ أَيَّامٍ"]
+            },
+            {
+              id: "tj_madd_silah",
+              title: "3. مد الصلة (الصغرى والكبرى) والبدل والعوض",
+              sourcePage: 79,
+              type: "words",
+              isMadd: true,
+              ruleTag: "صلة وبدل وعوض",
+              teacherNote: "أمثلة صلة هاء الضمير ومد البدل ومد العوض عند الوقف في نور البيان.",
+              items: ["يُضِلُّ بِهِۦ كَثِيرًا", "لَهُۥ مُلْكُ", "وَلَهُۥٓ أَسْلَمَ", "أَنَّ مَالَهُۥٓ أَخْلَدَهُۥ", "ءَامَنُواْ", "أُوتُواْ", "إِيمَٰنًا", "حَكِيمًا", "سَوَآءً", "هُدًى"]
+            },
+            {
+              id: "tj_madd_lazim",
+              title: "4. المد اللازم الكلمي والحروف المقطعة (6 حركات)",
+              sourcePage: 80,
+              type: "words",
+              isMadd: true,
+              ruleTag: "مد لازم 6 حركات",
+              teacherNote: "المد اللازم يمد 6 حركات لزوماً، سواء كان مثقلاً أو مخففاً أو حرفياً.",
+              items: ["الضَّآلِّينَ", "الْحَآقَّةُ", "حَآجَّ", "دَآبَّةٍ", "ءَا۬لْـَٰٔنَ", "الٓمٓ", "الٓمٓصٓ", "طسٓمٓ", "يٰسٓ", "حـمٓ", "قٓ", "كٓهٰيٰعٓصٓ"]
+            },
+            {
+              id: "tj_noon_izhhar",
+              title: "5. أحكام النون الساكنة والتنوين: الإظهار الحلقي",
+              sourcePage: 81,
+              type: "words",
+              ruleTag: "إظهار حلقي",
+              teacherNote: "تظهر النون والتنوين بغير غنة عند حروف الحلق الستة: (ء هـ ع ح غ خ).",
+              items: ["مَنْ ءَامَنَ", "مَثَلًا أَفَلَا", "يَنْهَوْنَ", "يَوْمٍ هُوَ", "يَنْعِقُ", "يَوْمٌ عَصِيبٌ", "وَمَنْ حَوْلَهَا", "مُلَاقٍ حِسَابِيَهْ", "مِنْ غِسْلِينٍ", "مِيثَاقًا غَلِيظًا", "وَمَنْ خَفَّتْ", "مُؤْمِنٌ خَيْرٌ"]
+            },
+            {
+              id: "tj_noon_idgham_ghunnah",
+              title: "6. أحكام النون والتنوين: الإدغام بغنة (ينمو)",
+              sourcePage: 81,
+              type: "words",
+              ruleTag: "إدغام بغنة",
+              teacherNote: "تدغم النون والتنوين بغنة مقدارها حركتان في حروف (ي - ن - م - و).",
+              items: ["مَالًا مَّمْدُودًا", "مُبَارَكٌ مُّصَدِّقُ", "مَن نَّشَآءُ", "يَوْمَئِذٍ نَّاضِرَةٌ", "خَيْرٌ نُّزُلًا", "مَن وَجَدَ", "مَالًا وَوَلَدًا", "مَالٌ وَلَا بَنُونَ", "مَن يَقُولُ", "يَوْمَئِذٍ يَوَدُّ", "يَوْمًا يَجْعَلُ"]
+            },
+            {
+              id: "tj_noon_idgham_bila",
+              title: "7. أحكام النون والتنوين: الإدغام بغير غنة (ر، ل)",
+              sourcePage: 82,
+              type: "words",
+              ruleTag: "إدغام بغير غنة",
+              teacherNote: "تدغم النون والتنوين بغير غنة إدغاماً كاملاً في حرفي الراء واللام.",
+              items: ["مَن رَّحِمَ", "خَافِضَةٌ رَّافِعَةٌ", "شَيْءٍ رَّحْمَةً", "مَثَلًا رَّجُلَيْنِ", "وَمَن لَّمْ", "مُبَارَكٌ لِّيَدَّبَّرُوٓاْ", "وَمُلْكٍ لَّا يَبْلَىٰ", "مَالًا لُّبَدًا"]
+            },
+            {
+              id: "tj_noon_iqlab",
+              title: "8. أحكام النون والتنوين: الإقلاب (مع الباء)",
+              sourcePage: 82,
+              type: "words",
+              ruleTag: "إقلاب نون وميم",
+              teacherNote: "تقلب النون والتنوين ميماً مخفاة مع بقاء الغنة عند حرف الباء.",
+              items: ["مِنۢ بَعْدِ", "مُنۢبَثًّا", "مُسَخَّرَٰتٍۭ بِأَمْرِهِۦ", "مُسْتَخْفٍۭ بِالَّيْلِ", "مَسْحًۢا بِالسُّوقِ", "عَلِيمٌۢ بِذَاتِ", "كِرَامٍۭ بَرَرَةٍ"]
+            },
+            {
+              id: "tj_noon_ikhfa",
+              title: "9. أحكام النون والتنوين: الإخفاء الحقيقي (15 حرفاً)",
+              sourcePage: 83,
+              type: "words",
+              ruleTag: "إخفاء حقيقي بغنة",
+              teacherNote: "تخفى النون والتنوين مع الغنة عند الحروف الخمسة عشر المتبقية.",
+              items: ["وَمَن تَطَوَّعَ", "كُنتَ", "شَجَرَةٌ تَخْرُجُ", "لِيَوْمٍ تَشْخَصُ", "مَن جَآءَ", "وَأَنجَيْنَا", "عَيْنٌ جَارِيَةٌ", "قَوْمًا جَبَّارِينَ", "مَن صَلَحَ", "مَنصُورًا", "مَآءٍ صَدِيدٍ", "مَن كَسَبَ", "أَنكَالًا", "يَوْمًا كَانَ", "مَلَكٌ كَرِيمٌ"]
+            },
+            {
+              id: "tj_meem_sakinah",
+              title: "10. أحكام الميم الساكنة (الإخفاء والإدغام والإظهار)",
+              sourcePage: 84,
+              type: "words",
+              ruleTag: "أحكام الميم الساكنة",
+              teacherNote: "إخفاء شفوي مع الباء، إدغام مثلين مع الميم، إظهار شفوي مع باقي الحروف.",
+              items: ["هُم بِهِۦ", "وَهُم بَدَءُوكُمْ", "لَكُم بَرَآءَةٌ", "وَهُم مُّهْتَدُونَ", "لَهُم مَّغْفِرَةٌ", "وَءَامَنَهُم مِّنْ خَوْفٍ", "وَهُمْ أُلُوفٌ", "لَهُمْ ذِكْرًا", "أَلَمْ تَرَ", "هُمْ فِيهَا", "هُمْ وَقُودُ", "أَنْعَمْتَ", "الْحَمْدُ"]
+            },
+            {
+              id: "tj_relations_qalqalah",
+              title: "11. القلقلة، والمتماثلان، والمتقاربان، والمتجانسان",
+              sourcePage: 86,
+              type: "words",
+              ruleTag: "قلقلة وعلاقات الحروف",
+              teacherNote: "اضطراب الصوت عند النطق بالحرف الساكن من حروف (قطب جد)، وإدغام المتماثلين والمتجانسين.",
+              items: ["اقْتَرَبَ", "فَوَسَطْنَ", "أَجْدَرُ", "يُدْخِلُ", "الْحَقُّ", "يَبْحَثُ", "لَّكُم مَّوْعِدًا", "اضْرِب بِّعَصَاكَ", "بَل لَّجُّواْ", "وَقَد دَّخَلُواْ", "أَلَمْ نَخْلُقكُّم", "بَل رَّفَعَهُ", "قَد تَّبَيَّنَ", "أَحَطْتُ", "ارْكَب مَّعَنَا"]
+            },
+            {
+              id: "tj_raat_sufr",
+              title: "12. أحكام الراء والصفر المستدير والمستطيل",
+              sourcePage: 88,
+              type: "words",
+              ruleTag: "أحكام الراء والصفر",
+              teacherNote: "تفخيم وترقيق الراء، وسقوط ألف الصفر المستدير، وثبوت ألف الصفر المستطيل وقفاً.",
+              items: ["رِزْقًا", "شِرْعَةً", "فَاصْبِرْ صَبْرًا", "مَجْر۪ىٰهَا", "رَبَّنَا", "أَرْسَلْنَا", "رُحَمَآءُ", "قُرْءَانًا", "أُوْلَٰٓئِكَ", "قَالُواْ", "نَبَإِيْْ", "أَنَا۠", "الظُّنُونَا۠", "الرَّسُولَا۠", "السَّبِيلَا۠", "قَوَارِيرَا۠"]
+            }
+          ]
+        },
+
+        {
+          id: "u7",
+          title: "الوحدة السابعة: الرَّسْمُ القُرْآنِيُّ وَالإِمْلَائِيّ وَالخِتَام",
+          desc: "الفروق بين رسم المصحف والإملاء، الهمزات، ونصوص الختام (ص 90 - 96)",
+          icon: "✍️",
+          color: "from-blue-600 to-indigo-800",
+          pageStart: 90,
+          pageEnd: 96,
+          lessons: [
+            {
+              id: "l_hamzah_rules",
+              title: "قواعد كتابة الهمزة المتوسطة والمتطرفة (ص 92 - 93)",
+              sourcePage: 92,
+              type: "words",
+              ruleTag: "قواعد رسم الهمزة",
+              teacherNote: "الهمزة المتوسطة تتبع أقوى الحركتين، والمتطرفة تتبع حركة الحرف السابق لها.",
+              items: ["فِئَةٍ", "تَطْمَئِنُّ", "زَئِيرُ", "تَقْرَئِينَ", "بِئْسَ", "جِئْتُ", "يُؤْجَرُ", "الْمُؤْمِنُونَ", "يُؤَدِّي", "يَؤُمُّ", "مَبْدَؤُهُ", "يُؤْثِرُ", "لَا تُؤْذِ", "يَرْؤُفُ", "حَفِظْتُ جُزْأَيْنِ", "تَأْثِيرُ", "سَمِعْتُ نِدَاءَهُ", "يُبْدِئُ", "الْقَارِئَ", "نَبَأَ", "قَرَأَ", "اللُّؤْلُؤُ", "كُلِّ شَيْءٍ", "مَآءٍ"]
+            },
+            {
+              id: "l_final_revisions",
+              title: "نصوص وتدريبات الختام والترتيل (ص 94 - 96)",
+              sourcePage: 94,
+              type: "sentences",
+              ruleTag: "نصوص ختام نور البيان",
+              teacherNote: "تلاوة آيات وأحاديث ختام كتاب نور البيان بطلاقة وإتقان أحكام التجويد.",
+              items: [
+                "إِنِ الْحُكْمُ إِلَّا لِلَّهِ يَقُصُّ الْحَقَّ وَهُوَ خَيْرُ الْفَٰصِلِينَ",
+                "وَتَمَّتْ كَلِمَتُ رَبِّكَ صِدْقًا وَعَدْلًا لَّا مُبَدِّلَ لِكَلِمَٰتِهِۦ",
+                "وَهَٰذَا كِتَٰبٌ أَنزَلْنَٰهُ مُبَارَكٌ فَاتَّبِعُوهُ وَاتَّقُواْ",
+                "ادْعُواْ رَبَّكُمْ تَضَرُّعًا وَخُفْيَةً إِنَّهُۥ لَا يُحِبُّ الْمُعْتَدِينَ",
+                "لَا يُؤْمِنُ أَحَدُكُمْ حَتَّى يُحِبَّ لِأَخِيهِ مَا يُحِبُّ لِنَفْسِهِ",
+                "الْمُؤْمِنُ لِلْمُؤْمِنِ كَالْبُنْيَانِ يَشُدُّ بَعْضُهُ بَعْضًا",
+                "إِنَّ وَلِيِّۦَ اللَّهُ الَّذِي نَزَّلَ الْكِتَٰبَ وَهُوَ يَتَوَلَّى الصَّٰلِحِينَ",
+                "وَقُل رَّبِّ اغْفِرْ وَارْحَمْ وَأَنتَ خَيْرُ الرَّٰحِمِينَ"
+              ]
+            }
+          ]
+        }
+      ]
+    };
+  </script>
+
+  <script>
+    class NoorAcademyApp {
+      constructor() {
+        this.currentTab = 'home';
+        this.currentUnitIndex = 0;
+        this.currentLessonIndex = 0;
+        this.currentTajweedLessonIndex = 0;
+        this.stars = 0;
+        this.completedLessons = new Set();
+        this.wordsReadStreak = 0;
+
+        this.isColorLettersMode = true;
+        this.isLaserActive = false;
+
+        this.presItems = [];
+        this.presIndex = 0;
+        this.presCurrentTitle = "";
+        this.presCurrentRule = "";
+        this.presIsMaddLesson = false;
+
+        this.themes = [
+          { name: 'theme-clouds', top: '☁️', btm: '⭐' },
+          { name: 'theme-garden', top: '🌸', btm: '🌿' },
+          { name: 'theme-sunshine', top: '☀️', btm: '✨' },
+          { name: 'theme-lavender', top: '🎈', btm: '🌙' },
+          { name: 'theme-peach', top: '🍎', btm: '🎨' }
+        ];
+
+        this.flashcardList = [];
+        this.currentCardIndex = 0;
+        this.currentCardRule = "";
+
+        this.wheelWords = [];
+        this.wheelAngle = 0;
+        this.isSpinning = false;
+
+        this.initAudioContext();
+      }
+
+      init() {
+        this.loadProgress();
+        this.renderHomeUnits();
+        this.renderSyllabus();
+        this.renderLettersGarden();
+        this.renderTajweedSection();
+        this.initFlashcards('fatha-words');
+        this.initWheel('fatha');
+        this.initGame('match');
+        this.updateStatsUI();
+        this.updateColorModeButtonUI();
+
+        // Laser Pointer Mouse & Touch Listener
+        const laserDot = document.getElementById('laser-pointer-dot');
+        window.addEventListener('mousemove', (e) => {
+          if (this.isLaserActive && laserDot) {
+            laserDot.style.display = 'block';
+            laserDot.style.left = `${e.clientX}px`;
+            laserDot.style.top = `${e.clientY}px`;
+          }
+        });
+        window.addEventListener('touchmove', (e) => {
+          if (this.isLaserActive && laserDot && e.touches.length > 0) {
+            laserDot.style.display = 'block';
+            laserDot.style.left = `${e.touches[0].clientX}px`;
+            laserDot.style.top = `${e.touches[0].clientY}px`;
+          }
+        });
+
+        window.addEventListener('keydown', (e) => {
+          const modal = document.getElementById('presentation-modal');
+          if (modal && !modal.classList.contains('hidden')) {
+            if (e.key === 'ArrowLeft' || e.key === ' ') {
+              this.presNext();
+            } else if (e.key === 'ArrowRight') {
+              this.presPrev();
+            } else if (e.key === 'Escape') {
+              this.closePresentationMode();
+            }
+          }
+        });
+      }
+
+      toggleLaserPointer() {
+        this.isLaserActive = !this.isLaserActive;
+        this.playSfx('click');
+        const laserDot = document.getElementById('laser-pointer-dot');
+        const laserBtn = document.getElementById('laser-toggle-btn');
+
+        if (this.isLaserActive) {
+          if (laserDot) laserDot.style.display = 'block';
+          if (laserBtn) laserBtn.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold bg-rose-600 text-white border-2 border-rose-300 transition shadow-xs active:scale-95 animate-pulse";
+          this.showFloatBanner("🔴 تم تفعيل مؤشر الليزر التفاعلي للشرح!", "bg-rose-700");
+        } else {
+          if (laserDot) laserDot.style.display = 'none';
+          if (laserBtn) laserBtn.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold bg-rose-50 hover:bg-rose-100 text-rose-700 border-2 border-rose-300 transition shadow-xs active:scale-95";
+          this.showFloatBanner("⚪ تم إيقاف مؤشر الليزر", "bg-slate-800");
+        }
+      }
+
+      initAudioContext() {
+        try {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          this.audioCtx = new AudioCtx();
+        } catch (e) {
+          console.debug("Web Audio not available", e);
+        }
+      }
+
+      playSfx(type) {
+        if (!this.audioCtx) return;
+        if (this.audioCtx.state === 'suspended') {
+          this.audioCtx.resume();
+        }
+        const now = this.audioCtx.currentTime;
+
+        if (type === 'success') {
+          const osc = this.audioCtx.createOscillator();
+          const gain = this.audioCtx.createGain();
+          osc.connect(gain);
+          gain.connect(this.audioCtx.destination);
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(523.25, now);
+          osc.frequency.exponentialRampToValueAtTime(659.25, now + 0.08);
+          osc.frequency.exponentialRampToValueAtTime(783.99, now + 0.16);
+          osc.frequency.exponentialRampToValueAtTime(1046.50, now + 0.28);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.linearRampToValueAtTime(0, now + 0.4);
+          osc.start(now);
+          osc.stop(now + 0.4);
+        } else if (type === 'click') {
+          const osc = this.audioCtx.createOscillator();
+          const gain = this.audioCtx.createGain();
+          osc.connect(gain);
+          gain.connect(this.audioCtx.destination);
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(750, now);
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.linearRampToValueAtTime(0, now + 0.06);
+          osc.start(now);
+          osc.stop(now + 0.06);
+        } else if (type === 'wrong') {
+          const osc = this.audioCtx.createOscillator();
+          const gain = this.audioCtx.createGain();
+          osc.connect(gain);
+          gain.connect(this.audioCtx.destination);
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(260, now);
+          osc.frequency.linearRampToValueAtTime(150, now + 0.2);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.linearRampToValueAtTime(0, now + 0.22);
+          osc.start(now);
+          osc.stop(now + 0.22);
+        } else if (type === 'applause') {
+          for (let i = 0; i < 9; i++) {
+            const clapTime = now + (i * 0.09) + (Math.random() * 0.03);
+            const osc = this.audioCtx.createOscillator();
+            const gain = this.audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(this.audioCtx.destination);
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(320 + Math.random() * 180, clapTime);
+            gain.gain.setValueAtTime(0.2, clapTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, clapTime + 0.06);
+            osc.start(clapTime);
+            osc.stop(clapTime + 0.07);
+          }
+        }
+      }
+
+      colorizeArabicText(text, highlightIndex = -1) {
+        if (!this.isColorLettersMode) {
+          return text;
+        }
+
+        // الألوان الأصلية المبهجة المضبوطة تماماً
+        const letterColors = [
+          '#0284c7', // Sky Blue
+          '#16a34a', // Emerald Green
+          '#d97706', // Warm Amber
+          '#9333ea', // Royal Purple
+          '#e11d48', // Gentle Rose
+          '#0d9488', // Deep Teal
+          '#4f46e5'  // Indigo
+        ];
+
+        const isTashkeel = (char) => /[\u064B-\u065F\u0670\u06D6-\u06ED]/.test(char);
+
+        const tokens = [];
+        let currentLetter = "";
+        let currentHarakat = "";
+
+        for (let i = 0; i < text.length; i++) {
+          const char = text[i];
+          if (char === ' ' || char === '\n' || char === '-' || char === '=' || char === '|' || char === '(' || char === ')') {
+            if (currentLetter) {
+              tokens.push({ letter: currentLetter, harakat: currentHarakat });
+              currentLetter = "";
+              currentHarakat = "";
+            }
+            tokens.push({ separator: char });
+          } else if (isTashkeel(char)) {
+            currentHarakat += char;
+          } else {
+            if (currentLetter) {
+              tokens.push({ letter: currentLetter, harakat: currentHarakat });
+              currentHarakat = "";
+            }
+            currentLetter = char;
+          }
+        }
+        if (currentLetter) {
+          tokens.push({ letter: currentLetter, harakat: currentHarakat });
+        }
+
+        let colorIdx = 0;
+        let htmlResult = "";
+        let tokenPos = 0;
+
+        tokens.forEach(tok => {
+          if (tok.separator) {
+            htmlResult += tok.separator;
+          } else {
+            const color = letterColors[colorIdx % letterColors.length];
+            colorIdx++;
+            const isHL = (tokenPos === highlightIndex);
+            tokenPos++;
+            htmlResult += `<span class="colored-char ${isHL ? 'highlighted-speech' : ''}" style="color: ${color};">${tok.letter}${tok.harakat}</span>`;
+          }
+        });
+
+        return htmlResult;
+      }
+
+      toggleColorLettersMode() {
+        this.isColorLettersMode = !this.isColorLettersMode;
+        this.playSfx('click');
+        this.updateColorModeButtonUI();
+        
+        const modal = document.getElementById('presentation-modal');
+        if (modal && !modal.classList.contains('hidden')) {
+          this.updatePresUI();
+        }
+        this.renderFlashcard();
+        this.showFloatBanner(this.isColorLettersMode ? "🎨 تَمَّ تَفْعِيلُ تَلْوِينِ الحُرُوفِ لِلأَطْفَالِ!" : "⚪ عُدْنَا لِلَّوْنِ العَادِي لِلحُرُوفِ", "bg-purple-600");
+      }
+
+      updateColorModeButtonUI() {
+        const statusEl = document.getElementById('color-mode-status');
+        if (statusEl) {
+          statusEl.textContent = this.isColorLettersMode ? 'مُفَعَّل' : 'مُعَطَّل';
+          statusEl.className = this.isColorLettersMode ? 'bg-purple-200 text-purple-900 px-1.5 py-0.2 rounded-md font-black' : 'bg-slate-200 text-slate-700 px-1.5 py-0.2 rounded-md font-bold';
+        }
+      }
+
+      triggerBalloons() {
+        this.playSfx('click');
+        const emojis = ['🎈', '🎈', '🎉', '⭐', '🎈'];
+        const colors = ['#ef4444', '#0ea5e9', '#22c55e', '#f59e0b', '#8b5cf6'];
+        for (let i = 0; i < 14; i++) {
+          const b = document.createElement('div');
+          b.className = 'balloon-item text-4xl sm:text-5xl';
+          b.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+          b.style.left = `${Math.floor(Math.random() * 88) + 5}%`;
+          b.style.animationDelay = `${(Math.random() * 0.7).toFixed(2)}s`;
+          b.style.animationDuration = `${(3.2 + Math.random() * 1.1).toFixed(2)}s`;
+          b.style.filter = `drop-shadow(0 4px 6px ${colors[i % colors.length]}55)`;
+          document.body.appendChild(b);
+          setTimeout(() => b.remove(), 4500);
+        }
+      }
+
+      triggerApplause() {
+        this.playSfx('applause');
+        const claps = ['👏 أَحْسَنْتَ يَا بَطَل!', '👏 مُمْتَازٌ جِدًّا!', '👏 قِرَاءَةٌ بَدِيعَة!', '👏 بَارَكَ اللَّهُ فِيكَ!'];
+        const chosen = claps[Math.floor(Math.random() * claps.length)];
+        this.showFloatBanner(chosen, 'bg-emerald-600');
+      }
+
+      triggerCheer() {
+        this.playSfx('success');
+        const phrases = [
+          '🌟 أَحْسَنْتَ يَا بَطَلَ القُرْآن!',
+          '👏 قِرَاءَتُكَ تُفْرِحُ القَلْب!',
+          '⭐ أَنْتَ ذَكِيٌّ وَمُتَفَوِّق!',
+          '🎉 عَمَلٌ مُتْقَنٌ وَمُبْهِر!',
+          '💪 اسْتَمِرَّ، أَنْتَ تَسْتَطِيع!',
+          '🌟 بَارَكَ اللَّهُ فِيكَ!'
+        ];
+        const chosen = phrases[Math.floor(Math.random() * phrases.length)];
+        this.addStars(1);
+        this.showFloatBanner(chosen, 'bg-gradient-to-r from-amber-500 to-amber-600');
+      }
+
+      showFloatBanner(text, bgClass = 'bg-emerald-600') {
+        const existing = document.getElementById('quick-float-banner');
+        if (existing) existing.remove();
+
+        const banner = document.createElement('div');
+        banner.id = 'quick-float-banner';
+        banner.className = `fixed top-16 sm:top-20 left-1/2 transform -translate-x-1/2 z-[60] text-white font-kids font-black text-xs sm:text-base px-5 py-2 rounded-2xl shadow-2xl pop-banner flex items-center gap-2 border-2 border-white/40 ${bgClass}`;
+        banner.innerHTML = `<span>${text}</span>`;
+        document.body.appendChild(banner);
+
+        setTimeout(() => {
+          if (banner.parentNode) {
+            banner.style.transition = 'opacity 0.35s, transform 0.35s';
+            banner.style.opacity = '0';
+            banner.style.transform = 'translate(-50%, -20px)';
+            setTimeout(() => banner.remove(), 350);
+          }
+        }, 2000);
+      }
+
+      addStars(count = 1) {
+        this.stars += count;
+        this.saveProgress();
+        this.updateStatsUI();
+      }
+
+      rewardWordRead(word) {
+        this.wordsReadStreak++;
+        this.playSfx('success');
+        this.speakWithGradualHighlight(word);
+
+        if (this.wordsReadStreak % 10 === 0) {
+          this.addStars(5);
+          this.triggerBalloons();
+          this.triggerApplause();
+          this.showFloatBanner(`🎉 رَائِع! 10 كَلِمَاتٍ مُتَتَالِيَة! (+5 نجوم ⭐⭐⭐⭐⭐)`, 'bg-emerald-700');
+        } else {
+          this.addStars(1);
+          this.showFloatBanner(`⭐ أَحْسَنْتَ: ${word} (+1 ⭐)`, 'bg-teal-600');
+        }
+      }
+
+      speakWithGradualHighlight(text) {
+        if (!('speechSynthesis' in window)) return;
+        window.speechSynthesis.cancel();
+        const cleanText = text.replace(/[ۦۥۭ۬ۚۖۗۘۢ]/g, '').trim();
+        const utterance = new SpeechSynthesisUtterance(cleanText);
+        utterance.lang = 'ar-SA';
+        utterance.rate = 0.8;
+        utterance.pitch = 1.1;
+
+        const voices = window.speechSynthesis.getVoices();
+        const arVoice = voices.find(v => v.lang.startsWith('ar'));
+        if (arVoice) utterance.voice = arVoice;
+
+        const giantEl = document.getElementById('pres-giant-text');
+        if (giantEl) {
+          let charCount = text.length;
+          let currentStep = 0;
+          const interval = setInterval(() => {
+            giantEl.innerHTML = this.colorizeArabicText(text, currentStep);
+            currentStep++;
+            if (currentStep > charCount) {
+              clearInterval(interval);
+              giantEl.innerHTML = this.colorizeArabicText(text, -1);
+            }
+          }, 150);
+          utterance.onend = () => clearInterval(interval);
+        }
+
+        window.speechSynthesis.speak(utterance);
+      }
+
+      speak(text, rate = 0.8) {
+        if (!('speechSynthesis' in window)) return;
+        window.speechSynthesis.cancel();
+        const cleanText = text.replace(/[ۦۥۭ۬ۚۖۗۘۢ]/g, '').trim();
+        const utterance = new SpeechSynthesisUtterance(cleanText);
+        utterance.lang = 'ar-SA';
+        utterance.rate = rate;
+        utterance.pitch = 1.1;
+
+        const voices = window.speechSynthesis.getVoices();
+        const arVoice = voices.find(v => v.lang.startsWith('ar'));
+        if (arVoice) utterance.voice = arVoice;
+
+        window.speechSynthesis.speak(utterance);
+      }
+
+      showTab(tabId) {
+        this.playSfx('click');
+        this.currentTab = tabId;
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+        const target = document.getElementById(`tab-${tabId}`);
+        if (target) target.classList.remove('hidden');
+
+        document.querySelectorAll('.nav-tab').forEach(btn => {
+          if (btn.dataset.target === tabId) {
+            btn.className = "nav-tab px-3.5 py-1.5 rounded-xl transition whitespace-nowrap flex items-center gap-1.5 bg-emerald-600 text-white shadow-xs font-bold";
+          } else {
+            btn.className = "nav-tab px-3.5 py-1.5 rounded-xl transition whitespace-nowrap flex items-center gap-1.5 text-slate-700 hover:bg-white font-bold";
+          }
+        });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      renderHomeUnits() {
+        const grid = document.getElementById('home-units-grid');
+        if (!grid) return;
+        grid.innerHTML = NOOR_ALBAYAN_DATA.units.map((unit, uIdx) => `
+          <div onclick="app.openUnitByIndex(${uIdx})" class="kid-card bg-white p-5 rounded-3xl border border-slate-200 shadow-xs cursor-pointer hover:border-emerald-300 relative overflow-hidden flex flex-col justify-between">
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="w-10 h-10 rounded-2xl bg-gradient-to-tr ${unit.color} text-white flex items-center justify-center text-xl shadow-md">
+                  ${unit.icon}
+                </span>
+                <span class="text-xs font-bold bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full">
+                  ${unit.lessons.length} دروس (ص ${unit.pageStart}-${unit.pageEnd})
+                </span>
+              </div>
+              <h4 class="font-black text-slate-800 text-lg font-kids mt-2">${unit.title}</h4>
+              <p class="text-xs text-slate-500 line-clamp-2 leading-relaxed">${unit.desc}</p>
+              
+              <!-- شريط تقدم لكل وحدة يوضح الصفحات المتبقية من 96 -->
+              <div class="mt-3 pt-2 border-t border-slate-100">
+                <div class="flex justify-between text-[11px] text-slate-500 mb-1">
+                  <span>صفحات الوحدة: ${unit.pageStart} إلى ${unit.pageEnd}</span>
+                  <span class="font-bold text-amber-600">ص 96</span>
+                </div>
+                <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden border border-slate-200">
+                  <div class="bg-emerald-500 h-full rounded-full" style="width: ${Math.round((unit.pageEnd / 96) * 100)}%;"></div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-emerald-600">
+              <span>تَصَفَّحِ الوَحْدَة</span>
+              <span>←</span>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      renderSyllabus() {
+        const container = document.getElementById('syllabus-accordion');
+        if (!container) return;
+        container.innerHTML = NOOR_ALBAYAN_DATA.units.map((unit, uIdx) => `
+          <div class="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-xs">
+            <div class="bg-slate-50/80 p-4 sm:p-5 flex items-center justify-between border-b border-slate-100">
+              <div class="flex items-center gap-3">
+                <span class="text-2xl">${unit.icon}</span>
+                <div>
+                  <h3 class="font-black text-slate-800 text-base sm:text-lg font-kids">${unit.title}</h3>
+                  <p class="text-xs text-slate-500">${unit.desc} | نطاق الصفحات: (${unit.pageStart} إلى ${unit.pageEnd} من 96 صفحة)</p>
+                </div>
+              </div>
+              <span class="text-xs font-bold bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full">
+                ${unit.lessons.length} دروس
+              </span>
+            </div>
+
+            <div class="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              ${unit.lessons.map((lesson, lIdx) => {
+                const isDone = this.completedLessons.has(lesson.id);
+                return `
+                  <div onclick="app.openLesson(${uIdx}, ${lIdx})" class="p-3.5 rounded-2xl border ${isDone ? 'border-amber-300 bg-amber-50/40' : 'border-slate-200 bg-white hover:border-emerald-300'} cursor-pointer transition flex items-center justify-between gap-3 kid-card">
+                    <div class="flex items-center gap-2.5 min-w-0">
+                      <span class="text-base">${isDone ? '⭐' : '📖'}</span>
+                      <div class="truncate">
+                        <h5 class="text-sm font-bold text-slate-800 truncate">${lesson.title}</h5>
+                        <span class="text-[11px] text-slate-400">صفحة الكتاب: ${lesson.sourcePage} من 96</span>
+                      </div>
+                    </div>
+                    <span class="text-xs font-black text-emerald-600 bg-emerald-50 px-2 py-1 rounded-lg">ابدأ</span>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        `).join('');
+      }
+
+      renderLettersGarden() {
+        const grid = document.getElementById('letters-grid');
+        if (!grid) return;
+        grid.innerHTML = NOOR_ALBAYAN_DATA.lettersGarden.map(item => `
+          <div onclick="app.speakLetterCard('${item.char}', '${item.name}', '${item.word}')" class="kid-card bg-white p-4 rounded-3xl border-2 border-emerald-100 hover:border-emerald-400 shadow-xs cursor-pointer text-center space-y-2 group">
+            <div class="text-5xl font-black text-emerald-700 font-quran tashkeel-word group-hover:scale-110 transition">
+              ${item.char}
+            </div>
+            <div class="text-3xl filter drop-shadow-sm select-none">
+              ${item.emoji}
+            </div>
+            <div class="text-base font-black text-slate-800 font-quran">
+              ${item.word}
+            </div>
+            <div class="text-[11px] font-bold text-slate-400 bg-slate-50 rounded-lg py-0.5">
+              ${item.name}
+            </div>
+          </div>
+        `).join('');
+      }
+
+      speakLetterCard(char, name, word) {
+        this.playSfx('click');
+        this.speak(`${char}... ${name}... ${word}`);
+        this.addStars(1);
+        this.showFloatBanner(`🌟 بَطَل الحُرُوف: ${char} - ${word} (+1 ⭐)`, 'bg-emerald-600');
+      }
+
+      openUnitByIndex(uIdx) {
+        this.openLesson(uIdx, 0);
+      }
+
+      openLesson(uIdx, lIdx) {
+        this.currentUnitIndex = uIdx;
+        this.currentLessonIndex = lIdx;
+        const unit = NOOR_ALBAYAN_DATA.units[uIdx];
+        const lesson = unit.lessons[lIdx];
+
+        document.getElementById('lesson-unit-badge').textContent = unit.title.split(':')[0];
+        document.getElementById('lesson-title-heading').textContent = lesson.title;
+        document.getElementById('lesson-source-page').textContent = `ص ${lesson.sourcePage} من 96`;
+
+        const noteEl = document.getElementById('lesson-teacher-note');
+        noteEl.innerHTML = `
+          <div class="flex items-center gap-2 font-black mb-1 text-sky-950">
+            <span>👨‍🏫</span> <span>إِرْشَادُ المُعَلِّمِ (كِتَابُ نُورِ البَيَانِ - إِعْدَاد: أَكَادِيمِيَّةُ الفَتْحِ - صَفْحَة ${lesson.sourcePage}):</span>
+          </div>
+          <p class="text-xs sm:text-sm text-sky-900 leading-relaxed font-medium">${lesson.teacherNote}</p>
+        `;
+
+        const display = document.getElementById('lesson-display-container');
+        display.innerHTML = '';
+
+        if (lesson.type === 'letters' || lesson.type === 'letters_tashkeel' || lesson.type === 'positions') {
+          display.innerHTML = `
+            <div class="grid grid-cols-3 sm:grid-cols-6 md:grid-cols-7 gap-3">
+              ${lesson.items.map(char => `
+                <button onclick="app.rewardWordRead('${char}')" class="p-4 rounded-2xl bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 font-quran text-3xl sm:text-5xl font-black text-slate-800 transition shadow-xs flex flex-col items-center justify-center gap-1 group kid-card">
+                  <span class="tashkeel-word group-hover:scale-110 transition">${this.colorizeArabicText(char)}</span>
+                  <span class="text-[10px] text-slate-400 group-hover:text-emerald-600 font-sans">🔊 استمع وتدرب</span>
+                </button>
+              `).join('')}
+            </div>
+          `;
+        } else if (lesson.type === 'words') {
+          display.innerHTML = `
+            <div class="space-y-4">
+              <div class="flex items-center justify-between text-xs text-slate-500 font-bold bg-slate-50 p-3 rounded-2xl border border-slate-200">
+                <span>اضغط على أي كلمة للاستماع للتظليل الصوتي وكسب نجمة ⭐</span>
+                <span>إجمالي الكلمات: ${lesson.items.length}</span>
+              </div>
+              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 max-h-[520px] overflow-y-auto p-1">
+                ${lesson.items.map(word => `
+                  <button onclick="app.rewardWordRead('${word}')" class="p-3.5 rounded-2xl bg-white hover:bg-emerald-50 border-2 border-slate-100 hover:border-emerald-300 font-quran text-2xl sm:text-3xl font-black text-slate-800 hover:text-emerald-900 transition shadow-xs flex flex-col items-center justify-center gap-1 group kid-card">
+                    <span class="tashkeel-word">${this.colorizeArabicText(word)}</span>
+                    <span class="text-[10px] text-slate-400 group-hover:text-emerald-600 font-sans">🔊 قراءة ونجمة ⭐</span>
+                  </button>
+                `).join('')}
+              </div>
+            </div>
+          `;
+        } else if (lesson.type === 'sentences') {
+          display.innerHTML = `
+            <div class="space-y-3 max-h-[540px] overflow-y-auto p-1">
+              ${lesson.items.map((sent, i) => `
+                <div onclick="app.rewardWordRead('${sent}')" class="p-4 rounded-2xl bg-slate-50 hover:bg-emerald-50/70 border border-slate-200 hover:border-emerald-300 transition cursor-pointer flex items-center justify-between gap-4 group">
+                  <div class="flex items-center gap-3">
+                    <span class="w-7 h-7 rounded-full bg-emerald-100 text-emerald-700 text-xs font-black flex items-center justify-center shrink-0">${i + 1}</span>
+                    <p class="font-quran text-xl sm:text-2xl font-black text-slate-800 group-hover:text-emerald-900 leading-relaxed tashkeel-word">${this.colorizeArabicText(sent)}</p>
+                  </div>
+                  <button class="shrink-0 text-emerald-600 text-xs sm:text-sm font-bold bg-white px-3 py-1.5 rounded-xl border border-slate-200 group-hover:bg-emerald-600 group-hover:text-white transition">
+                    🔊 قراءة ⭐
+                  </button>
+                </div>
+              `).join('')}
+            </div>
+          `;
+        }
+
+        localStorage.setItem('noor_last_u', uIdx);
+        localStorage.setItem('noor_last_l', lIdx);
+
+        this.showTab('lesson');
+      }
+
+      openPresentationForCurrentLesson() {
+        const unit = NOOR_ALBAYAN_DATA.units[this.currentUnitIndex];
+        const lesson = unit.lessons[this.currentLessonIndex];
+        this.presItems = lesson.items;
+        this.presIndex = 0;
+        this.presCurrentTitle = lesson.title;
+        this.presCurrentRule = unit.title.split(':')[0];
+        this.presIsMaddLesson = !!lesson.isMadd;
+        this.startPresentationMode();
+      }
+
+      openPresentationForGarden() {
+        this.presItems = NOOR_ALBAYAN_DATA.lettersGarden.map(l => `${l.char} - ${l.word}`);
+        this.presIndex = 0;
+        this.presCurrentTitle = "بُسْتَانُ حُرُوفِ الهِجَاءِ";
+        this.presCurrentRule = "ص 3 - 6";
+        this.presIsMaddLesson = false;
+        this.startPresentationMode();
+      }
+
+      prevLesson() {
+        if (this.currentLessonIndex > 0) {
+          this.openLesson(this.currentUnitIndex, this.currentLessonIndex - 1);
+        } else if (this.currentUnitIndex > 0) {
+          const prevUnit = NOOR_ALBAYAN_DATA.units[this.currentUnitIndex - 1];
+          this.openLesson(this.currentUnitIndex - 1, prevUnit.lessons.length - 1);
+        }
+      }
+
+      nextLesson() {
+        const unit = NOOR_ALBAYAN_DATA.units[this.currentUnitIndex];
+        if (this.currentLessonIndex < unit.lessons.length - 1) {
+          this.openLesson(this.currentUnitIndex, this.currentLessonIndex + 1);
+        } else if (this.currentUnitIndex < NOOR_ALBAYAN_DATA.units.length - 1) {
+          this.openLesson(this.currentUnitIndex + 1, 0);
+        }
+      }
+
+      markLessonComplete() {
+        const unit = NOOR_ALBAYAN_DATA.units[this.currentUnitIndex];
+        const lesson = unit.lessons[this.currentLessonIndex];
+        this.completedLessons.add(lesson.id);
+        this.addStars(5);
+        this.openHeroCelebration(`🎉 أَتْقَنْتَ دَرْسَ: ${lesson.title}`, "لَقَدْ أَكْمَلْتَ هَذَا الدَّرْسَ بِنَجَاحٍ مُبْهِر!", 5);
+        this.renderSyllabus();
+      }
+
+      resumeLastLesson() {
+        const u = parseInt(localStorage.getItem('noor_last_u') || '0', 10);
+        const l = parseInt(localStorage.getItem('noor_last_l') || '0', 10);
+        this.openLesson(u, l);
+      }
+
+      renderTajweedSection() {
+        const tajweedLessons = NOOR_ALBAYAN_DATA.units[5].lessons;
+        const pills = document.getElementById('tajweed-topic-pills');
+        if (!pills) return;
+
+        pills.innerHTML = tajweedLessons.map((l, idx) => `
+          <button onclick="app.displayTajweedTopic(${idx})" class="tajweed-pill px-3.5 py-1.5 rounded-xl text-xs font-bold ${idx === 0 ? 'bg-emerald-700 text-white shadow-xs' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'} transition">
+            ${l.title.split('(')[0]}
+          </button>
+        `).join('');
+
+        this.displayTajweedTopic(0);
+      }
+
+      displayTajweedTopic(idx) {
+        this.currentTajweedLessonIndex = idx;
+        const tajweedLessons = NOOR_ALBAYAN_DATA.units[5].lessons;
+        const lesson = tajweedLessons[idx];
+
+        document.querySelectorAll('.tajweed-pill').forEach((btn, i) => {
+          if (i === idx) {
+            btn.className = 'tajweed-pill px-3.5 py-1.5 rounded-xl text-xs font-black bg-emerald-700 text-white shadow-xs';
+          } else {
+            btn.className = 'tajweed-pill px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200';
+          }
+        });
+
+        const card = document.getElementById('tajweed-content-card');
+        card.innerHTML = `
+          <div class="border-b border-slate-100 pb-3 flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <span class="text-xs font-black text-emerald-700 bg-emerald-100 px-3 py-0.5 rounded-full">${lesson.ruleTag || 'أحكام التجويد'} - ص ${lesson.sourcePage}</span>
+              <h3 class="text-lg sm:text-xl font-black text-slate-800 font-kids mt-1">${lesson.title}</h3>
+            </div>
+            <button onclick="app.openPresentationForCurrentTajweed()" class="bg-amber-400 hover:bg-amber-300 text-amber-950 font-black px-4 py-2 rounded-xl text-xs sm:text-sm shadow-sm transition flex items-center gap-1.5 active:scale-95">
+              <span>📖</span> عَرْضُ أَمْثِلَةِ القَاعِدَةِ (مُكَبَّر)
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 max-h-[500px] overflow-y-auto p-1">
+            ${lesson.items.map((item, i) => `
+              <div onclick="app.rewardWordRead('${item}')" class="p-4 rounded-2xl bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 transition flex items-center justify-between gap-3 cursor-pointer kid-card">
+                <div class="flex items-center gap-2.5">
+                  <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 text-xs font-black flex items-center justify-center shrink-0">${i + 1}</span>
+                  <p class="font-quran text-2xl font-black text-slate-800 tashkeel-word">${this.colorizeArabicText(item)}</p>
+                </div>
+                <button class="shrink-0 text-xs bg-emerald-600 hover:bg-emerald-500 text-white px-2.5 py-1.5 rounded-xl font-bold transition">
+                  🔊
+                </button>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+
+      openPresentationForCurrentTajweed() {
+        const tajweedLessons = NOOR_ALBAYAN_DATA.units[5].lessons;
+        const lesson = tajweedLessons[this.currentTajweedLessonIndex];
+        this.presItems = lesson.items;
+        this.presIndex = 0;
+        this.presCurrentTitle = lesson.title;
+        this.presCurrentRule = lesson.ruleTag || "أَحْكَامُ التَّجْوِيد";
+        this.presIsMaddLesson = !!lesson.isMadd;
+        this.startPresentationMode();
+      }
+
+      startPresentationMode() {
+        if (!this.presItems || !this.presItems.length) {
+          const unit = NOOR_ALBAYAN_DATA.units[this.currentUnitIndex] || NOOR_ALBAYAN_DATA.units[0];
+          const lesson = unit.lessons[this.currentLessonIndex] || unit.lessons[1];
+          this.presItems = lesson.items;
+          this.presIndex = 0;
+          this.presCurrentTitle = lesson.title;
+          this.presCurrentRule = unit.title.split(':')[0];
+          this.presIsMaddLesson = !!lesson.isMadd;
+        }
+
+        const modal = document.getElementById('presentation-modal');
+        if (modal) modal.classList.remove('hidden');
+
+        document.getElementById('pres-lesson-title').textContent = this.presCurrentTitle;
+        document.getElementById('pres-rule-badge').textContent = this.presCurrentRule;
+
+        this.updatePresUI();
+      }
+
+      closePresentationMode() {
+        const modal = document.getElementById('presentation-modal');
+        if (modal) modal.classList.add('hidden');
+      }
+
+      updatePresUI() {
+        if (!this.presItems || !this.presItems.length) return;
+
+        const rawItem = this.presItems[this.presIndex];
+        const textEl = document.getElementById('pres-giant-text');
+        const counterEl = document.getElementById('pres-counter');
+        const btnPrev = document.getElementById('pres-btn-prev');
+        const btnNext = document.getElementById('pres-btn-next');
+        const cardBox = document.getElementById('pres-card-box');
+        const categoryBadge = document.getElementById('pres-example-category');
+        const stickerTop = document.getElementById('pres-sticker-top');
+        const stickerBtm = document.getElementById('pres-sticker-bottom');
+        const presBarStars = document.getElementById('pres-bar-stars');
+        const maddTimerContainer = document.getElementById('pres-madd-timer-container');
+
+        if (presBarStars) {
+          presBarStars.textContent = this.stars;
+        }
+
+        if (maddTimerContainer) {
+          if (this.presIsMaddLesson || this.presCurrentTitle.includes('المد') || this.presCurrentRule.includes('مد')) {
+            maddTimerContainer.classList.remove('hidden');
+          } else {
+            maddTimerContainer.classList.add('hidden');
+          }
+        }
+
+        const theme = this.themes[this.presIndex % this.themes.length];
+        cardBox.className = `w-full h-full max-h-full rounded-2xl sm:rounded-3xl md:rounded-[36px] p-4 sm:p-6 md:p-8 text-center flex flex-col justify-between items-center relative transition-all duration-300 shadow-xl overflow-hidden ${theme.name}`;
+        stickerTop.textContent = theme.top;
+        stickerBtm.textContent = theme.btm;
+
+        if (categoryBadge) {
+          categoryBadge.textContent = this.presCurrentRule || "نور البيان لتعليم القراءة";
+        }
+
+        textEl.innerHTML = this.colorizeArabicText(rawItem);
+
+        if (counterEl) {
+          counterEl.textContent = `المثال ${this.presIndex + 1} من ${this.presItems.length}`;
+        }
+
+        if (btnPrev) {
+          btnPrev.disabled = (this.presIndex <= 0);
+        }
+
+        if (btnNext) {
+          btnNext.disabled = (this.presIndex >= this.presItems.length - 1);
+        }
+      }
+
+      presNext() {
+        if (this.presIndex < this.presItems.length - 1) {
+          this.playSfx('click');
+          this.presIndex++;
+          this.updatePresUI();
+        }
+      }
+
+      presPrev() {
+        if (this.presIndex > 0) {
+          this.playSfx('click');
+          this.presIndex--;
+          this.updatePresUI();
+        }
+      }
+
+      speakPresCurrent() {
+        if (this.presItems && this.presItems[this.presIndex]) {
+          this.speakWithGradualHighlight(this.presItems[this.presIndex]);
+        }
+      }
+
+      rewardPresCurrent() {
+        if (this.presItems && this.presItems[this.presIndex]) {
+          const item = this.presItems[this.presIndex];
+          this.rewardWordRead(item);
+          const presBarStars = document.getElementById('pres-bar-stars');
+          if (presBarStars) presBarStars.textContent = this.stars;
+
+          if (this.presIndex < this.presItems.length - 1) {
+            setTimeout(() => this.presNext(), 1000);
+          }
+        }
+      }
+
+      initFlashcards(category) {
+        let items = [];
+        let ruleName = "";
+
+        if (category === 'fatha-letters') {
+          items = NOOR_ALBAYAN_DATA.units[0].lessons[1].items;
+          ruleName = "الحروف بالفتح";
+        } else if (category === 'fatha-words') {
+          items = NOOR_ALBAYAN_DATA.units[0].lessons[3].items;
+          ruleName = "كلمات الفتح";
+        } else if (category === 'fatha-sentences') {
+          items = NOOR_ALBAYAN_DATA.units[0].lessons[5].items;
+          ruleName = "جمل الفتح";
+        } else if (category === 'kasra-words') {
+          items = NOOR_ALBAYAN_DATA.units[0].lessons[6].items;
+          ruleName = "كلمات الكسر";
+        } else if (category === 'damma-words') {
+          items = NOOR_ALBAYAN_DATA.units[0].lessons[8].items;
+          ruleName = "كلمات الضم";
+        } else if (category === 'madd-alif') {
+          items = NOOR_ALBAYAN_DATA.units[1].lessons[1].items;
+          ruleName = "المد بالألف";
+        } else if (category === 'madd-yaa') {
+          items = NOOR_ALBAYAN_DATA.units[1].lessons[3].items;
+          ruleName = "المد بالياء";
+        } else if (category === 'madd-waw') {
+          items = NOOR_ALBAYAN_DATA.units[1].lessons[4].items;
+          ruleName = "المد بالواو";
+        } else if (category === 'sukoon-words') {
+          items = NOOR_ALBAYAN_DATA.units[2].lessons[1].items;
+          ruleName = "السكون";
+        } else if (category === 'tanween-words') {
+          items = NOOR_ALBAYAN_DATA.units[3].lessons[0].items;
+          ruleName = "التنوين";
+        } else if (category === 'shaddah-words') {
+          items = NOOR_ALBAYAN_DATA.units[4].lessons[0].items;
+          ruleName = "الشدة";
+        } else if (category === 'tajweed-noon') {
+          items = NOOR_ALBAYAN_DATA.units[5].lessons[4].items.concat(NOOR_ALBAYAN_DATA.units[5].lessons[5].items);
+          ruleName = "تجويد النون والتنوين";
+        } else if (category === 'tajweed-madd') {
+          items = NOOR_ALBAYAN_DATA.units[5].lessons[0].items.concat(NOOR_ALBAYAN_DATA.units[5].lessons[1].items);
+          ruleName = "تجويد أحكام المدود";
+        }
+
+        this.flashcardList = items;
+        this.currentCardIndex = 0;
+        this.currentCardRule = ruleName;
+        this.renderFlashcard();
+      }
+
+      renderFlashcard() {
+        if (!this.flashcardList.length) return;
+        const currentItem = this.flashcardList[this.currentCardIndex];
+        document.getElementById('flashcard-counter').textContent = `بطاقة ${this.currentCardIndex + 1} من ${this.flashcardList.length}`;
+        document.getElementById('flashcard-rule-tag').textContent = this.currentCardRule;
+        
+        const cardBox = document.getElementById('flashcard-box');
+        const theme = this.themes[this.currentCardIndex % this.themes.length];
+        cardBox.className = `${theme.name} rounded-3xl p-10 sm:p-16 shadow-xl text-center space-y-8 relative overflow-hidden transition-all duration-300`;
+
+        document.getElementById('flashcard-text').innerHTML = this.colorizeArabicText(currentItem);
+      }
+
+      nextFlashcard() {
+        this.playSfx('click');
+        if (this.currentCardIndex < this.flashcardList.length - 1) {
+          this.currentCardIndex++;
+        } else {
+          this.currentCardIndex = 0;
+          this.openHeroCelebration("🎉 بَطَلُ البِطَاقَاتِ!", "أَنْهَيْتَ مَجْمُوعَةَ البِطَاقَاتِ كَامِلَةً!", 5);
+        }
+        this.renderFlashcard();
+      }
+
+      readCurrentFlashcard() {
+        const text = this.flashcardList[this.currentCardIndex];
+        this.rewardWordRead(text);
+      }
+
+      initWheel(category) {
+        let words = [];
+        if (category === 'fatha') {
+          words = ["كَتَبَ", "قَرَأَ", "سَجَدَ", "رَكَعَ", "حَصَدَ", "دَخَلَ", "جَلَسَ", "زَرَعَ", "غَفَرَ", "خَلَقَ", "شَكَرَ", "عَبَدَ"];
+        } else if (category === 'kasra') {
+          words = ["شَرِبَ", "لَعِبَ", "ضَحِكَ", "فَرِحَ", "سَمِعَ", "حَفِظَ", "عَلِمَ", "رَحِمَ", "رَكِبَ", "شَبِعَ", "صَبَرَ", "حَمِدَ"];
+        } else if (category === 'damma') {
+          words = ["كُتِبَ", "خُلِقَ", "قُتِلَ", "جُمِعَ", "فُتِحَ", "شُرِبَ", "رُزِقَ", "ذُكِرَ", "وُجِدَ", "بُعِثَ", "غُلِبَ", "هُدِيَ"];
+        } else if (category === 'madd') {
+          words = ["قَامَ", "عَادَ", "صَامَ", "قِيلَ", "بِيعَ", "نَعِيمُ", "يَقُولُ", "تُوبُوا", "رَسُولُ", "نُوحِيهَا", "صُومِي", "هَاجَرَ"];
+        } else if (category === 'sukoon') {
+          words = ["يَهْبِطُ", "نَعْبُدُ", "يَشْرَحُ", "أَقْسَمَ", "أَنْعَمَ", "يَدْخُلْ", "أَرْسَلَ", "يَمْحَقُ", "يَصْنَعُ", "أَسْرَفَ", "أَذْهَبَ", "يَغْفِرُ"];
+        } else if (category === 'tanween') {
+          words = ["أَحَدًا", "قَرِيبًا", "عَرْضًا", "بَيْتٍ", "جُوعٍ", "عَلَقَةٍ", "عَرْشٌ", "فُرَاتٌ", "شَيْخٌ", "كَرِيمًا", "رِجَالٌ", "أُمَمٌ"];
+        } else if (category === 'shaddah') {
+          words = ["قَدَّرَ", "نَزَّلَ", "صَلَّى", "عَلَّمَ", "يَصُبُّ", "يَدُقُّ", "عَدُوٌّ", "حَقًّا", "حَبَّا", "غَشَّا", "وَصَّى", "أُمِّي"];
+        } else if (category === 'tajweed') {
+          words = ["حُنَفَآءَ", "أُوْلَٰٓئِكَ", "مَنْ ءَامَنَ", "مَن يَقُولُ", "مَن رَّحِمَ", "مِنۢ بَعْدِ", "مَن صَلَحَ", "الضَّآلِّينَ", "هُم بِهِۦ", "اقْتَرَبَ", "رِزْقًا", "أَنَا۠"];
+        }
+
+        this.wheelWords = words;
+        this.drawWheel();
+      }
+
+      drawWheel() {
+        const canvas = document.getElementById('wheel-canvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const numSlices = this.wheelWords.length;
+        const arc = (2 * Math.PI) / numSlices;
+        const colors = ["#22c55e", "#0ea5e9", "#f59e0b", "#ec4899", "#8b5cf6", "#14b8a6", "#f97316", "#6366f1", "#10b981", "#3b82f6", "#eab308", "#a855f7"];
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const radius = canvas.width / 2;
+
+        ctx.save();
+        ctx.translate(radius, radius);
+
+        for (let i = 0; i < numSlices; i++) {
+          const angle = i * arc;
+          ctx.beginPath();
+          ctx.fillStyle = colors[i % colors.length];
+          ctx.moveTo(0, 0);
+          ctx.arc(0, 0, radius - 6, angle, angle + arc);
+          ctx.fill();
+          ctx.lineWidth = 2;
+          ctx.strokeStyle = '#ffffff';
+          ctx.stroke();
+
+          ctx.save();
+          ctx.rotate(angle + arc / 2);
+          ctx.textAlign = 'right';
+          ctx.fillStyle = '#ffffff';
+          ctx.font = 'bold 22px Amiri, Cairo, sans-serif';
+          ctx.fillText(this.wheelWords[i], radius - 25, 8);
+          ctx.restore();
+        }
+
+        ctx.beginPath();
+        ctx.fillStyle = '#ffffff';
+        ctx.arc(0, 0, 30, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.fillStyle = '#10b981';
+        ctx.arc(0, 0, 18, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.restore();
+      }
+
+      spinWheel() {
+        if (this.isSpinning) return;
+        this.isSpinning = true;
+        this.playSfx('click');
+
+        const btn = document.getElementById('spin-btn');
+        btn.disabled = true;
+        btn.classList.add('opacity-50');
+
+        const numSlices = this.wheelWords.length;
+        const randomSpins = 5 + Math.floor(Math.random() * 4);
+        const randomIndex = Math.floor(Math.random() * numSlices);
+        const degreesPerSlice = 360 / numSlices;
+
+        const targetDeg = (randomSpins * 360) + (360 - (randomIndex * degreesPerSlice) - (degreesPerSlice / 2) + 270) % 360;
+        this.wheelAngle += targetDeg;
+
+        const canvas = document.getElementById('wheel-canvas');
+        canvas.style.transform = `rotate(${this.wheelAngle}deg)`;
+
+        setTimeout(() => {
+          this.isSpinning = false;
+          btn.disabled = false;
+          btn.classList.remove('opacity-50');
+
+          const pickedWord = this.wheelWords[randomIndex];
+          document.getElementById('wheel-result-word').innerHTML = this.colorizeArabicText(pickedWord);
+          this.playSfx('success');
+          this.addStars(1);
+          this.showFloatBanner(`🎯 كَلِمَتُكَ: ${pickedWord}! اقْرَأْهَا ثُمَّ تَحَقَّقْ!`, 'bg-amber-600');
+        }, 4100);
+      }
+
+      readWheelWord() {
+        const text = document.getElementById('wheel-result-word').textContent.trim();
+        if (text && !text.includes('اضغط')) {
+          this.speak(text);
+        }
+      }
+
+      initGame(type) {
+        document.querySelectorAll('.game-switch-btn').forEach(b => {
+          if (b.dataset.game === type) {
+            b.className = 'game-switch-btn px-4 py-2 rounded-xl text-xs font-black bg-sky-600 text-white shadow-xs';
+          } else {
+            b.className = 'game-switch-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200';
+          }
+        });
+
+        const stage = document.getElementById('game-stage');
+        if (type === 'match') {
+          this.renderMatchGame(stage);
+        } else if (type === 'listen') {
+          this.renderListenGame(stage);
+        }
+      }
+
+      renderMatchGame(stage) {
+        const letters = NOOR_ALBAYAN_DATA.lettersGarden;
+        const target = letters[Math.floor(Math.random() * letters.length)];
+        const wrongAnswers = letters.filter(l => l.char !== target.char).sort(() => 0.5 - Math.random()).slice(0, 2);
+        const options = [target, ...wrongAnswers].sort(() => 0.5 - Math.random());
+
+        stage.innerHTML = `
+          <div class="text-center space-y-4">
+            <div class="inline-block bg-white text-purple-900 text-xs font-black px-3.5 py-1 rounded-full shadow-2xs">
+              تَحَدِّي المُطَابَقَةِ البَصَرِيَّة
+            </div>
+            <h3 class="text-2xl font-black text-slate-900 font-kids">
+              مَا هِيَ الصُّورَةُ المُنَاسِبَةُ لِحَرْفِ:
+            </h3>
+            <div class="text-8xl font-black text-purple-700 font-quran tashkeel-word my-3 animate-bounce">
+              ${target.char}
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 my-6">
+            ${options.map(opt => `
+              <button onclick="app.checkMatchAnswer('${opt.char}', '${target.char}', '${target.word}')" class="p-5 rounded-3xl border-2 border-purple-200 hover:border-purple-400 bg-white hover:bg-purple-50 transition text-center space-y-2 kid-card group shadow-sm">
+                <span class="text-5xl block group-hover:scale-110 transition">${opt.emoji}</span>
+                <span class="font-black text-slate-800 text-xl block font-quran">${this.colorizeArabicText(opt.word)}</span>
+              </button>
+            `).join('')}
+          </div>
+
+          <div id="game-feedback" class="text-center text-sm font-bold min-h-[24px]"></div>
+        `;
+      }
+
+      checkMatchAnswer(selected, correct, word) {
+        const feedback = document.getElementById('game-feedback');
+        if (selected === correct) {
+          this.playSfx('success');
+          this.triggerBalloons();
+          this.addStars(2);
+          feedback.innerHTML = `<span class="text-emerald-700 font-black">🎉 أَحْسَنْتَ يَا بَطَل! نَعَم، ${word}! (+2 نجوم ⭐⭐)</span>`;
+          this.speak(`أحسنت! ${word}`);
+          setTimeout(() => this.renderMatchGame(document.getElementById('game-stage')), 2000);
+        } else {
+          this.playSfx('wrong');
+          feedback.innerHTML = `<span class="text-rose-600 font-bold">❌ حَاوِلْ مَرَّةً أُخْرَى، رَكِّزْ فِي الحَرْفِ جَيِّدًا!</span>`;
+        }
+      }
+
+      renderListenGame(stage) {
+        const items = ["بَ", "بِ", "بُ", "تَ", "تِ", "تُ", "ثَ", "ثِ", "ثُ", "جَ", "جِ", "جُ", "حَ", "حِ", "حُ"];
+        const target = items[Math.floor(Math.random() * items.length)];
+        const root = target[0];
+        const options = [`${root}َ`, `${root}ِ`, `${root}ُ`].sort(() => 0.5 - Math.random());
+
+        stage.innerHTML = `
+          <div class="text-center space-y-4">
+            <div class="inline-block bg-white text-purple-900 text-xs font-black px-3.5 py-1 rounded-full shadow-2xs">
+              تَدْرِيبُ السَّمَاعِ وَالحَرَكَات
+            </div>
+            <h3 class="text-2xl font-black text-slate-900 font-kids">
+              اسْتَمِعْ إِلَى الصَّوْتِ وَاخْتَرِ التَّشْكِيلَ الصَّحِيح:
+            </h3>
+            <button onclick="app.speak('${target}')" class="w-20 h-20 rounded-full bg-emerald-500 hover:bg-emerald-400 text-white text-3xl mx-auto flex items-center justify-center shadow-lg transition active:scale-95 animate-pulse">
+              🔊
+            </button>
+            <p class="text-xs text-slate-500">اضغط للاستماع مجدداً</p>
+          </div>
+
+          <div class="grid grid-cols-3 gap-4 my-6 max-w-md mx-auto">
+            ${options.map(opt => `
+              <button onclick="app.checkListenAnswer('${opt}', '${target}')" class="p-6 rounded-3xl border-2 border-purple-200 hover:border-purple-400 bg-white hover:bg-purple-50 transition text-center text-5xl font-black font-quran tashkeel-word text-slate-800 kid-card shadow-sm">
+                ${this.colorizeArabicText(opt)}
+              </button>
+            `).join('')}
+          </div>
+
+          <div id="game-feedback" class="text-center text-sm font-bold min-h-[24px]"></div>
+        `;
+
+        setTimeout(() => this.speak(target), 400);
+      }
+
+      checkListenAnswer(selected, correct) {
+        const feedback = document.getElementById('game-feedback');
+        if (selected === correct) {
+          this.playSfx('success');
+          this.triggerBalloons();
+          this.addStars(2);
+          feedback.innerHTML = `<span class="text-emerald-700 font-black">🎉 إِجَابَةٌ صَحِيحَةٌ وَرَائِعَة! (+2 نجوم ⭐⭐)</span>`;
+          setTimeout(() => this.renderListenGame(document.getElementById('game-stage')), 2000);
+        } else {
+          this.playSfx('wrong');
+          feedback.innerHTML = `<span class="text-rose-600 font-bold">❌ اسْتَمِعْ جَيِّدًا ثُمَّ جَرِّبْ!</span>`;
+          this.speak(correct);
+        }
+      }
+
+      openHeroCelebration(title, sub, starsCount = 5) {
+        const modal = document.getElementById('hero-celebration-modal');
+        if (!modal) return;
+        document.getElementById('hero-modal-title').textContent = title;
+        document.getElementById('hero-modal-sub').textContent = sub;
+        document.getElementById('hero-modal-stars').textContent = '⭐'.repeat(starsCount);
+        modal.classList.remove('hidden');
+
+        this.triggerBalloons();
+        this.triggerApplause();
+        if (typeof confetti === 'function') {
+          confetti({ particleCount: 90, spread: 80, origin: { y: 0.6 } });
+        }
+
+        setTimeout(() => this.closeHeroModal(), 3600);
+      }
+
+      closeHeroModal() {
+        const modal = document.getElementById('hero-celebration-modal');
+        if (modal) modal.classList.add('hidden');
+      }
+
+      saveProgress() {
+        localStorage.setItem('noor_stars', this.stars);
+        localStorage.setItem('noor_done_lessons', JSON.stringify(Array.from(this.completedLessons)));
+      }
+
+      loadProgress() {
+        this.stars = parseInt(localStorage.getItem('noor_stars') || '0', 10);
+        const savedDone = localStorage.getItem('noor_done_lessons');
+        if (savedDone) {
+          this.completedLessons = new Set(JSON.parse(savedDone));
+        }
+      }
+
+      updateStatsUI() {
+        const hStars = document.getElementById('header-stars-count');
+        if (hStars) hStars.textContent = this.stars;
+        const sStars = document.getElementById('stat-stars-count');
+        if (sStars) sStars.textContent = this.stars;
+        const presBarStars = document.getElementById('pres-bar-stars');
+        if (presBarStars) presBarStars.textContent = this.stars;
+
+        let totalLessonsCount = 0;
+        NOOR_ALBAYAN_DATA.units.forEach(u => totalLessonsCount += u.lessons.length);
+        const doneCount = this.completedLessons.size;
+        const pct = Math.round((doneCount / totalLessonsCount) * 100);
+
+        const pctEl = document.getElementById('progress-percentage');
+        if (pctEl) pctEl.textContent = `${pct}%`;
+
+        const txtEl = document.getElementById('progress-lessons-text');
+        if (txtEl) txtEl.textContent = `تم إتقان ${doneCount} من ${totalLessonsCount} درساً`;
+
+        const badgesContainer = document.getElementById('badges-container');
+        if (badgesContainer) {
+          const badges = [
+            { title: "بطل الحروف", emoji: "🦁", earned: doneCount >= 1 || this.stars >= 5 },
+            { title: "نجم الفتح", emoji: "⭐", earned: doneCount >= 3 || this.stars >= 15 },
+            { title: "متقن الكسر", emoji: "💎", earned: doneCount >= 6 || this.stars >= 30 },
+            { title: "فارس الضم", emoji: "🛡️", earned: doneCount >= 9 || this.stars >= 50 },
+            { title: "بطل المدود", emoji: "🌊", earned: doneCount >= 13 || this.stars >= 75 },
+            { title: "حارس السكون", emoji: "🌙", earned: doneCount >= 17 || this.stars >= 100 },
+            { title: "أمير الشدة", emoji: "⚡", earned: doneCount >= 22 || this.stars >= 140 },
+            { title: "مرتل القرآن", emoji: "🕌", earned: doneCount >= 28 || this.stars >= 200 }
+          ];
+
+          badgesContainer.innerHTML = badges.map(b => `
+            <div class="p-3.5 rounded-2xl border ${b.earned ? 'border-amber-300 bg-amber-50 shadow-2xs' : 'border-slate-200 bg-slate-50 opacity-40'} text-center space-y-1">
+              <span class="text-3xl block">${b.emoji}</span>
+              <h5 class="text-xs font-bold text-slate-800">${b.title}</h5>
+              <span class="text-[10px] ${b.earned ? 'text-amber-800 font-black' : 'text-slate-400'} block">
+                ${b.earned ? 'مُكْتَسَب' : 'قيد التعلم'}
+              </span>
+            </div>
+          `).join('');
+
+          const earnedCount = badges.filter(b => b.earned).length;
+          document.getElementById('stat-badges-count').textContent = earnedCount;
+        }
+      }
+
+      resetProgressConfirm() {
+        this.stars = 0;
+        this.completedLessons.clear();
+        this.wordsReadStreak = 0;
+        this.saveProgress();
+        this.updateStatsUI();
+        this.renderSyllabus();
+        this.showFloatBanner("تمت إعادة ضبط التقدم والنجوم بنجاح", "bg-slate-800");
+      }
+
+      filterLessons(keyword) {
+        const kw = keyword.trim().toLowerCase();
+        const cards = document.querySelectorAll('#syllabus-accordion .kid-card');
+        cards.forEach(card => {
+          if (card.textContent.toLowerCase().includes(kw)) {
+            card.style.display = 'flex';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      }
+    }
+
+    let app;
+    window.onload = () => {
+      app = new NoorAcademyApp();
+      app.init();
+    };
+  </script>
+</body>
+</html>
